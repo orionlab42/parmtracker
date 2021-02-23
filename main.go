@@ -2,11 +2,14 @@ package main
 
 import (
 	"fmt"
+	"github.com/annakallo/parmtracker/mysql"
 	"github.com/gorilla/mux"
 	"net/http"
 )
 
 func main() {
+	mysql.OpenConnection()
+
 	fmt.Println("Hello world!")
 	r := mux.NewRouter()
 
