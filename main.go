@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/annakallo/parmtracker/mysql"
+	"github.com/annakallo/parmtracker/server"
 	"net/http"
 )
 
@@ -22,7 +23,7 @@ func main() {
 	//r.HandleFunc("/api/expenses", handlerApi)
 
 	// other tutorial
-	r := NewRouter()
+	r := server.NewRouter()
 	//r.HandleFunc("/todos", TodoIndex)
 	//r.HandleFunc("/todos/{todoId1}", TodoShow)
 	//http.HandleFunc("/hello", handler)
