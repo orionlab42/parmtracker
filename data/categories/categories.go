@@ -101,7 +101,7 @@ func GetCategories() Categories {
 	}
 	defer rows.Close()
 	categories := Categories{}
-	if rows.Next() {
+	for rows.Next() {
 		cat := Category{}
 		var createdAt string
 		var updatedAt string

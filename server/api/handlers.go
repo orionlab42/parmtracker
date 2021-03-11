@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/annakallo/parmtracker/data"
+	"github.com/annakallo/parmtracker/data/categories"
 	"github.com/annakallo/parmtracker/data/expenses"
 	"github.com/gorilla/mux"
 	"io"
@@ -20,7 +20,8 @@ func Index(w http.ResponseWriter, r *http.Request) {
 func Expenses(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(data.AllExpenses); err != nil {
+	expenses := expenses.GetExpenseEntries()
+	if err := json.NewEncoder(w).Encode(expenses); err != nil {
 		panic(err)
 	}
 }
@@ -29,7 +30,8 @@ func Expenses(w http.ResponseWriter, r *http.Request) {
 func Categories(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(data.AllCategories); err != nil {
+	categories := categories.GetCategories()
+	if err := json.NewEncoder(w).Encode(categories); err != nil {
 		panic(err)
 	}
 }
@@ -41,10 +43,11 @@ func EntryShow(w http.ResponseWriter, r *http.Request) {
 	_, _ = fmt.Fprintln(w, "The entry what we are searching, has the id:", entry)
 }
 
-// EntryNew is a handler for: /expenses/new
+// EntryNew is a handler for: /api/expenses/new
 func EntryNew(w http.ResponseWriter, r *http.Request) {
 	var entry expenses.ExpenseEntry
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	fmt.Printf("%+v\n", string(body))
 	if err != nil {
 		panic(err)
 	}
@@ -58,11 +61,12 @@ func EntryNew(w http.ResponseWriter, r *http.Request) {
 			panic(err)
 		}
 	}
-
-	t := data.RepoCreateEntry(entry)
+	fmt.Printf("%+v\n", entry)
+	entry.Insert()
+	expenses := expenses.GetExpenseEntries()
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
-	if err := json.NewEncoder(w).Encode(t); err != nil {
+	if err := json.NewEncoder(w).Encode(expenses); err != nil {
 		panic(err)
 	}
 }

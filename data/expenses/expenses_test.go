@@ -58,5 +58,5 @@ func TestExpenseSaveSeedData(t *testing.T) {
 		row.Insert()
 	}
 	entries := GetExpenseEntries()
-	assert.NotEqual(t, len(entries), 0)
+	assert.Equal(t, len(entries), 10)
 }

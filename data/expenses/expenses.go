@@ -95,7 +95,7 @@ func (entry *ExpenseEntry) Delete() error {
 
 func GetExpenseEntries() Expenses {
 	db := mysql.GetInstance()
-	stmt, _ := db.Prepare(`select * from expenses order by id DESC`)
+	stmt, _ := db.Prepare(`select * from expenses`)
 	defer stmt.Close()
 	rows, e := stmt.Query()
 	if e != nil {
@@ -104,7 +104,7 @@ func GetExpenseEntries() Expenses {
 	}
 	defer rows.Close()
 	expenses := Expenses{}
-	if rows.Next() {
+	for rows.Next() {
 		entry := ExpenseEntry{}
 		var createdAt string
 		var updatedAt string

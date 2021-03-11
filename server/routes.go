@@ -15,9 +15,11 @@ type Route struct {
 type Routes []Route
 
 var routes = Routes{
-	Route{"Index", "GET", "/", api.Index},
-	Route{"Expenses", "GET", "/api/expenses", api.Expenses},
-	Route{"Categories", "GET", "/api/categories", api.Categories},
-	Route{"EntryShow", "GET", "/expenses/{id}", api.EntryShow},
-	Route{"EntryNew", "POST", "/expenses/new", api.EntryNew},
+	Route{"Index", http.MethodGet, "/", api.Index},
+	Route{"Expenses", http.MethodGet, "/api/expenses", api.Expenses},
+	Route{"EntryNew", http.MethodPost, "/api/expenses", api.EntryNew},
+	Route{"Categories", http.MethodGet, "/api/categories", api.Categories},
+	//Route{"EntryNew", "POST", "/api/expenses/new", api.EntryNew},
+	//Route{"EntryShow", "GET", "/expenses/{id}", api.EntryShow},
+
 }
