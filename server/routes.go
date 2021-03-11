@@ -15,28 +15,9 @@ type Route struct {
 type Routes []Route
 
 var routes = Routes{
-	Route{
-		"Index",
-		"GET",
-		"/",
-		api.Index,
-	},
-	Route{
-		"TodoIndex",
-		"GET",
-		"/todos",
-		api.TodoIndex,
-	},
-	Route{
-		"TodoShow",
-		"GET",
-		"/todos/{todoId1}",
-		api.TodoShow,
-	},
-	Route{
-		"TodoCreate",
-		"POST",
-		"/todos",
-		api.TodoCreate,
-	},
+	Route{"Index", "GET", "/", api.Index},
+	Route{"Expenses", "GET", "/api/expenses", api.Expenses},
+	Route{"Categories", "GET", "/api/categories", api.Categories},
+	Route{"EntryShow", "GET", "/expenses/{id}", api.EntryShow},
+	Route{"EntryNew", "POST", "/expenses/new", api.EntryNew},
 }
