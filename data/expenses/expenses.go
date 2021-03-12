@@ -119,3 +119,30 @@ func GetExpenseEntries() Expenses {
 	}
 	return expenses
 }
+
+func GetExpenseEntry(entryId int) Expenses {
+	db := mysql.GetInstance()
+	stmt, _ := db.Prepare(`select * from expenses where id = ?`)
+	defer stmt.Close()
+	rows, e := stmt.Query(entryId)
+	if e != nil {
+		fmt.Printf("Error when preparing stmt in getting entry with id %d: %s", entryId, e.Error())
+		return Expenses{}
+	}
+	defer rows.Close()
+	expenses := Expenses{}
+	for rows.Next() {
+		entry := ExpenseEntry{}
+		var createdAt string
+		var updatedAt string
+		e := rows.Scan(&entry.Id, &entry.Title, &entry.Amount, &entry.Category, &entry.Shop, &createdAt, &updatedAt)
+		if e != nil {
+			fmt.Printf("Error when loading entry with id %d: %s", entryId, e.Error())
+			return Expenses{}
+		}
+		entry.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
+		entry.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
+		expenses = append(expenses, entry)
+	}
+	return expenses
+}

@@ -14,5 +14,5 @@ func main() {
 	expenses.UpdateExpensesTable()
 	categories.UpdateCategoriesTable()
 	r := server.NewRouter()
-	log.Fatal(http.ListenAndServe(":80", r))
+	log.Fatal(http.ListenAndServe(":12345", r))
 }

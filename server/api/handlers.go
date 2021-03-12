@@ -9,6 +9,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 )
 
 // Index is a handler for: /
@@ -36,14 +37,7 @@ func Categories(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// EntryShow is a handler for: /expenses/{id}
-func EntryShow(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	entry := vars["id"]
-	_, _ = fmt.Fprintln(w, "The entry what we are searching, has the id:", entry)
-}
-
-// EntryNew is a handler for: /api/expenses/new
+// EntryNew is a handler for: /api/expenses
 func EntryNew(w http.ResponseWriter, r *http.Request) {
 	var entry expenses.ExpenseEntry
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -63,9 +57,109 @@ func EntryNew(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("%+v\n", entry)
 	entry.Insert()
-	expenses := expenses.GetExpenseEntries()
+
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
+	if err := json.NewEncoder(w).Encode(entry); err != nil {
+		panic(err)
+	}
+}
+
+// EntryShow is a handler for: /expenses/{id}
+func EntryShow(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	entryId := vars["id"]
+	var entry expenses.ExpenseEntry
+	id, err := strconv.Atoi(entryId)
+	if err == nil {
+		fmt.Println(id)
+	}
+
+	if err := entry.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The entry with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			panic(err)
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(entry); err != nil {
+		panic(err)
+	}
+}
+
+// EntryUpdate is a handler for: /api/expenses
+func EntryUpdate(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	entryId := vars["id"]
+	var entry expenses.ExpenseEntry
+	id, err := strconv.Atoi(entryId)
+	if err == nil {
+		fmt.Println(id)
+	}
+
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	fmt.Printf("%+v\n", string(body))
+	if err != nil {
+		panic(err)
+	}
+	if err := r.Body.Close(); err != nil {
+		panic(err)
+	}
+
+	if err := entry.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The entry with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			panic(err)
+		}
+	}
+
+	if err := json.Unmarshal(body, &entry); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			panic(err)
+		}
+	}
+	fmt.Printf("%+v\n", entry)
+	entry.Save()
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
+	if err := json.NewEncoder(w).Encode(entry); err != nil {
+		panic(err)
+	}
+}
+
+// EntryDelete is a handler for: /api/expenses/{id}
+func EntryDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	entryId := vars["id"]
+	var entry expenses.ExpenseEntry
+	id, err := strconv.Atoi(entryId)
+	if err == nil {
+		fmt.Println(id)
+	}
+	//fmt.Println("Id: ", id)
+	//fmt.Println("Loading the entry with the Id: ",entry.Load(id))
+
+	if err := entry.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The entry with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			panic(err)
+		}
+	}
+
+	entry.Delete()
+	expenses := expenses.GetExpenseEntries()
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(expenses); err != nil {
 		panic(err)
 	}
