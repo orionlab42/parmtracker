@@ -7,15 +7,17 @@ import (
 )
 
 type Category struct {
-	Id           int       `json:"id"`
-	CategoryName string    `json:"category_name"`
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	Id            int       `json:"id"`
+	CategoryName  string    `json:"category_name"`
+	CategoryColor string    `json:"category_color"`
+	CategoryIcon  string    `json:"category_icon"`
+	CreatedAt     time.Time `json:"created_at"`
+	UpdatedAt     time.Time `json:"updated_at"`
 }
 
 type Categories []Category
 
-// Load trade order
+// Load category
 func (cat *Category) Load(id int) error {
 	db := mysql.GetInstance()
 	stmt, _ := db.Prepare(`select * from categories where id = ?`)
@@ -29,7 +31,7 @@ func (cat *Category) Load(id int) error {
 	if rows.Next() {
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&cat.Id, &cat.CategoryName, &createdAt, &updatedAt)
+		e := rows.Scan(&cat.Id, &cat.CategoryName, &cat.CategoryColor, &cat.CategoryIcon, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading id %v: %s", id, e.Error())
 			return e
@@ -49,10 +51,10 @@ func (cat *Category) Insert() error {
 		cat.UpdatedAt = time.Now().UTC()
 	}
 	db := mysql.GetInstance()
-	stmt, _ := db.Prepare(`insert categories set id=?, category_name=?, created_at=?, updated_at=?`)
+	stmt, _ := db.Prepare(`insert categories set id=?, category_name=?, category_color=?, category_icon=?, created_at=?, updated_at=?`)
 	defer stmt.Close()
 
-	res, e := stmt.Exec(cat.Id, cat.CategoryName, cat.CreatedAt, cat.UpdatedAt)
+	res, e := stmt.Exec(cat.Id, cat.CategoryName, &cat.CategoryColor, &cat.CategoryIcon, cat.CreatedAt, cat.UpdatedAt)
 	if e != nil {
 		fmt.Printf("Error when inserting category: %s", e.Error())
 		return e
@@ -67,10 +69,10 @@ func (cat *Category) Save() error {
 		cat.UpdatedAt = time.Now().UTC()
 	}
 	db := mysql.GetInstance()
-	stmt, _ := db.Prepare(`update categories set category_name=?, created_at=?, updated_at=? where id=?`)
+	stmt, _ := db.Prepare(`update categories set category_name=?, category_color=?, category_icon=?, created_at=?, updated_at=? where id=?`)
 	defer stmt.Close()
 
-	_, e := stmt.Exec(cat.CategoryName, cat.CreatedAt, cat.UpdatedAt, cat.Id)
+	_, e := stmt.Exec(cat.CategoryName, &cat.CategoryColor, &cat.CategoryIcon, cat.CreatedAt, cat.UpdatedAt, cat.Id)
 	if e != nil {
 		fmt.Printf("Error when saving category: %s", e.Error())
 		return e
@@ -105,7 +107,7 @@ func GetCategories() Categories {
 		cat := Category{}
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&cat.Id, &cat.CategoryName, &createdAt, &updatedAt)
+		e := rows.Scan(&cat.Id, &cat.CategoryName, &cat.CategoryColor, &cat.CategoryIcon, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading categories: %s", e.Error())
 			return Categories{}
