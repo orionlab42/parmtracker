@@ -37,6 +37,64 @@ func Categories(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// CategoryNew is a handler for: /api/categories
+func CategoryNew(w http.ResponseWriter, r *http.Request) {
+	var cat categories.Category
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	fmt.Printf("%+v\n", string(body))
+	if err != nil {
+		panic(err)
+	}
+	if err := r.Body.Close(); err != nil {
+		panic(err)
+	}
+	if err := json.Unmarshal(body, &cat); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			panic(err)
+		}
+	}
+	fmt.Printf("%+v\n", cat)
+	cat.Insert()
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
+	if err := json.NewEncoder(w).Encode(cat); err != nil {
+		panic(err)
+	}
+}
+
+// CategoryDelete is a handler for: /api/categories/{id}
+func CategoryDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	categoryId := vars["id"]
+	var cat categories.Category
+	id, err := strconv.Atoi(categoryId)
+	if err == nil {
+		fmt.Println(id)
+	}
+	//fmt.Println("Id: ", id)
+	//fmt.Println("Loading the entry with the Id: ",entry.Load(id))
+
+	if err := cat.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The category with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			panic(err)
+		}
+	}
+
+	cat.Delete()
+	categories := categories.GetCategories()
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(categories); err != nil {
+		panic(err)
+	}
+}
+
 // EntryNew is a handler for: /api/expenses
 func EntryNew(w http.ResponseWriter, r *http.Request) {
 	var entry expenses.ExpenseEntry

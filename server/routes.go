@@ -22,6 +22,8 @@ var routes = Routes{
 	Route{"EntryUpdate", http.MethodPut, "/api/expenses/{id}", api.EntryUpdate},
 	Route{"EntryDelete", http.MethodDelete, "/api/expenses/{id}", api.EntryDelete},
 	Route{"Categories", http.MethodGet, "/api/categories", api.Categories},
+	Route{"CategoryNew", http.MethodPost, "/api/categories", api.CategoryNew},
+	Route{"CategoryDelete", http.MethodDelete, "/api/categories/{id}", api.CategoryDelete},
 	//Route{"EntryNew", "POST", "/api/expenses/new", api.EntryNew},
 	//Route{"EntryShow", "GET", "/expenses/{id}", api.EntryShow},
 

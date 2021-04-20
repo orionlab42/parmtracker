@@ -94,7 +94,7 @@ func (cat *Category) Delete() error {
 
 func GetCategories() Categories {
 	db := mysql.GetInstance()
-	stmt, _ := db.Prepare(`select * from categories order by id DESC`)
+	stmt, _ := db.Prepare(`select * from categories order by category_name ASC`)
 	defer stmt.Close()
 	rows, e := stmt.Query()
 	if e != nil {
