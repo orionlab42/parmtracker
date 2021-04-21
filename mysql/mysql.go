@@ -16,7 +16,7 @@ var conn *sql.DB
 func GetInstance() *sql.DB {
 	if conn == nil {
 		var e error
-		conn, e = sql.Open("mysql", "root:admin@tcp(localhost:3306)/parmtracker")
+		conn, e = sql.Open("mysql", "parmtracker:OpIwMkHsml3UKoN4IKKD@tcp(localhost:3306)/parmtracker")
 		if e != nil {
 			fmt.Println(e) // needs a logger
 			panic(e)
