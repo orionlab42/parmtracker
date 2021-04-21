@@ -23,4 +23,5 @@ func UpdateCategoriesTable() {
 		panic(e)
 	}
 	fmt.Println("Table categories created.")
+
 }

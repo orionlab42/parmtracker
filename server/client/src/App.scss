@@ -1,0 +1,185 @@
+@charset "utf-8";
+
+/**
+ * Bulma customization
+ */
+
+@import "../node_modules/bulma/bulma.sass";
+
+@import "assets/normalize";
+
+
+/* taking out the default styling of any button */
+button {
+        border: none;
+        background-color: Transparent;
+        &:active, &:hover, &:focus {
+           outline: 0;
+           background-color: Transparent;
+        }
+    }
+
+/** Navbar */
+
+.navbar {
+    margin: 0 auto;
+    padding: 0 0 60px 0;
+    max-width: 1152px;
+    @media (max-width: 376px){
+        padding: 5px 0 50px 0;
+    }
+    .navbar-brand {
+        .center-navbar-title {
+            margin-top: 25px;
+            @media (max-width: 376px){
+                margin: 15px 0 0 25px;
+            }
+       }
+       .navbar-burger {
+            margin-right: 5px;
+       }
+    }
+    .navbar-item {
+        .mdi {
+            margin-right: 5px;
+        }
+        @media (max-width: 376px){
+            text-align: center;
+        }
+    }
+    .navbar-item:last-child {
+        padding-right: 0px;
+        @media (max-width: 376px){
+                    padding-right: 12px;
+                }
+    }
+}
+
+/** --- Expenses page --- */
+/** Control area */
+
+/* Add entry */
+.center-text {
+    text-align: center;
+    margin-top: 0;
+}
+
+.add-more {
+    text-align: center;
+    .add-more-button {
+        width: 150px;
+    }
+}
+
+/* Filters and search bar */
+.filters {
+    padding: 15px 0;
+    display: flex;
+    @media (max-width: 376px){
+        text-align: center;
+        padding: 30px 0;
+    }
+    .filter-position {
+        float: right;
+        padding-top: 20px;
+        padding-bottom: 30px;
+        @media (max-width: 376px){
+            float: none;
+            padding: 0 2px;
+        }
+    }
+    .filter-time {
+        margin-right: 10px;
+    }
+    .filter-category {
+        margin-right: 10px;
+        .mdi {
+            margin-right: 5px;
+        }
+    }
+    .add-category {
+        padding-top: 20px;
+        float: left;
+        .add-category-button {
+            // margin-right: 10px;
+        }
+        .span[title]:hover:after {
+            content: attr(title);
+            color: red;
+            position: absolute;
+              top: -100%;
+              left: 0;
+        }
+    }
+    .search-box {
+        float: left;
+        width: 295px;
+        padding-top: 20px;
+        padding-bottom: 30px;
+        margin-right: 10px;
+        @media (max-width: 376px){
+            float: none;
+            padding-bottom: 4px;
+            width: 292px;
+        }
+    }
+}
+
+/** Table area */
+.table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 20px;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.tag .mdi {
+    margin-right: 5px;
+}
+
+.total-text {
+    margin-bottom: 50px;
+}
+
+
+/** Categories page */
+
+.category-container {
+    width: 100%;
+    .category-table {
+        width: 70%;
+        float: left;
+        padding-right: 30px;
+    }
+    .add-new-category {
+        width: 30%;
+        float: right;
+        .new-category-form {
+            width: auto;
+        }
+
+    }
+    .add-new-category-button {
+        text-align: center;
+    }
+    .field {
+        justify-content: center;
+    }
+}
+
+/** --- Forms: adding new entry --- */
+form {
+    margin-left: auto;
+    margin-right: auto;
+    width: 400px;
+    @media (max-width: 376px){
+        width: 280px;
+    }
+}
+
+.is-delete {
+    cursor: pointer;
+}

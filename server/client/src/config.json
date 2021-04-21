@@ -1,0 +1,4 @@
+{
+  "apiEndpoint": "https://jsonplaceholder.typicode.com/posts",
+  "apiUrl": "http://localhost:3000/api"
+}

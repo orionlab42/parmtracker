@@ -51,7 +51,6 @@ func TestCategoriesSaveSeedData(t *testing.T) {
 		{CategoryName: "saving", CategoryColor: "#b0a368", CategoryIcon: "mdi-bank"},
 		{CategoryName: "services", CategoryColor: "#e6e6fa", CategoryIcon: "mdi-home-plus-outline"},
 		{CategoryName: "healthcare", CategoryColor: "#c39797", CategoryIcon: "mdi-medical-bag"}}
-
 	for _, row := range table {
 		row.Insert()
 	}
