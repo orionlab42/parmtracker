@@ -21,12 +21,12 @@ export function getEntry(id) {
 
 export function saveEntry(entry) {
     entry.category = parseInt(entry.category)
-    entry.amount = parseInt(entry.amount)
+    entry.amount = parseFloat(entry.amount)
     if (entry.id) {
         const body = { ...entry };
         delete body.id;
         body.category = parseInt(body.category)
-        body.amount = parseInt(body.amount)
+        body.amount = parseFloat(body.amount)
         return http.put(entryUrl(entry.id), body);
     }
     return http.post(apiEndpoint, entry);
