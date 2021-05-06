@@ -9,10 +9,10 @@ func UpdateExpensesTable() {
 
 	query := `create table if not exists expenses (
 	id int(11) unsigned not null auto_increment,
-	title varchar(255)  not null,
+	entry_name varchar(255)  not null,
 	amount float not null,
 	category int(11),
-	shop varchar(255),
+	entry_date datetime,
 	created_at datetime not null default now(),
 	updated_at datetime not null default now(),
 	PRIMARY KEY (id)

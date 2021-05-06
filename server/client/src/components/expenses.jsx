@@ -23,7 +23,7 @@ class Entries extends Component {
         selectedCategory: 0,
         searchQuery: '',
         pageSize: 4,
-        sortColumn: {path: 'id', order: 'asc'}
+        sortColumn: {path: 'entry_date', order: 'desc'}
     };
 
     async componentDidMount() {

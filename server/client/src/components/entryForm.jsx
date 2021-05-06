@@ -3,14 +3,17 @@ import Joi from 'joi-browser';
 import Form from './common/form';
 import {getCategories} from "../services/categoryService";
 import {getEntry, saveEntry} from "../services/entryService";
+import DatePicker from 'react-datepicker';
+
+import "react-datepicker/dist/react-datepicker.css";
 
 class EntryForm extends Form {
     state = {
         data: {
-            title: '',
+            entry_name: '',
             amount: '',
             category: '',
-            shop: ''
+            entry_date: new Date(),
         },
         categories: [],
         errors: {}
@@ -18,7 +21,7 @@ class EntryForm extends Form {
 
     schema = {
         id: Joi.number(),
-        title: Joi.string()
+        entry_name: Joi.string()
             .required()
             .label('Title'),
         amount: Joi.number()
@@ -28,10 +31,7 @@ class EntryForm extends Form {
         category: Joi.number()
             .required()
             .label('Category'),
-        shop: Joi.string()
-            .required()
-            .label('Shop'),
-        date: Joi.date(),
+        entry_date: Joi.date(),
     };
 
     populateCategories = async () => {
@@ -61,10 +61,10 @@ class EntryForm extends Form {
     mapToViewModel(entry) {
         return {
             id: entry.id,
-            title: entry.title,
+            entry_name: entry.entry_name,
             amount: entry.amount,
             category: entry.category,
-            shop: entry.shop
+            entry_date: entry.entry_date,
         };
     }
 
@@ -75,15 +75,32 @@ class EntryForm extends Form {
         console.log('Submitted');
     };
 
+    handleDateChange = (newDate) => {
+        const data = {...this.state.data};
+        data.entry_date = newDate;
+        this.setState({data});
+    };
+
     render() {
         return (
             <div className="container">
                 <h1 className="title center-text">New entry</h1>
                 <form onSubmit={this.handleSubmit}>
-                    {this.renderInput('title', 'Title')}
+                    {this.renderInput('entry_name', 'Name')}
                     {this.renderInput('amount', 'Amount')}
                     {this.renderSelect('category', 'Category', this.state.categories)}
-                    {this.renderInput('shop', 'Shop')}
+                    <div className="field">
+                        <label htmlFor="Date" className="label">Date</label>
+                        <div className="control picker">
+                            <DatePicker
+                                id="date"
+                                selected={ this.state.data.entry_date}
+                                onChange={this.handleDateChange}
+                                name="Date"
+                                dateFormat={"dd/MM/yyyy"}
+                            />
+                        </div>
+                    </div>
                     {this.renderButton("Save")}
                 </form>
             </div>
@@ -92,3 +109,4 @@ class EntryForm extends Form {
 }
 
 export default EntryForm;
+

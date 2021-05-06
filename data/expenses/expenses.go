@@ -8,10 +8,10 @@ import (
 
 type ExpenseEntry struct {
 	Id        int       `json:"id"`
-	Title     string    `json:"title"`
+	Name      string    `json:"entry_name"`
 	Amount    float64   `json:"amount"`
 	Category  int       `json:"category"`
-	Shop      string    `json:"shop"`
+	Date      time.Time `json:"entry_date"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -30,13 +30,15 @@ func (entry *ExpenseEntry) Load(id int) error {
 	}
 	defer rows.Close()
 	if rows.Next() {
+		var date string
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&entry.Id, &entry.Title, &entry.Amount, &entry.Category, &entry.Shop, &createdAt, &updatedAt)
+		e := rows.Scan(&entry.Id, &entry.Name, &entry.Amount, &entry.Category, &date, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading id %v: %s", id, e.Error())
 			return e
 		}
+		entry.Date, _ = time.Parse(mysql.MysqlDateFormat, date)
 		entry.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
 		entry.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
 	}
@@ -52,10 +54,10 @@ func (entry *ExpenseEntry) Insert() error {
 		entry.UpdatedAt = time.Now().UTC()
 	}
 	db := mysql.GetInstance()
-	stmt, _ := db.Prepare(`insert expenses set id=?, title=?, amount=?, category=?, shop=?, created_at=?, updated_at=?`)
+	stmt, _ := db.Prepare(`insert expenses set id=?, entry_name=?, amount=?, category=?, entry_date=?, created_at=?, updated_at=?`)
 	defer stmt.Close()
 
-	res, e := stmt.Exec(entry.Id, entry.Title, entry.Amount, entry.Category, entry.Shop, entry.CreatedAt, entry.UpdatedAt)
+	res, e := stmt.Exec(entry.Id, entry.Name, entry.Amount, entry.Category, entry.Date, entry.CreatedAt, entry.UpdatedAt)
 	if e != nil {
 		fmt.Printf("Error when inserting expense entry: %s", e.Error())
 		return e
@@ -70,10 +72,10 @@ func (entry *ExpenseEntry) Save() error {
 		entry.UpdatedAt = time.Now().UTC()
 	}
 	db := mysql.GetInstance()
-	stmt, _ := db.Prepare(`update expenses set title=?, amount=?, category=?, shop=?, created_at=?, updated_at=? where id=?`)
+	stmt, _ := db.Prepare(`update expenses set entry_name=?, amount=?, category=?, entry_date=?, created_at=?, updated_at=? where id=?`)
 	defer stmt.Close()
 
-	_, e := stmt.Exec(entry.Title, entry.Amount, entry.Category, entry.Shop, entry.CreatedAt, entry.UpdatedAt, entry.Id)
+	_, e := stmt.Exec(entry.Name, entry.Amount, entry.Category, entry.Date, entry.CreatedAt, entry.UpdatedAt, entry.Id)
 	if e != nil {
 		fmt.Printf("Error when saving expense entry: %s", e.Error())
 		return e
@@ -95,7 +97,7 @@ func (entry *ExpenseEntry) Delete() error {
 
 func GetExpenseEntries() Expenses {
 	db := mysql.GetInstance()
-	stmt, _ := db.Prepare(`select * from expenses`)
+	stmt, _ := db.Prepare(`select * from expenses `)
 	defer stmt.Close()
 	rows, e := stmt.Query()
 	if e != nil {
@@ -106,13 +108,15 @@ func GetExpenseEntries() Expenses {
 	expenses := Expenses{}
 	for rows.Next() {
 		entry := ExpenseEntry{}
+		var date string
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&entry.Id, &entry.Title, &entry.Amount, &entry.Category, &entry.Shop, &createdAt, &updatedAt)
+		e := rows.Scan(&entry.Id, &entry.Name, &entry.Amount, &entry.Category, &date, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading entries: %s", e.Error())
 			return Expenses{}
 		}
+		entry.Date, _ = time.Parse(mysql.MysqlDateFormat, date)
 		entry.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
 		entry.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
 		expenses = append(expenses, entry)
@@ -133,13 +137,15 @@ func GetExpenseEntry(entryId int) Expenses {
 	expenses := Expenses{}
 	for rows.Next() {
 		entry := ExpenseEntry{}
+		var date string
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&entry.Id, &entry.Title, &entry.Amount, &entry.Category, &entry.Shop, &createdAt, &updatedAt)
+		e := rows.Scan(&entry.Id, &entry.Name, &entry.Amount, &entry.Category, &date, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading entry with id %d: %s", entryId, e.Error())
 			return Expenses{}
 		}
+		entry.Date, _ = time.Parse(mysql.MysqlDateFormat, date)
 		entry.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
 		entry.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
 		expenses = append(expenses, entry)

@@ -8,10 +8,10 @@ import (
 
 func TestExpenseInsertAndFetch(t *testing.T) {
 	entry := ExpenseEntry{
-		Title:     "Dinner A",
+		Name:      "Dinner A",
 		Amount:    25,
 		Category:  1,
-		Shop:      "Lidl",
+		Date:      time.Now().UTC(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}
@@ -25,34 +25,37 @@ func TestExpenseInsertAndFetch(t *testing.T) {
 
 func TestExpenseSave(t *testing.T) {
 	entry := ExpenseEntry{
-		Title:     "Dinner A",
+		Name:      "Dinner A",
 		Amount:    25,
 		Category:  1,
-		Shop:      "Lidl",
+		Date:      time.Now().UTC(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}
 	e := entry.Insert()
 	assert.Nil(t, e)
-	entry.Shop = "Mercadona"
+	entry.Name = "Mercadona"
 	entry.Save()
-	assert.Equal(t, entry.Shop, "Mercadona")
+	assert.Equal(t, entry.Name, "Mercadona")
 	e = entry.Delete()
 	assert.Nil(t, e)
 }
 
 func TestExpenseSaveSeedData(t *testing.T) {
+	layout := "2006-01-02T15:04:05.000Z"
+	strStart := "2020-12-12T08:00:00.371Z"
+	t1, _ := time.Parse(layout, strStart)
 	table := []ExpenseEntry{
-		{Title: "Weekly big food", Amount: 11, Shop: "Mercadona"},
-		{Title: "Weekly big food", Amount: 111, Category: 1, Shop: "Lidl"},
-		{Title: "Sushi Wednesday", Amount: 1, Category: 2, Shop: "Koyo"},
-		{Title: "Lunch", Amount: 11, Category: 2, Shop: "KFC"},
-		{Title: "B-day gift Roser", Amount: 111, Category: 3, Shop: "Yves Rocher"},
-		{Title: "Weekly big food", Amount: 111, Category: 1, Shop: "Corte Ingles"},
-		{Title: "Weekly big food", Amount: 1.1, Category: 1, Shop: "Lidl"},
-		{Title: "Burger Wednesday", Amount: 11, Category: 2, Shop: "Goiko"},
-		{Title: "Lunch", Amount: 1, Category: 2, Shop: "Burger King"},
-		{Title: "B-day gift Gabri", Amount: 1111, Category: 3, Shop: "Artisanal beers"}}
+		{Name: "Weekly big food", Amount: 11, Date: t1},
+		{Name: "Weekly big food", Amount: 111, Category: 1, Date: time.Now().UTC()},
+		{Name: "Sushi Wednesday", Amount: 1, Category: 2, Date: time.Now().UTC()},
+		{Name: "Lunch", Amount: 11, Category: 2, Date: time.Now().UTC()},
+		{Name: "B-day gift Roser", Amount: 111, Category: 3, Date: time.Now().UTC()},
+		{Name: "Weekly big food", Amount: 111, Category: 1, Date: time.Now().UTC()},
+		{Name: "Weekly big food", Amount: 1.1, Category: 1, Date: time.Now().UTC()},
+		{Name: "Burger Wednesday", Amount: 11, Category: 2, Date: time.Now().UTC()},
+		{Name: "Lunch", Amount: 1, Category: 2, Date: time.Now().UTC()},
+		{Name: "B-day gift Gabri", Amount: 1111, Category: 3, Date: time.Now().UTC()}}
 
 	for _, row := range table {
 		row.Insert()
