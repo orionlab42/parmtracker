@@ -76,8 +76,12 @@ button {
     padding: 15px 0;
     display: flex;
     @media (max-width: 376px){
-        text-align: center;
-        padding: 30px 0;
+        padding: 30px 15px;
+        width: auto;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: center;
     }
     .filter-position {
         float: right;
@@ -90,11 +94,19 @@ button {
     }
     .filter-time {
         margin-right: 10px;
+        @media (max-width: 376px){
+                    padding-top: 4px;
+                    margin-right: 0;
+                }
     }
     .filter-category {
         margin-right: 10px;
         .mdi {
             margin-right: 5px;
+        }
+        @media (max-width: 376px){
+            padding-top: 4px;
+            margin-right: 0;
         }
     }
     .add-category {
@@ -102,6 +114,9 @@ button {
         float: left;
         .add-category-button {
             // margin-right: 10px;
+        }
+         @media (max-width: 376px){
+            padding-top: 8px;
         }
         .span[title]:hover:after {
             content: attr(title);
@@ -118,9 +133,10 @@ button {
         padding-bottom: 30px;
         margin-right: 10px;
         @media (max-width: 376px){
-            float: none;
+            float: left;
             padding-bottom: 4px;
             width: 292px;
+            margin-right: 0;
         }
     }
 }
@@ -153,17 +169,31 @@ button {
         width: 70%;
         float: left;
         padding-right: 30px;
+         @media (max-width: 376px){
+            float: none;
+            width: 100%;
+            padding-right: 0;
+            padding: 0 10px;
+        }
     }
     .add-new-category {
         width: 30%;
         float: right;
-        .new-category-form {
-            width: auto;
+        @media (max-width: 376px){
+            float: none;
+            width: 100%;
         }
-
+    }
+    form {
+        @media (max-width: 376px){
+            padding-bottom: 50px;
+        }
     }
     .add-new-category-button {
         text-align: center;
+        @media (max-width: 376px){
+            padding-bottom: 50px;
+        }
     }
     .field {
         justify-content: center;

@@ -134,7 +134,6 @@ class Entries extends Component {
                 </div>
 
                 <div className="filters">
-
                     <SearchBox
                         value={searchQuery}
                         onChange={this.handleSearch}

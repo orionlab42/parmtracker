@@ -10611,8 +10611,12 @@ button:active, button:hover, button:focus {
 }
 @media (max-width: 376px) {
   .filters {
-    text-align: center;
-    padding: 30px 0;
+    padding: 30px 15px;
+    width: auto;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
   }
 }
 .filters .filter-position {
@@ -10629,15 +10633,32 @@ button:active, button:hover, button:focus {
 .filters .filter-time {
   margin-right: 10px;
 }
+@media (max-width: 376px) {
+  .filters .filter-time {
+    padding-top: 4px;
+    margin-right: 0;
+  }
+}
 .filters .filter-category {
   margin-right: 10px;
 }
 .filters .filter-category .mdi {
   margin-right: 5px;
 }
+@media (max-width: 376px) {
+  .filters .filter-category {
+    padding-top: 4px;
+    margin-right: 0;
+  }
+}
 .filters .add-category {
   padding-top: 20px;
   float: left;
+}
+@media (max-width: 376px) {
+  .filters .add-category {
+    padding-top: 8px;
+  }
 }
 .filters .add-category .span[title]:hover:after {
   content: attr(title);
@@ -10655,9 +10676,10 @@ button:active, button:hover, button:focus {
 }
 @media (max-width: 376px) {
   .filters .search-box {
-    float: none;
+    float: left;
     padding-bottom: 4px;
     width: 292px;
+    margin-right: 0;
   }
 }
 
@@ -10689,15 +10711,36 @@ button:active, button:hover, button:focus {
   float: left;
   padding-right: 30px;
 }
+@media (max-width: 376px) {
+  .category-container .category-table {
+    float: none;
+    width: 100%;
+    padding-right: 0;
+    padding: 0 10px;
+  }
+}
 .category-container .add-new-category {
   width: 30%;
   float: right;
 }
-.category-container .add-new-category .new-category-form {
-  width: auto;
+@media (max-width: 376px) {
+  .category-container .add-new-category {
+    float: none;
+    width: 100%;
+  }
+}
+@media (max-width: 376px) {
+  .category-container form {
+    padding-bottom: 50px;
+  }
 }
 .category-container .add-new-category-button {
   text-align: center;
+}
+@media (max-width: 376px) {
+  .category-container .add-new-category-button {
+    padding-bottom: 50px;
+  }
 }
 .category-container .field {
   justify-content: center;
