@@ -7,9 +7,8 @@ func Update() {
 	v varchar(255) NOT NULL default '',
 	PRIMARY KEY (k)
 	);`
-
-	c := GetInstance()
-	_, e := c.Exec(query)
+	db := GetInstance().GetConn()
+	_, e := db.Exec(query)
 	if e != nil {
 		panic(e)
 	}

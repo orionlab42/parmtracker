@@ -20,7 +20,7 @@ type Expenses []ExpenseEntry
 
 // Load trade order
 func (entry *ExpenseEntry) Load(id int) error {
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`select * from expenses where id = ?`)
 	defer stmt.Close()
 	rows, e := stmt.Query(id)
@@ -53,7 +53,7 @@ func (entry *ExpenseEntry) Insert() error {
 	if entry.UpdatedAt.IsZero() {
 		entry.UpdatedAt = time.Now().UTC()
 	}
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`insert expenses set id=?, entry_name=?, amount=?, category=?, entry_date=?, created_at=?, updated_at=?`)
 	defer stmt.Close()
 
@@ -71,7 +71,7 @@ func (entry *ExpenseEntry) Save() error {
 	if entry.UpdatedAt.IsZero() {
 		entry.UpdatedAt = time.Now().UTC()
 	}
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`update expenses set entry_name=?, amount=?, category=?, entry_date=?, created_at=?, updated_at=? where id=?`)
 	defer stmt.Close()
 
@@ -84,7 +84,7 @@ func (entry *ExpenseEntry) Save() error {
 }
 
 func (entry *ExpenseEntry) Delete() error {
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`delete from expenses where id=?`)
 	defer stmt.Close()
 	_, e := stmt.Exec(entry.Id)
@@ -96,7 +96,7 @@ func (entry *ExpenseEntry) Delete() error {
 }
 
 func GetExpenseEntries() Expenses {
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`select * from expenses `)
 	defer stmt.Close()
 	rows, e := stmt.Query()
@@ -125,7 +125,7 @@ func GetExpenseEntries() Expenses {
 }
 
 func GetExpenseEntry(entryId int) Expenses {
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`select * from expenses where id = ?`)
 	defer stmt.Close()
 	rows, e := stmt.Query(entryId)

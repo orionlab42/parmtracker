@@ -114,7 +114,15 @@ class Entries extends Component {
             categories,
         } = this.state;
 
-        if (this.state.entries.length === 0) return <h5 className="title is-5 center-text">There are no entries!</h5>
+        if (this.state.entries.length === 0) return (
+            <div>
+                <h3 className="title is-3 center-text">Expenses</h3>
+                <h5 className="title is-5 center-text">There are no entries!</h5>
+                <div className="add-more">
+                    <Link to="/expenses/new" className="button is-link is-medium add-more-button">+</Link>
+                </div>
+            </div>
+            )
         const {totalCount, entries, total} = this.getPagedData();
         // const {history} = this.props;
         return (

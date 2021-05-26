@@ -1,8 +1,12 @@
 package categories
 
 import (
-	"fmt"
+	"github.com/annakallo/parmtracker/log"
 	"github.com/annakallo/parmtracker/mysql"
+)
+
+const (
+	LogPrefix = "Version categories"
 )
 
 func UpdateCategoriesTable() {
@@ -17,11 +21,11 @@ func UpdateCategoriesTable() {
 	PRIMARY KEY (id)
 	);`
 
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	_, e := db.Exec(query)
 	if e != nil {
-		panic(e)
+		log.GetInstance().Errorf(LogPrefix, "Trouble at creating expenses table: ", e)
 	}
-	fmt.Println("Table categories created.")
+	log.GetInstance().Infof(LogPrefix, "Table expenses created.")
 
 }

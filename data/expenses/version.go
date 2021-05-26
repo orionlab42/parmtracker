@@ -1,8 +1,12 @@
 package expenses
 
 import (
-	"fmt"
+	"github.com/annakallo/parmtracker/log"
 	"github.com/annakallo/parmtracker/mysql"
+)
+
+const (
+	LogPrefix = "Version expenses"
 )
 
 func UpdateExpensesTable() {
@@ -18,10 +22,10 @@ func UpdateExpensesTable() {
 	PRIMARY KEY (id)
 	);`
 
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	_, e := db.Exec(query)
 	if e != nil {
-		panic(e)
+		log.GetInstance().Errorf(LogPrefix, "Trouble at creating expenses table: ", e)
 	}
-	fmt.Println("Table expenses created.")
+	log.GetInstance().Infof(LogPrefix, "Table expenses created.")
 }

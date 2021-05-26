@@ -1,0 +1,16 @@
+{
+  "LogLevel": 1,
+  "LogFile": "parmtracker.log",
+  "MysqlIP": "localhost",
+  "MysqlPort": "3306",
+  "MysqlUser": "parmtracker",
+  "MysqlPass": "password",
+  "MysqlDB": "parmtracker",
+  "WebPort": 8080,
+  "WebPrefix": "/client",
+  "WebUsername": "admin",
+  "WebPassword": "12345",
+  "Client": "server/client/build/",
+  "Static": "server/static/",
+  "Template": "server/template/"
+}

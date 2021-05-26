@@ -19,7 +19,7 @@ type Categories []Category
 
 // Load category
 func (cat *Category) Load(id int) error {
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`select * from categories where id = ?`)
 	defer stmt.Close()
 	rows, e := stmt.Query(id)
@@ -50,7 +50,7 @@ func (cat *Category) Insert() error {
 	if cat.UpdatedAt.IsZero() {
 		cat.UpdatedAt = time.Now().UTC()
 	}
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`insert categories set id=?, category_name=?, category_color=?, category_icon=?, created_at=?, updated_at=?`)
 	defer stmt.Close()
 
@@ -68,7 +68,7 @@ func (cat *Category) Save() error {
 	if cat.UpdatedAt.IsZero() {
 		cat.UpdatedAt = time.Now().UTC()
 	}
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`update categories set category_name=?, category_color=?, category_icon=?, created_at=?, updated_at=? where id=?`)
 	defer stmt.Close()
 
@@ -81,7 +81,7 @@ func (cat *Category) Save() error {
 }
 
 func (cat *Category) Delete() error {
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`delete from categories where id=?`)
 	defer stmt.Close()
 	_, e := stmt.Exec(cat.Id)
@@ -93,7 +93,7 @@ func (cat *Category) Delete() error {
 }
 
 func GetCategories() Categories {
-	db := mysql.GetInstance()
+	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`select * from categories order by category_name ASC`)
 	defer stmt.Close()
 	rows, e := stmt.Query()
