@@ -24,6 +24,7 @@ func updateV1M0(version string) string {
 		query := `create table if not exists categories (
 					id int(11) unsigned not null auto_increment,
 					category_name varchar(255)  not null,
+					category_color varchar(255),
 					category_icon varchar(255),
 					created_at datetime not null default now(),
 					updated_at datetime not null default now(),
@@ -41,12 +42,27 @@ func updateV1M0(version string) string {
 	}
 
 	if version == "v1.0-0" {
-		query := `alter table categories add category_color varchar(255) after category_name;`
-		_, e := db.Exec(query)
-		if e != nil {
-			log.GetInstance().Errorf(LogPrefix, "Trouble at updating categories table: ", e)
-			return version
+		defaultCategories := []Category{
+			{CategoryName: "groceries", CategoryColor: "#dfc6c6", CategoryIcon: "mdi-food-apple"},
+			{CategoryName: "restaurant", CategoryColor: "#a4a4a4", CategoryIcon: "mdi-food-fork-drink"},
+			{CategoryName: "gift", CategoryColor: "#f08080", CategoryIcon: "mdi-gift"},
+			{CategoryName: "housing", CategoryColor: "#badcea", CategoryIcon: "mdi-home"},
+			{CategoryName: "transportation", CategoryColor: "#fff68f", CategoryIcon: "mdi-tram"},
+			{CategoryName: "utilities", CategoryColor: "#ffc000", CategoryIcon: "mdi-hand-water"},
+			{CategoryName: "insurance", CategoryColor: "#817171", CategoryIcon: "mdi-shield-home"},
+			{CategoryName: "saving", CategoryColor: "#b0a368", CategoryIcon: "mdi-bank"},
+			{CategoryName: "services", CategoryColor: "#e6e6fa", CategoryIcon: "mdi-home-plus-outline"},
+			{CategoryName: "healthcare", CategoryColor: "#c39797", CategoryIcon: "mdi-medical-bag"}}
+		for _, cat := range defaultCategories {
+			stmt, _ := db.Prepare(`insert categories set category_name=?, category_color=?, category_icon=?`)
+			_, e := stmt.Exec(cat.CategoryName, cat.CategoryColor, cat.CategoryIcon)
+			if e != nil {
+				log.GetInstance().Errorf(LogPrefix, "Trouble when inserting default category in categories table: ", e.Error())
+				return version
+			}
+			stmt.Close()
 		}
+
 		log.GetInstance().Infof(LogPrefix, "Table categories updated.")
 		version = "v1.0-1"
 		settings.UpdateVersion(PackageName, version)
