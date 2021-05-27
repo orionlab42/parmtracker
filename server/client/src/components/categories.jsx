@@ -11,7 +11,8 @@ import {Route} from "react-router-dom";
 class Categories extends Component {
     state = {
         categories: [],
-        sortColumn: {path: 'id', order: 'asc'}
+        sortColumn: {path: 'id', order: 'asc'},
+        addButtonToggle: false
     };
 
     async componentDidMount() {
@@ -38,21 +39,31 @@ class Categories extends Component {
         }
     };
 
+    handleToggle = () => {
+        let addButtonToggle = this.state.addButtonToggle;
+        addButtonToggle = !addButtonToggle;
+        this.setState({addButtonToggle});
+    }
+
+
     render() {
-        const {categories} = this.state;
+        const {categories, addButtonToggle} = this.state;
         return (
             <div className="container">
                 <div className="category-container">
                     <div className="add-new-category">
                         <div className="add-new-category-button">
-                            <Link to="/categories/new" className="button is-link is-medium add-more-button">+</Link>
+                            <Link to="/categories/new"
+                                  className="button is-link is-medium add-more-button"
+                                  onClick={this.handleToggle}
+                            >{addButtonToggle ? "x" : "+"}</Link>
                         </div>
+                        {addButtonToggle &&
                         <Route
                             path="/categories/new"
-                            render={(props) => (
-                                <CategoryForm {...props} onUpdate={this.handleUpdate}/>
-                            )}
-                        />
+                            render={(props) => (<CategoryForm {...props}
+                                                              onUpdate={this.handleUpdate}/>)}
+                        />}
                     </div>
                     {(categories.length === 0) && <h5 className="title is-5 center-text total-text">There are no categories. Please add new ones.</h5>}
                     <CategoriesList

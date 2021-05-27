@@ -10736,6 +10736,7 @@ button:active, button:hover, button:focus {
 }
 .category-container .add-new-category-button {
   text-align: center;
+  padding-bottom: 50px;
 }
 @media (max-width: 376px) {
   .category-container .add-new-category-button {
