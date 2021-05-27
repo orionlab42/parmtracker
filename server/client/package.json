@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@auth0/auth0-spa-js": "^1.15.0",
     "@mdi/font": "^5.9.55",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
