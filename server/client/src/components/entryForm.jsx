@@ -2,7 +2,7 @@ import React from "react";
 import Joi from 'joi-browser';
 import Form from './common/form';
 import {getCategories} from "../services/categoryService";
-import {getEntry, saveEntry} from "../services/entryService";
+import {getEntry, saveEntry, duplicateEntry} from "../services/entryService";
 import DatePicker from 'react-datepicker';
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -64,7 +64,7 @@ class EntryForm extends Form {
             entry_name: entry.entry_name,
             amount: entry.amount,
             category: entry.category,
-            entry_date: entry.entry_date,
+            entry_date: Date.parse(entry.entry_date),
         };
     }
 
@@ -81,11 +81,28 @@ class EntryForm extends Form {
         this.setState({data});
     };
 
+    doDuplicate = async () => {
+        await duplicateEntry(this.state.data);
+        this.props.history.push("/expenses");
+    };
+
+    renderDuplicateButton = () => {
+        if (this.state.data.id === undefined) {
+            return <h1 className="title center-text">New entry</h1>;
+        }
+        return <div className="field duplicate-button">
+                    <button className="button is-link center-text"
+                            onClick={this.doDuplicate}>
+                        Duplicate
+                    </button></div>;
+    }
+
     render() {
         return (
             <div className="container">
-                <h1 className="title center-text">New entry</h1>
+                {this.renderDuplicateButton()}
                 <form onSubmit={this.handleSubmit}>
+
                     {this.renderInput('entry_name', 'Name')}
                     {this.renderInput('amount', 'Amount')}
                     {this.renderSelect('category', 'Category', this.state.categories)}

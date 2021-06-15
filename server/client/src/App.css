@@ -10796,4 +10796,23 @@ form {
   box-shadow: 0 0 0 0.125em rgba(50, 115, 220, 0.25);
 }
 
+.duplicate-button {
+  overflow: hidden;
+  width: 400px;
+  margin: 0 auto;
+}
+.duplicate-button button {
+  float: right;
+}
+@media (max-width: 376px) {
+  .duplicate-button button {
+    margin-right: 50px;
+  }
+}
+@media (max-width: 376px) {
+  .duplicate-button {
+    width: 100%;
+  }
+}
+
 /*# sourceMappingURL=App.css.map */

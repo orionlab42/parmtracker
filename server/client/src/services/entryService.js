@@ -32,3 +32,11 @@ export function saveEntry(entry) {
     return http.post(apiEndpoint, entry);
 }
 
+export function duplicateEntry(entry) {
+    delete entry.id;
+    entry.category = parseInt(entry.category)
+    entry.amount = parseFloat(entry.amount)
+    entry.entry_date = new Date()
+    return http.post(apiEndpoint, entry);
+}
+

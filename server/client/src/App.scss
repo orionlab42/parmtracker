@@ -250,6 +250,21 @@ form {
 
 }
 
+.duplicate-button {
+    overflow: hidden;
+    width: 400px;
+    margin: 0 auto;
+    button {
+        float: right;
+        @media (max-width: 376px){
+            margin-right: 50px;
+        }
+    }
+    @media (max-width: 376px){
+        width: 100%;
+    }
+}
+
 
 
 
