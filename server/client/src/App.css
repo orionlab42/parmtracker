@@ -10702,6 +10702,13 @@ button:active, button:hover, button:focus {
   margin-bottom: 50px;
 }
 
+/** Pagination */
+@media (max-width: 376px) {
+  .pagination {
+    margin: 10px;
+  }
+}
+
 /** Categories page */
 .category-container {
   width: 100%;

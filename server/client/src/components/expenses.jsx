@@ -22,7 +22,7 @@ class Entries extends Component {
         currentTimeFilter: "Get all entries",
         selectedCategory: 0,
         searchQuery: '',
-        pageSize: 4,
+        pageSize: 25,
         sortColumn: {path: 'entry_date', order: 'desc'}
     };
 

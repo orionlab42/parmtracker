@@ -160,6 +160,13 @@ button {
     margin-bottom: 50px;
 }
 
+/** Pagination */
+.pagination {
+    @media (max-width: 376px){
+        margin: 10px;
+    }
+}
+
 
 /** Categories page */
 
