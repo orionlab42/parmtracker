@@ -28,6 +28,61 @@ func Expenses(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// ChartsExpensesByDate is a handler for: /api/charts-expenses-by-date
+func ChartsExpensesByDate(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	exp := expenses.GetExpenseEntriesMergedByDate()
+	if err := json.NewEncoder(w).Encode(exp); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+// ChartsExpensesByCategory is a handler for: /api/charts-expenses-by-category
+func ChartsExpensesByCategory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	exp := expenses.GetExpenseEntriesMergedByCategory()
+	if err := json.NewEncoder(w).Encode(exp); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+// ChartsExpensesByWeek is a handler for: /api/charts-expenses-by-week
+func ChartsExpensesByWeek(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	exp := expenses.GetExpenseEntriesMergedByWeek()
+	if err := json.NewEncoder(w).Encode(exp); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+// ChartsExpensesByMonth is a handler for: /api/charts-expenses-by-month
+func ChartsExpensesByMonth(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	exp := expenses.GetExpenseEntriesMergedByMonth()
+	if err := json.NewEncoder(w).Encode(exp); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+// ChartsPieExpensesByCategory is a handler for: /api/charts-pie-expenses-by-category
+func ChartsPieExpensesByCategory(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	exp := expenses.GetExpenseEntriesPieByMonth()
+	if err := json.NewEncoder(w).Encode(exp); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
 // Categories is a handler for: /api/categories
 func Categories(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

@@ -1,6 +1,7 @@
 package expenses
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -46,20 +47,58 @@ func TestExpenseSaveSeedData(t *testing.T) {
 	strStart := "2020-12-12T08:00:00.371Z"
 	t1, _ := time.Parse(layout, strStart)
 	table := []ExpenseEntry{
-		{Name: "Weekly big food", Amount: 11, Date: t1},
-		{Name: "Weekly big food", Amount: 111, Category: 1, Date: time.Now().UTC()},
-		{Name: "Sushi Wednesday", Amount: 1, Category: 2, Date: time.Now().UTC()},
-		{Name: "Lunch", Amount: 11, Category: 2, Date: time.Now().UTC()},
-		{Name: "B-day gift Roser", Amount: 111, Category: 3, Date: time.Now().UTC()},
-		{Name: "Weekly big food", Amount: 111, Category: 1, Date: time.Now().UTC()},
+		{Name: "Weekly big food", Amount: 22.8, Date: t1},
+		{Name: "Weekly big food", Amount: 11.65, Category: 1, Date: time.Now().UTC()},
+		{Name: "Sushi Wednesday", Amount: 17.87, Category: 2, Date: time.Now().UTC()},
+		{Name: "Lunch", Amount: 2.7, Category: 2, Date: time.Now().UTC()},
+		{Name: "B-day gift Roser", Amount: 35, Category: 3, Date: time.Now().UTC()},
+		{Name: "Weekly big food", Amount: 47.66, Category: 1, Date: time.Now().UTC()},
 		{Name: "Weekly big food", Amount: 1.1, Category: 1, Date: time.Now().UTC()},
-		{Name: "Burger Wednesday", Amount: 11, Category: 2, Date: time.Now().UTC()},
-		{Name: "Lunch", Amount: 1, Category: 2, Date: time.Now().UTC()},
-		{Name: "B-day gift Gabri", Amount: 1111, Category: 3, Date: time.Now().UTC()}}
+		{Name: "Burger Wednesday", Amount: 32.5, Category: 2, Date: time.Now().UTC()},
+		{Name: "Lunch", Amount: 8.9, Category: 2, Date: time.Now().UTC()},
+		{Name: "B-day gift Gabri", Amount: 102.77, Category: 3, Date: time.Now().UTC()}}
 
 	for _, row := range table {
 		row.Insert()
 	}
 	entries := GetExpenseEntries()
 	assert.Equal(t, len(entries), 10)
+}
+
+func TestGetExpenseEntriesMergedByDate(t *testing.T) {
+	entries := GetExpenseEntriesMergedByDate()
+	for _, entry := range entries {
+		fmt.Printf("%+v\n", entry)
+	}
+}
+
+func TestGetExpenseEntriesMergedByCategory(t *testing.T) {
+	entries := GetExpenseEntriesMergedByCategory()
+	for _, entry := range entries {
+		fmt.Printf("%+v\n", entry)
+	}
+}
+
+func TestGetExpenseEntriesMergedByWeek(t *testing.T) {
+	entries := GetExpenseEntriesMergedByWeek()
+	for _, entry := range entries {
+		fmt.Printf("%+v\n", entry)
+	}
+}
+
+func TestGetExpenseEntriesMergedByMonth(t *testing.T) {
+	entries := GetExpenseEntriesMergedByMonth()
+	for _, entry := range entries {
+		fmt.Printf("%+v\n", entry)
+	}
+}
+
+func TestGetExpenseEntriesPieByMonth(t *testing.T) {
+	entries := GetExpenseEntriesPieByMonth()
+	var total float64
+	for _, entry := range entries {
+		total += entry.Amount
+		fmt.Printf("%+v\n", entry)
+	}
+	fmt.Println(total)
 }

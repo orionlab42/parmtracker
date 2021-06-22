@@ -265,6 +265,25 @@ form {
     }
 }
 
+/* Charts */
+
+.chart-container {
+    width: 100%;
+    .chart-item-right {
+        width: 50%;
+        float: right;
+        padding: 20px 40px 60px 20px;
+    }
+    .chart-item-left {
+        width: 50%;
+        float: left;
+        padding: 20px 20px 60px 40px;
+    }
+    .chart-item {
+        padding: 20px 40px 60px 40px;
+    }
+}
+
 
 
 

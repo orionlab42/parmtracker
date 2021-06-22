@@ -152,3 +152,97 @@ func GetExpenseEntry(entryId int) Expenses {
 	}
 	return expenses
 }
+
+func GetExpenseEntriesMergedByDate() Expenses {
+	expenses := GetExpenseEntries()
+	var expensesNew Expenses
+	for _, val := range expenses {
+		isSaved := false
+		for i, _ := range expensesNew {
+			if val.Date == expensesNew[i].Date {
+				expensesNew[i].Name = "Total expenses of the day: " + fmt.Sprint(expensesNew[i].Date)
+				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
+				isSaved = true
+				break
+			}
+		}
+		if isSaved == false {
+			expensesNew = append(expensesNew, val)
+		}
+	}
+	return expensesNew
+}
+
+func GetExpenseEntriesMergedByCategory() Expenses {
+	expenses := GetExpenseEntries()
+	var expensesNew Expenses
+	for _, val := range expenses {
+		isSaved := false
+		for i, _ := range expensesNew {
+			if val.Category == expensesNew[i].Category {
+				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
+				isSaved = true
+				break
+			}
+		}
+		if isSaved == false {
+			val.Name = "Total expenses of " + fmt.Sprint(val.Category)
+			expensesNew = append(expensesNew, val)
+		}
+	}
+	return expensesNew
+}
+
+func GetExpenseEntriesMergedByWeek() Expenses {
+	expenses := GetExpenseEntries()
+	var expensesNew Expenses
+	for _, val := range expenses {
+		isSaved := false
+		year1, week1 := val.Date.ISOWeek()
+		for i, _ := range expensesNew {
+			year2, week2 := expensesNew[i].Date.ISOWeek()
+			if year1 == year2 && week1 == week2 {
+				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
+				isSaved = true
+				break
+			}
+		}
+		if isSaved == false {
+			val.Name = "Week nr." + fmt.Sprint(week1) + "/" + fmt.Sprint(year1)
+			expensesNew = append(expensesNew, val)
+		}
+	}
+	return expensesNew
+}
+
+func GetExpenseEntriesMergedByMonth() Expenses {
+	expenses := GetExpenseEntries()
+	var expensesNew Expenses
+	for _, val := range expenses {
+		isSaved := false
+		for i, _ := range expensesNew {
+			if val.Date.Month() == expensesNew[i].Date.Month() && val.Date.Year() == expensesNew[i].Date.Year() {
+				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
+				isSaved = true
+				break
+			}
+		}
+		if isSaved == false {
+			val.Name = "Total expenses of " + fmt.Sprint(val.Date.Month()) + " " + fmt.Sprint(val.Date.Year())
+			expensesNew = append(expensesNew, val)
+		}
+	}
+	return expensesNew
+}
+
+func GetExpenseEntriesPieByMonth() Expenses {
+	expensesByCategory := GetExpenseEntriesMergedByCategory()
+	var totalExpenses float64
+	for _, val := range expensesByCategory {
+		totalExpenses += val.Amount
+	}
+	for i, _ := range expensesByCategory {
+		expensesByCategory[i].Amount = expensesByCategory[i].Amount * 100 / totalExpenses
+	}
+	return expensesByCategory
+}
