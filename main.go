@@ -23,6 +23,7 @@ func initializeConfigAndLogger() {
 }
 
 func UpdateTablesVersion() {
+
 	settings.UpdateSettingsTable()
 	categories.UpdateCategoriesTable()
 	expenses.UpdateExpensesTable()
@@ -35,7 +36,7 @@ func main() {
 	UpdateTablesVersion()
 
 	r := server.NewRouter()
-	e := http.ListenAndServe(":12345", r)
+	e := http.ListenAndServe(":12346", r)
 	// @TODO needs to be tested this error handling
 	responseJson, _ := json.Marshal(e)
 	if e != nil {
