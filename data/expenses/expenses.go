@@ -97,7 +97,7 @@ func (entry *ExpenseEntry) Delete() error {
 
 func GetExpenseEntries() Expenses {
 	db := mysql.GetInstance().GetConn()
-	stmt, _ := db.Prepare(`select * from expenses `)
+	stmt, _ := db.Prepare(`select * from expenses order by entry_date asc;`)
 	defer stmt.Close()
 	rows, e := stmt.Query()
 	if e != nil {
@@ -119,6 +119,15 @@ func GetExpenseEntries() Expenses {
 		entry.Date, _ = time.Parse(mysql.MysqlDateFormat, date)
 		entry.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
 		entry.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
+		// correcting the entries that have an incorrect date, by adding the date when it was updated the entry instead
+		// the date was generated automatically
+		layout := "2006-01-02T15:04:05.000Z"
+		strStart := "1000-01-01T08:00:00.371Z"
+		firstDate, _ := time.Parse(layout, strStart)
+		if entry.Date.Before(firstDate) {
+			entry.Date = entry.UpdatedAt
+			entry.Save()
+		}
 		expenses = append(expenses, entry)
 	}
 	return expenses

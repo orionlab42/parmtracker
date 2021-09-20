@@ -123,7 +123,7 @@ const Overview = (props) => {
         },
         title: {text: 'Expenses by month'},
         xAxis: {
-            categories: entriesByMonth.map(entry => monthNames[new Date(entry.entry_date).getMonth()])
+            categories: entriesByMonth.map(entry => monthNames[new Date(entry.entry_date).getMonth()] + ' ' + new Date(entry.entry_date).getFullYear())
         },
         plotOptions: {
             line: {

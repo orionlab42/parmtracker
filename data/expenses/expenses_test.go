@@ -65,6 +65,13 @@ func TestExpenseSaveSeedData(t *testing.T) {
 	assert.Equal(t, len(entries), 10)
 }
 
+func TestGetExpenseEntries(t *testing.T) {
+	entries := GetExpenseEntries()
+	for _, entry := range entries {
+		fmt.Printf("%+v\n", entry)
+	}
+}
+
 func TestGetExpenseEntriesMergedByDate(t *testing.T) {
 	entries := GetExpenseEntriesMergedByDate()
 	for _, entry := range entries {

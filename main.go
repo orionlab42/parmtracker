@@ -36,7 +36,7 @@ func main() {
 	UpdateTablesVersion()
 
 	r := server.NewRouter()
-	e := http.ListenAndServe(":12346", r)
+	e := http.ListenAndServe(":12345", r)
 	// @TODO needs to be tested this error handling
 	responseJson, _ := json.Marshal(e)
 	if e != nil {
