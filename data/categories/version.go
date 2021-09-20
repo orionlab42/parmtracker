@@ -68,5 +68,26 @@ func updateV1M0(version string) string {
 		settings.UpdateVersion(PackageName, version)
 	}
 
+	if version == "v1.0-1" {
+		cat := Category{}
+		e := cat.Load(11)
+		if e != nil {
+			log.GetInstance().Errorf(LogPrefix, "Trouble when adding category icons in categories table: ", e.Error())
+			return version
+		}
+		cat.CategoryIcon = "mdi-airballoon"
+		cat.Save()
+		e = cat.Load(12)
+		if e != nil {
+			log.GetInstance().Errorf(LogPrefix, "Trouble when adding category icons in categories table: ", e.Error())
+			return version
+		}
+		cat.CategoryIcon = "mdi-tshirt-crew"
+		cat.Save()
+
+		log.GetInstance().Infof(LogPrefix, "Table categories updated.")
+		version = "v1.0-2"
+		settings.UpdateVersion(PackageName, version)
+	}
 	return version
 }
