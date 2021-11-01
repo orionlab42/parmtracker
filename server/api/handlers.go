@@ -207,7 +207,7 @@ func EntryGet(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// EntryUpdate is a handler for: /api/expenses
+// EntryUpdate is a handler for: /api/expenses/{id}
 func EntryUpdate(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	entryId := vars["id"]
