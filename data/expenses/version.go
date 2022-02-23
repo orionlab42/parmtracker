@@ -53,5 +53,29 @@ func updateV1M0(version string) string {
 		settings.UpdateVersion(PackageName, version)
 	}
 
+	if version == "v1.0-1" {
+		query := `alter table expenses add user_id int(11) not null default 1 after category;`
+		_, e := db.Exec(query)
+		if e != nil {
+			log.GetInstance().Errorf(LogPrefix, "Trouble at updating expenses table: ", e)
+			return version
+		}
+		log.GetInstance().Infof(LogPrefix, "Table expenses updated.")
+		version = "v1.0-2"
+		settings.UpdateVersion(PackageName, version)
+	}
+
+	if version == "v1.0-2" {
+		query := `alter table expenses add shared boolean not null default false after user_id;`
+		_, e := db.Exec(query)
+		if e != nil {
+			log.GetInstance().Errorf(LogPrefix, "Trouble at updating expenses table: ", e)
+			return version
+		}
+		log.GetInstance().Infof(LogPrefix, "Table expenses updated.")
+		version = "v1.0-3"
+		settings.UpdateVersion(PackageName, version)
+	}
+
 	return version
 }

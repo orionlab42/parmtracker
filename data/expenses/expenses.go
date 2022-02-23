@@ -11,6 +11,8 @@ type ExpenseEntry struct {
 	Name      string    `json:"entry_name"`
 	Amount    float64   `json:"amount"`
 	Category  int       `json:"category"`
+	UserId    int       `json:"user_id"`
+	Shared    bool      `json:"shared"`
 	Date      time.Time `json:"entry_date"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
@@ -33,7 +35,7 @@ func (entry *ExpenseEntry) Load(id int) error {
 		var date string
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&entry.Id, &entry.Name, &entry.Amount, &entry.Category, &date, &createdAt, &updatedAt)
+		e := rows.Scan(&entry.Id, &entry.Name, &entry.Amount, &entry.Category, &entry.UserId, &entry.Shared, &date, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading id %v: %s", id, e.Error())
 			return e
@@ -54,10 +56,10 @@ func (entry *ExpenseEntry) Insert() error {
 		entry.UpdatedAt = time.Now().UTC()
 	}
 	db := mysql.GetInstance().GetConn()
-	stmt, _ := db.Prepare(`insert expenses set id=?, entry_name=?, amount=?, category=?, entry_date=?, created_at=?, updated_at=?`)
+	stmt, _ := db.Prepare(`insert expenses set id=?, entry_name=?, amount=?, category=?, user_id=?, shared=?, entry_date=?, created_at=?, updated_at=?`)
 	defer stmt.Close()
 
-	res, e := stmt.Exec(entry.Id, entry.Name, entry.Amount, entry.Category, entry.Date, entry.CreatedAt, entry.UpdatedAt)
+	res, e := stmt.Exec(entry.Id, entry.Name, entry.Amount, entry.Category, entry.UserId, entry.Shared, entry.Date, entry.CreatedAt, entry.UpdatedAt)
 	if e != nil {
 		fmt.Printf("Error when inserting expense entry: %s", e.Error())
 		return e
@@ -72,10 +74,10 @@ func (entry *ExpenseEntry) Save() error {
 		entry.UpdatedAt = time.Now().UTC()
 	}
 	db := mysql.GetInstance().GetConn()
-	stmt, _ := db.Prepare(`update expenses set entry_name=?, amount=?, category=?, entry_date=?, created_at=?, updated_at=? where id=?`)
+	stmt, _ := db.Prepare(`update expenses set entry_name=?, amount=?, category=?, user_id=?, shared=?, entry_date=?, created_at=?, updated_at=? where id=?`)
 	defer stmt.Close()
 
-	_, e := stmt.Exec(entry.Name, entry.Amount, entry.Category, entry.Date, entry.CreatedAt, entry.UpdatedAt, entry.Id)
+	_, e := stmt.Exec(entry.Name, entry.Amount, entry.Category, entry.UserId, entry.Shared, entry.Date, entry.CreatedAt, entry.UpdatedAt, entry.Id)
 	if e != nil {
 		fmt.Printf("Error when saving expense entry: %s", e.Error())
 		return e
@@ -111,7 +113,7 @@ func GetExpenseEntries() Expenses {
 		var date string
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&entry.Id, &entry.Name, &entry.Amount, &entry.Category, &date, &createdAt, &updatedAt)
+		e := rows.Scan(&entry.Id, &entry.Name, &entry.Amount, &entry.Category, &entry.UserId, &entry.Shared, &date, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading entries: %s", e.Error())
 			return Expenses{}
@@ -149,7 +151,7 @@ func GetExpenseEntry(entryId int) Expenses {
 		var date string
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&entry.Id, &entry.Name, &entry.Amount, &entry.Category, &date, &createdAt, &updatedAt)
+		e := rows.Scan(&entry.Id, &entry.Name, &entry.Amount, &entry.Category, &entry.UserId, &entry.Shared, &date, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading entry with id %d: %s", entryId, e.Error())
 			return Expenses{}
