@@ -13,6 +13,7 @@ class EntryForm extends Form {
             entry_name: '',
             amount: '',
             category: '',
+            shared: false,
             entry_date: new Date(),
         },
         categories: [],
@@ -31,6 +32,10 @@ class EntryForm extends Form {
         category: Joi.number()
             .required()
             .label('Category'),
+        shared: Joi
+            .bool()
+            .default(false)
+            .label('Shared'),
         entry_date: Joi.date(),
     };
 
@@ -64,6 +69,7 @@ class EntryForm extends Form {
             entry_name: entry.entry_name,
             amount: entry.amount,
             category: entry.category,
+            shared: entry.shared,
             entry_date: Date.parse(entry.entry_date),
         };
     }
@@ -106,6 +112,7 @@ class EntryForm extends Form {
                     {this.renderInput('entry_name', 'Name')}
                     {this.renderInput('amount', 'Amount')}
                     {this.renderSelect('category', 'Category', this.state.categories)}
+                    {this.renderCheckbox('shared', 'Shared')}
                     <div className="field">
                         <label htmlFor="Date" className="label">Date</label>
                         <div className="control picker">

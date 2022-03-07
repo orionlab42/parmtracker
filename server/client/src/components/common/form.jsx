@@ -3,6 +3,7 @@ import Joi from "joi-browser";
 import Input from "./input";
 import Select from "./select";
 import SelectColor from "./selectColor";
+import Checkbox from "./checkbox";
 
 class Form extends Component {
     state = {
@@ -24,7 +25,6 @@ class Form extends Component {
         const schema = {[name]: this.schema[name]};
         const {error} = Joi.validate(obj, schema);
         return error ? error.details[0].message : null;
-
     };
 
     handleSubmit = e => {
@@ -47,6 +47,13 @@ class Form extends Component {
         data[input.name] = input.value;
         this.setState({data, errors});
     };
+
+    handleChecked = (e) => {
+        const data = {...this.state.data};
+        data.shared = e.target.checked;
+        console.log(data.shared);
+        this.setState({data});
+    }
 
     renderButton(label) {
         return (
@@ -85,6 +92,20 @@ class Form extends Component {
                 label={label}
                 options={options}
                 onChange={this.handleChange}
+                errors={errors[name]}
+            />
+        );
+    };
+
+    renderCheckbox(name, label, type='checkbox') {
+        const { data, errors } = this.state;
+        return (
+            <Checkbox
+                type={type}
+                name={name}
+                value={data[name]}
+                label={label}
+                onChange={this.handleChecked}
                 errors={errors[name]}
             />
         );
