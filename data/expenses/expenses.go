@@ -20,7 +20,7 @@ type ExpenseEntry struct {
 
 type Expenses []ExpenseEntry
 
-// Load trade order
+// Load expense entry
 func (entry *ExpenseEntry) Load(id int) error {
 	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`select * from expenses where id = ?`)
@@ -47,7 +47,7 @@ func (entry *ExpenseEntry) Load(id int) error {
 	return nil
 }
 
-// Insert a new trade
+// Insert a new entry
 func (entry *ExpenseEntry) Insert() error {
 	if entry.CreatedAt.IsZero() {
 		entry.CreatedAt = time.Now().UTC()

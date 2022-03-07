@@ -34,7 +34,7 @@ func GetCurrentVersion(key string) string {
 	return value
 }
 
-// Set value of key in table
+// UpdateVersion Set value of key in table
 func UpdateVersion(key string, value string) {
 	db := mysql.GetInstance().GetConn()
 	timestamp := time.Now().UTC()

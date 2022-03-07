@@ -5,6 +5,7 @@ import (
 	"github.com/annakallo/parmtracker/config"
 	"github.com/annakallo/parmtracker/data/categories"
 	"github.com/annakallo/parmtracker/data/expenses"
+	"github.com/annakallo/parmtracker/data/users"
 	"github.com/annakallo/parmtracker/log"
 	"github.com/annakallo/parmtracker/server"
 	"github.com/annakallo/parmtracker/settings"
@@ -23,10 +24,10 @@ func initializeConfigAndLogger() {
 }
 
 func UpdateTablesVersion() {
-
 	settings.UpdateSettingsTable()
 	categories.UpdateCategoriesTable()
 	expenses.UpdateExpensesTable()
+	users.UpdateUsersTable()
 }
 
 func main() {
