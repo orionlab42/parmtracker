@@ -264,7 +264,53 @@ form {
         width: 100%;
     }
 }
+.control {
+    width: 50%;
+}
 
+.full-input {
+    width: 100%;
+}
+
+#submit-button {
+    width: 100%;
+    padding-top: 13px;
+}
+
+.checkbox {
+    float: right;
+    padding-top: 42px;
+    padding-left: 122px;
+}
+
+.label {
+    width: 50%;
+}
+
+#date-label, #date-picker {
+    float: right;
+}
+
+#category, #user_id {
+    display: inline;
+    width: 100%;
+}
+
+.react-datepicker-wrapper {
+    width: 100%;
+}
+
+.select {
+    width: 48%;
+}
+
+#date-category, #user-shared {
+    padding-top: 8px;
+}
+
+#Save {
+    width: 130px;
+}
 /* Charts */
 
 .chart-container {

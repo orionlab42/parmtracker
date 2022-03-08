@@ -1,22 +1,20 @@
 import React from "react";
 
-const Select = ({ name, label, options, error, ...rest }) => {
+const Select = ({ name, label, dbId, dbName, options, error, ...rest }) => {
     return (
-        <div className="field">
+        <React.Fragment>
             <label htmlFor={name} className="label">{label}</label>
-            <div className="control">
+            <div className="control" id={name}>
                 <div className="select">
                     <select name={name} id={name} {...rest}>
                         <option value=""/>
-                        {options.map(option => <option key={option.id} value={option.id}>{option.category_name}</option>)}
+                        {options.map(option => <option key={option[dbId]} value={option[dbId]}>{option[dbName]}</option>)}
                     </select>
                     {error && <div>{error}</div>}
                 </div>
             </div>
-        </div>
+        </React.Fragment>
     );
 };
-
-
 
 export default Select;

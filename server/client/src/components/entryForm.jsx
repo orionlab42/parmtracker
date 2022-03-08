@@ -2,6 +2,7 @@ import React from "react";
 import Joi from 'joi-browser';
 import Form from './common/form';
 import {getCategories} from "../services/categoryService";
+import {getUsers} from "../services/userService";
 import {getEntry, saveEntry, duplicateEntry} from "../services/entryService";
 import DatePicker from 'react-datepicker';
 
@@ -12,11 +13,13 @@ class EntryForm extends Form {
         data: {
             entry_name: '',
             amount: '',
-            category: '',
+            category: 1,
+            user_id: 1,
             shared: false,
             entry_date: new Date(),
         },
         categories: [],
+        users:[],
         errors: {}
     };
 
@@ -32,6 +35,9 @@ class EntryForm extends Form {
         category: Joi.number()
             .required()
             .label('Category'),
+        user_id: Joi.number()
+            .required()
+            .label('User'),
         shared: Joi
             .bool()
             .default(false)
@@ -44,6 +50,19 @@ class EntryForm extends Form {
         const categories = [...data];
         this.setState({categories});
     }
+
+    populateUsers = async () => {
+        const { data } = await getUsers();
+        const users = [...data];
+        this.setState({users});
+    }
+
+    // setDefaultCategory = () => {
+    //     const data = {...this.state.data};
+    //     const categories = {...this.state.categories};
+    //     data.category = 1;
+    //     this.setState({data});
+    // }
 
     populateEntry = async () => {
         try {
@@ -60,6 +79,7 @@ class EntryForm extends Form {
 
     async componentDidMount() {
         await this.populateCategories();
+        await this.populateUsers();
         await this.populateEntry();
     }
 
@@ -69,6 +89,7 @@ class EntryForm extends Form {
             entry_name: entry.entry_name,
             amount: entry.amount,
             category: entry.category,
+            user_id: entry.user_id,
             shared: entry.shared,
             entry_date: Date.parse(entry.entry_date),
         };
@@ -111,19 +132,24 @@ class EntryForm extends Form {
 
                     {this.renderInput('entry_name', 'Name')}
                     {this.renderInput('amount', 'Amount')}
-                    {this.renderSelect('category', 'Category', this.state.categories)}
-                    {this.renderCheckbox('shared', 'Shared')}
-                    <div className="field">
-                        <label htmlFor="Date" className="label">Date</label>
-                        <div className="control picker">
-                            <DatePicker
-                                id="date"
-                                selected={ this.state.data.entry_date}
-                                onChange={this.handleDateChange}
-                                name="Date"
-                                dateFormat={"dd/MM/yyyy"}
-                            />
+                    <div className="field date-category" id="date-category">
+                        <div>
+                            <label htmlFor="Date" className="label" id="date-label">Date</label>
+                            <div className="control picker" id="date-picker">
+                                <DatePicker
+                                    id="date"
+                                    selected={ this.state.data.entry_date}
+                                    onChange={this.handleDateChange}
+                                    name="Date"
+                                    dateFormat={"dd/MM/yyyy"}
+                                />
+                            </div>
                         </div>
+                        {this.renderSelect('category', 'Category', 'id','category_name', this.state.categories)}
+                    </div>
+                    <div className="field" id="user-shared">
+                        {this.renderCheckbox('shared', 'Shared')}
+                        {this.renderSelect('user_id', 'User','user_id','user_name', this.state.users)}
                     </div>
                     {this.renderButton("Save")}
                 </form>

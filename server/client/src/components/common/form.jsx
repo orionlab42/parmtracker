@@ -51,14 +51,13 @@ class Form extends Component {
     handleChecked = (e) => {
         const data = {...this.state.data};
         data.shared = e.target.checked;
-        console.log(data.shared);
         this.setState({data});
     }
 
     renderButton(label) {
         return (
             <div className="field">
-                <div className="control center-text">
+                <div className="control center-text" id="submit-button">
                     <button
                         id={label}
                         disabled={this.validate()}
@@ -83,13 +82,17 @@ class Form extends Component {
         );
     };
 
-    renderSelect(name, label, options) {
+    renderSelect(name, label, dbId, dbName, options) {
         const { data, errors } = this.state;
+        // console.log(data[name])
+        // console.log(name)
         return (
             <Select
                 name={name}
                 value={data[name]}
                 label={label}
+                dbId={dbId}
+                dbName={dbName}
                 options={options}
                 onChange={this.handleChange}
                 errors={errors[name]}

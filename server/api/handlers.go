@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/annakallo/parmtracker/data/categories"
 	"github.com/annakallo/parmtracker/data/expenses"
+	"github.com/annakallo/parmtracker/data/users"
 	"github.com/gorilla/mux"
 	"io"
 	"io/ioutil"
@@ -272,6 +273,146 @@ func EntryDelete(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	err = entry.Delete()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+}
+
+// Users is a handler for: /api/user
+func Users(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	exp := users.GetUsers()
+	if err := json.NewEncoder(w).Encode(exp); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+// UserNew is a handler for: /api/user
+func UserNew(w http.ResponseWriter, r *http.Request) {
+	var user users.User
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := json.Unmarshal(body, &user); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	err = user.Insert()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
+}
+
+// UserGet is a handler for: /api/user/{id}
+func UserGet(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["id"]
+	var user users.User
+	id, err := strconv.Atoi(userId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := user.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The user with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(user); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+// UserUpdate is a handler for: /api/user/{id}
+func UserUpdate(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["id"]
+	var user users.User
+	id, err := strconv.Atoi(userId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := user.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The user with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	if err := json.Unmarshal(body, &user); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	err = user.Save()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+}
+
+// UserDelete is a handler for: /api/user/{id}
+func UserDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	userId := vars["id"]
+	var user users.User
+	id, err := strconv.Atoi(userId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := user.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The user with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	err = user.Delete()
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
