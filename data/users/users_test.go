@@ -12,6 +12,7 @@ func TestUserInsertAndFetch(t *testing.T) {
 		UserName:  "Orion",
 		Password:  "pass",
 		Email:     "orion@gmail.com",
+		UserColor: "red",
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}
@@ -19,7 +20,7 @@ func TestUserInsertAndFetch(t *testing.T) {
 	assert.Nil(t, e)
 	users := users.GetUsers()
 	assert.NotEqual(t, len(users), 0)
-	//e = u.Delete()
+	e = u.Delete()
 	assert.Nil(t, e)
 }
 
@@ -28,6 +29,7 @@ func TestUserSave(t *testing.T) {
 		UserName:  "Orion2",
 		Password:  "pass1",
 		Email:     "orion2@gmail.com",
+		UserColor: "blue",
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}
@@ -36,21 +38,20 @@ func TestUserSave(t *testing.T) {
 	u.UserName = "Atik"
 	u.Save()
 	assert.Equal(t, u.UserName, "Atik")
-	//e = u.Delete()
+	e = u.Delete()
 	assert.Nil(t, e)
 }
 
 func TestUsersSaveSeedData(t *testing.T) {
 	table := []users.User{
-		{UserName: "Orion", Password: "12345", Email: "orion@gmail.com"},
-		{UserName: "Atik", Password: "11111", Email: "atik@gmail.com"},
-		{UserName: "Random", Password: "password", Email: "mr_random@gmail.com"}}
+		{UserName: "Orion", Password: "12345", Email: "orion@gmail.com", UserColor: "#666"},
+		{UserName: "Atik", Password: "11111", Email: "atik@gmail.com", UserColor: "#f0f0f0"}}
 
 	for _, row := range table {
 		row.Insert()
 	}
 	entries := users.GetUsers()
-	assert.Equal(t, len(entries), 3)
+	assert.Equal(t, len(entries), 2)
 }
 
 //func TestGetUsers(t *testing.T) {

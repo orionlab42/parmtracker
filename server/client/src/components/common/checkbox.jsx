@@ -10,6 +10,7 @@ const Checkbox = ({ name, label, error, ...rest }) => {
                     name={name}
                     id={name}
                     type="checkbox"
+                    defaultChecked={true}
                     {...rest}/>
             &nbsp;&nbsp;{label}</label>
             {error && <div>{error}</div>}

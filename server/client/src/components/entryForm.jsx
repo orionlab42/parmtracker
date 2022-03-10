@@ -15,7 +15,7 @@ class EntryForm extends Form {
             amount: '',
             category: 1,
             user_id: 1,
-            shared: false,
+            shared: true,
             entry_date: new Date(),
         },
         categories: [],
@@ -145,11 +145,11 @@ class EntryForm extends Form {
                                 />
                             </div>
                         </div>
-                        {this.renderSelect('category', 'Category', 'id','category_name', this.state.categories)}
+                        {this.renderSelect('category', 'Category', 'id','category_name','', this.state.categories)}
                     </div>
                     <div className="field" id="user-shared">
                         {this.renderCheckbox('shared', 'Shared')}
-                        {this.renderSelect('user_id', 'User','user_id','user_name', this.state.users)}
+                        {this.renderSelect('user_id', 'User','user_id','user_name', 'user_color', this.state.users)}
                     </div>
                     {this.renderButton("Save")}
                 </form>

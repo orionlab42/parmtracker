@@ -82,10 +82,8 @@ class Form extends Component {
         );
     };
 
-    renderSelect(name, label, dbId, dbName, options) {
+    renderSelect(name, label, dbId, dbName, dbStyle, options) {
         const { data, errors } = this.state;
-        // console.log(data[name])
-        // console.log(name)
         return (
             <Select
                 name={name}
@@ -93,6 +91,7 @@ class Form extends Component {
                 label={label}
                 dbId={dbId}
                 dbName={dbName}
+                dbStyle={dbStyle}
                 options={options}
                 onChange={this.handleChange}
                 errors={errors[name]}

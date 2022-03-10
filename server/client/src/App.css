@@ -10667,6 +10667,10 @@ button:active, button:hover, button:focus {
   top: -100%;
   left: 0;
 }
+.filters .add-shared {
+  padding-top: 20px;
+  padding-right: 10px;
+}
 .filters .search-box {
   float: left;
   width: 295px;

@@ -1,12 +1,14 @@
 import React, {Component} from "react";
 import {getEntries, deleteEntry} from '../services/entryService';
 import {getCategories} from '../services/categoryService';
+import {getUsers} from '../services/userService';
 import ExpensesTable from './expensesTable';
 import Pagination from './common/pagination';
 import {paginate} from '../utils/paginate';
 import FilterTime from "./common/filterTime";
 import FilterCategory from "./common/filterCategories";
-import {filterByCategory, filterByTime} from "../utils/filters";
+import FilterUser from "./common/filterUser";
+import {filterByCategory, filterByUser, filterByShared, filterByTime} from "../utils/filters";
 import {searchKeyword} from "../utils/search";
 import _ from 'lodash';
 import Link from "react-router-dom/Link";
@@ -18,9 +20,14 @@ class Entries extends Component {
     state = {
         entries: [],
         categories: [],
+        users: [],
         currentPage: 1,
         currentTimeFilter: "Get all entries",
         selectedCategory: 0,
+        selectedUser: 0,
+        shared: false,
+        sharedColor: "#363636",
+        sharedBGColor: "whitesmoke",
         searchQuery: '',
         pageSize: 25,
         sortColumn: {path: 'entry_date', order: 'desc'}
@@ -29,9 +36,10 @@ class Entries extends Component {
     async componentDidMount() {
         const { data } = await getCategories();
         const categories = [{id:0 , category_name: "Get all entries"}, ...data];
-
+        const { data:u } = await getUsers();
+        const users = [{user_id:0 , user_name: "Get all users"},...u];
         const { data: entries } = await getEntries();
-        this.setState({entries, categories});
+        this.setState({entries, users, categories});
     }
 
     totalCalculation = entries => {
@@ -68,6 +76,19 @@ class Entries extends Component {
         this.setState({selectedCategory: category, searchQuery: "", currentPage: 1});
     };
 
+    handleUserFilterChange = user => {
+        this.setState({selectedUser: user, searchQuery: "", currentPage: 1});
+    };
+
+    handleShareFilter = () => {
+        const shared = this.state.shared;
+        if (shared === false) {
+            this.setState({shared: true, sharedColor: "whitesmoke", sharedBGColor: "#363636", searchQuery: "", currentPage: 1});
+        } else {
+            this.setState({shared: false, sharedColor: "#363636", sharedBGColor: "whitesmoke", searchQuery: "", currentPage: 1});
+        }
+    };
+
     handleSort = sortColumn => {
         this.setState({sortColumn})
     };
@@ -88,7 +109,16 @@ class Entries extends Component {
         // filtering
         const entriesFilteredByTime = filterByTime(allEntries, this.state.currentTimeFilter);
         const entriesFilteredByCategory = filterByCategory(allEntries, this.state.selectedCategory);
-        let filtered = entriesFilteredByTime.filter(x => entriesFilteredByCategory.includes(x));
+        const entriesFilteredByUser = filterByUser(allEntries, this.state.selectedUser);
+        const entriesFilteredByShared = filterByShared(allEntries, this.state.shared);
+        let filteredAll = [];
+        filteredAll.push(entriesFilteredByTime, entriesFilteredByCategory, entriesFilteredByUser, entriesFilteredByShared);
+        // filtering out only the common elements of the 3 array
+        let filtered = filteredAll.shift().filter(function(v) {
+            return filteredAll.every(function(a) {
+                return a.indexOf(v) !== -1;
+            });
+        });
 
         // searching
         const entriesSearched = searchKeyword(allEntries, searchQuery);
@@ -112,6 +142,7 @@ class Entries extends Component {
             sortColumn,
             searchQuery,
             categories,
+            users,
         } = this.state;
 
         if (this.state.entries.length === 0) return (
@@ -124,6 +155,7 @@ class Entries extends Component {
             </div>
             )
         const {totalCount, entries, total} = this.getPagedData();
+        const styleSharedButton = {color: this.state.sharedColor, backgroundColor: this.state.sharedBGColor};
         // const {history} = this.props;
         return (
 
@@ -146,6 +178,16 @@ class Entries extends Component {
                         selectedItem={this.state.selectedCategory}
                         onItemSelect={this.handleCategoryFilterChange}
                     />
+                    <FilterUser
+                        items={this.state.users}
+                        selectedItem={this.state.selectedUser}
+                        onItemSelect={this.handleUserFilterChange}
+                    />
+                    <div className="add-shared">
+                        <a className="button is-light add-shared-button" style={styleSharedButton} onClick={this.handleShareFilter}>
+                            <span className="mdi mdi-account-multiple-check" />
+                        </a>
+                    </div>
                     <div className="add-category">
                         <Link to="/categories" className="button is-link is-light add-category-button">
                             <span className="mdi mdi-square-edit-outline" title="Edit categories" />
@@ -155,6 +197,7 @@ class Entries extends Component {
                 <ExpensesTable
                     entries={entries}
                     categories={categories}
+                    users={users}
                     sortColumn={sortColumn}
                     onDelete={this.handleDelete}
                     onLike={this.handleLike}
