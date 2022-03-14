@@ -1,7 +1,7 @@
 package config_test
 
 import (
-	"github.com/annakallo/parmtracker/config"
+	"github.com/orionlab42/parmtracker/config"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

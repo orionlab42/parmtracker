@@ -1,7 +1,7 @@
 package config_test
 
 import (
-	"github.com/annakallo/parmtracker/testutil"
+	"github.com/orionlab42/parmtracker/testutil"
 	"testing"
 )
 

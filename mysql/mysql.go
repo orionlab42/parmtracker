@@ -3,9 +3,9 @@ package mysql
 import (
 	"database/sql"
 	"fmt"
-	"github.com/annakallo/parmtracker/config"
-	"github.com/annakallo/parmtracker/log"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/orionlab42/parmtracker/config"
+	"github.com/orionlab42/parmtracker/log"
 	"sync"
 )
 

@@ -2,7 +2,7 @@ package config
 
 import (
 	"encoding/json"
-	"github.com/annakallo/parmtracker/log"
+	"github.com/orionlab42/parmtracker/log"
 	"os"
 	"sync"
 )

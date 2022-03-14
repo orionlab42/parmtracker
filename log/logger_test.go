@@ -1,7 +1,7 @@
 package log_test
 
 import (
-	"github.com/annakallo/parmtracker/log"
+	"github.com/orionlab42/parmtracker/log"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"os"

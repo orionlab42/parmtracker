@@ -1,9 +1,9 @@
 package expenses
 
 import (
-	"github.com/annakallo/parmtracker/log"
-	"github.com/annakallo/parmtracker/mysql"
-	"github.com/annakallo/parmtracker/settings"
+	"github.com/orionlab42/parmtracker/log"
+	"github.com/orionlab42/parmtracker/mysql"
+	"github.com/orionlab42/parmtracker/settings"
 )
 
 const (

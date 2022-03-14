@@ -2,7 +2,7 @@ package categories
 
 import (
 	"fmt"
-	"github.com/annakallo/parmtracker/mysql"
+	"github.com/orionlab42/parmtracker/mysql"
 	"time"
 )
 

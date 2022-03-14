@@ -2,7 +2,7 @@ package users_test
 
 import (
 	"fmt"
-	"github.com/annakallo/parmtracker/data/users"
+	"github.com/orionlab42/parmtracker/data/users"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

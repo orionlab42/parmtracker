@@ -2,13 +2,13 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/annakallo/parmtracker/config"
-	"github.com/annakallo/parmtracker/data/categories"
-	"github.com/annakallo/parmtracker/data/expenses"
-	"github.com/annakallo/parmtracker/data/users"
-	"github.com/annakallo/parmtracker/log"
-	"github.com/annakallo/parmtracker/server"
-	"github.com/annakallo/parmtracker/settings"
+	"github.com/orionlab42/parmtracker/config"
+	"github.com/orionlab42/parmtracker/data/categories"
+	"github.com/orionlab42/parmtracker/data/expenses"
+	"github.com/orionlab42/parmtracker/data/users"
+	"github.com/orionlab42/parmtracker/log"
+	"github.com/orionlab42/parmtracker/server"
+	"github.com/orionlab42/parmtracker/settings"
 	"net/http"
 )
 

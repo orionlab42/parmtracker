@@ -3,10 +3,10 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/annakallo/parmtracker/data/categories"
-	"github.com/annakallo/parmtracker/data/expenses"
-	"github.com/annakallo/parmtracker/data/users"
 	"github.com/gorilla/mux"
+	"github.com/orionlab42/parmtracker/data/categories"
+	"github.com/orionlab42/parmtracker/data/expenses"
+	"github.com/orionlab42/parmtracker/data/users"
 	"io"
 	"io/ioutil"
 	"net/http"

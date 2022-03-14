@@ -1,4 +1,4 @@
-module github.com/annakallo/parmtracker
+module github.com/orionlab42/parmtracker
 
 go 1.15
 

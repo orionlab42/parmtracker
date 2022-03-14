@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/annakallo/parmtracker/server/api"
+	"github.com/orionlab42/parmtracker/server/api"
 	"net/http"
 )
 
