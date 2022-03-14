@@ -12,5 +12,6 @@
   "WebPassword": "12345",
   "Client": "server/client/build/",
   "Static": "server/static/",
-  "Template": "server/template/"
+  "Template": "server/template/",
+  "JWTSecret": "secret"
 }

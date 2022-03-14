@@ -29,12 +29,13 @@ type Config struct {
 	Client      string
 	Static      string
 	Template    string
+	JWTSecret   string
 }
 
 var instance *Config
 var once sync.Once
 
-// Get config and subscribe them with flags
+// NewConfig Get config and subscribe them with flags
 func NewConfig() *Config {
 	// Get defaults
 	config := &Config{}
@@ -63,7 +64,7 @@ func NewConfig() *Config {
 	return config
 }
 
-// Transforming Config into a Singleton
+// GetInstance Transforming Config into a Singleton
 func GetInstance() *Config {
 	once.Do(func() {
 		instance = NewConfig()

@@ -11,7 +11,7 @@ import (
 func TestUserInsertAndFetch(t *testing.T) {
 	u := users.User{
 		UserName:  "Orion",
-		Password:  "pass",
+		Password:  []byte("pass"),
 		Email:     "orion@gmail.com",
 		UserColor: "red",
 		CreatedAt: time.Now().UTC(),
@@ -21,14 +21,14 @@ func TestUserInsertAndFetch(t *testing.T) {
 	assert.Nil(t, e)
 	users := users.GetUsers()
 	assert.NotEqual(t, len(users), 0)
-	e = u.Delete()
-	assert.Nil(t, e)
+	//e = u.Delete()
+	//assert.Nil(t, e)
 }
 
 func TestUserSave(t *testing.T) {
 	u := users.User{
 		UserName:  "Orion2",
-		Password:  "pass1",
+		Password:  []byte("pass1"),
 		Email:     "orion2@gmail.com",
 		UserColor: "blue",
 		CreatedAt: time.Now().UTC(),
@@ -45,8 +45,8 @@ func TestUserSave(t *testing.T) {
 
 func TestUsersSaveSeedData(t *testing.T) {
 	table := []users.User{
-		{UserName: "Orion", Password: "12345", Email: "orion@gmail.com", UserColor: "#666"},
-		{UserName: "Atik", Password: "11111", Email: "atik@gmail.com", UserColor: "#f0f0f0"}}
+		{UserName: "Orion", Password: []byte("12345"), Email: "orion@gmail.com", UserColor: "#666"},
+		{UserName: "Atik", Password: []byte("11111"), Email: "atik@gmail.com", UserColor: "#f0f0f0"}}
 
 	for _, row := range table {
 		row.Insert()
@@ -58,12 +58,21 @@ func TestUsersSaveSeedData(t *testing.T) {
 func TestUsersLoadByName(t *testing.T) {
 	u := users.User{}
 	e := u.LoadByName("orion@gmail.com")
+	fmt.Println("Name:", u.UserName)
 	if u.UserName == "" {
 		e := u.LoadByEmail("orion@gmail.com")
 		fmt.Println("error1", e)
 	}
-	fmt.Println("email", u.Email)
+	fmt.Println("Bye mail", u.UserName)
 	fmt.Println("error2", e)
+	//assert.Equal(t, len(entries), 2)
+}
+
+func TestUsersLoadByName2(t *testing.T) {
+	u := users.User{}
+	_ = u.LoadByName("Orion")
+	fmt.Println("Name:", u.UserName)
+	fmt.Println("Username:", u.UserName)
 	//assert.Equal(t, len(entries), 2)
 }
 

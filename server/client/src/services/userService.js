@@ -1,6 +1,6 @@
 import http from "./httpService";
 
-const  apiEndpoint = '/user';
+const  apiEndpoint = '/register';
 
 function userUrl(id) {
     return `${apiEndpoint}/${id}`;

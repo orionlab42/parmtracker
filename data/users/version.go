@@ -25,7 +25,7 @@ func updateV1M0(version string) string {
 					user_id int(11) unsigned not null auto_increment,
 					user_name varchar(255)  not null,
 					password varchar(255)  not null,
-					email varchar(255)  not null,
+					email varchar(255) not null unique,
     				user_color varchar(255),
 					created_at datetime not null default now(),
 					updated_at datetime not null default now(),

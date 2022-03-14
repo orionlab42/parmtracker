@@ -184,9 +184,9 @@ class Entries extends Component {
                         onItemSelect={this.handleUserFilterChange}
                     />
                     <div className="add-shared">
-                        <a className="button is-light add-shared-button" style={styleSharedButton} onClick={this.handleShareFilter}>
+                        <button className="button is-light add-shared-button" style={styleSharedButton} onClick={this.handleShareFilter}>
                             <span className="mdi mdi-account-multiple-check" />
-                        </a>
+                        </button>
                     </div>
                     <div className="add-category">
                         <Link to="/categories" className="button is-link is-light add-category-button">
