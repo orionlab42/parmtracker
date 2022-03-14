@@ -1,6 +1,7 @@
 package users_test
 
 import (
+	"fmt"
 	"github.com/annakallo/parmtracker/data/users"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -52,6 +53,18 @@ func TestUsersSaveSeedData(t *testing.T) {
 	}
 	entries := users.GetUsers()
 	assert.Equal(t, len(entries), 2)
+}
+
+func TestUsersLoadByName(t *testing.T) {
+	u := users.User{}
+	e := u.LoadByName("orion@gmail.com")
+	if u.UserName == "" {
+		e := u.LoadByEmail("orion@gmail.com")
+		fmt.Println("error1", e)
+	}
+	fmt.Println("email", u.Email)
+	fmt.Println("error2", e)
+	//assert.Equal(t, len(entries), 2)
 }
 
 //func TestGetUsers(t *testing.T) {

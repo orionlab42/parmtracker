@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
+import jwtDecode from 'jwt-decode';
 import NavBar from "./components/navbar";
 import Expenses from './components/expenses';
 import Categories from './components/categories';
@@ -14,13 +15,23 @@ import "./App.css";
 console.log("aaa" + process.env.REACT_APP_BASE_URL);
 
 class App extends Component {
+    state= {};
 
+    componentDidMount() {
+        try {
+            const jwt = localStorage.getItem('token');
+            const user = jwtDecode(jwt);
+            console.log(user);
+            this.setState({user});
+        }
+        catch (ex) {}
+    }
     render() {
         return (
             <React.Fragment>
                 <BrowserRouter basename={process.env.REACT_APP_BASE_URL}>
                     <div>
-                        <NavBar/>
+                        <NavBar user={this.state.user}/>
                         <main>
                             <Switch>
                                 <Route path="/incomes" component={Incomes}/>

@@ -43,6 +43,56 @@ func (u *User) Load(id int) error {
 	return nil
 }
 
+// LoadByName user
+func (u *User) LoadByName(name string) error {
+	db := mysql.GetInstance().GetConn()
+	stmt, _ := db.Prepare(`select * from users where user_name = ?`)
+	defer stmt.Close()
+	rows, e := stmt.Query(name)
+	if e != nil {
+		fmt.Printf("Error when preparing stmt id %v: %s", name, e.Error())
+		return e
+	}
+	defer rows.Close()
+	if rows.Next() {
+		var createdAt string
+		var updatedAt string
+		e := rows.Scan(&u.UserId, &u.UserName, &u.Password, &u.Email, &u.UserColor, &createdAt, &updatedAt)
+		if e != nil {
+			fmt.Printf("Error when loading name %v: %s", name, e.Error())
+			return e
+		}
+		u.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
+		u.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
+	}
+	return nil
+}
+
+// LoadByEmail user
+func (u *User) LoadByEmail(email string) error {
+	db := mysql.GetInstance().GetConn()
+	stmt, _ := db.Prepare(`select * from users where email = ?`)
+	defer stmt.Close()
+	rows, e := stmt.Query(email)
+	if e != nil {
+		fmt.Printf("Error when preparing stmt id %v: %s", email, e.Error())
+		return e
+	}
+	defer rows.Close()
+	if rows.Next() {
+		var createdAt string
+		var updatedAt string
+		e := rows.Scan(&u.UserId, &u.UserName, &u.Password, &u.Email, &u.UserColor, &createdAt, &updatedAt)
+		if e != nil {
+			fmt.Printf("Error when loading email %v: %s", email, e.Error())
+			return e
+		}
+		u.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
+		u.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
+	}
+	return nil
+}
+
 // Insert a new user
 func (u *User) Insert() error {
 	if u.CreatedAt.IsZero() {

@@ -37,7 +37,7 @@ class Entries extends Component {
         const { data } = await getCategories();
         const categories = [{id:0 , category_name: "Get all entries"}, ...data];
         const { data:u } = await getUsers();
-        const users = [{user_id:0 , user_name: "Get all users"},...u];
+        const users = [{user_id:0 , user_name: "Get all entries"},...u];
         const { data: entries } = await getEntries();
         this.setState({entries, users, categories});
     }

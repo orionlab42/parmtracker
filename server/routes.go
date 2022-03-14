@@ -32,6 +32,7 @@ var routes = Routes{
 	Route{"Users", http.MethodGet, "/api/user", api.Users},
 	Route{"UserNew", http.MethodPost, "/api/user", api.UserNew},
 	Route{"User", http.MethodGet, "/api/user/{id}", api.UserGet},
+	Route{"UserAuth", http.MethodPost, "/api/auth", api.UserAuth},
 	Route{"UserUpdate", http.MethodPut, "/api/user/{id}", api.UserUpdate},
 	Route{"UserDelete", http.MethodDelete, "/api/user/{id}", api.UserDelete},
 }

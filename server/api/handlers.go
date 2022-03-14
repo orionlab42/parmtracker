@@ -317,8 +317,13 @@ func UserNew(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Error: %s\n", err)
 		return
 	}
+	jasonWebToken := "blablabla2"
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
+	if err := json.NewEncoder(w).Encode(jasonWebToken); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
 }
 
 // UserGet is a handler for: /api/user/{id}
@@ -345,6 +350,42 @@ func UserGet(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewEncoder(w).Encode(user); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
+	}
+}
+
+// UserAuth is a handler for: /api/auth
+func UserAuth(w http.ResponseWriter, r *http.Request) {
+	var user users.User
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := json.Unmarshal(body, &user); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	var u users.User
+	_ = u.LoadByName(user.UserName)
+	if u.UserName == "" {
+		_ = u.LoadByEmail(user.Email)
+	}
+	jasonWebToken := "blablabla"
+	if user.Password == u.Password {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(http.StatusOK)
+		if err := json.NewEncoder(w).Encode(jasonWebToken); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
 	}
 }
 

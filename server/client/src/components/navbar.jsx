@@ -1,7 +1,7 @@
 import React from "react";
 import NavLink from "react-router-dom/NavLink";
 
-const NavBar = () => {
+const NavBar = (props) => {
     return (
         <nav className="navbar" role="navigation" aria-label="main navigation">
             <div className="navbar-brand">
@@ -33,12 +33,14 @@ const NavBar = () => {
                         <span className="mdi mdi-chart-bar"/>
                         Overview
                     </NavLink>
-                    { /* <NavLink className="navbar-item" to="/login">
-                        Login
-                    </NavLink>
-                        <NavLink className="navbar-item" to="/register">
-                        Register
-                        </NavLink> */ }
+                    {!props.user && <React.Fragment>
+                                        <NavLink className="navbar-item" to="/login">
+                                            Login
+                                        </NavLink>
+                                        <NavLink className="navbar-item" to="/register">
+                                            Register
+                                        </NavLink>
+                    </React.Fragment>}
                 </div>
             </div>
         </nav>

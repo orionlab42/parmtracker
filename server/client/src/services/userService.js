@@ -27,3 +27,12 @@ export function saveUser(user) {
     return http.post(apiEndpoint, user);
 }
 
+
+export function register(user) {
+    return http.post(apiEndpoint, {
+            user_name: user.username,
+            password: user.password,
+            email: user.email
+        });
+}
+
