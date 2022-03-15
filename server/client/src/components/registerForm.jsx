@@ -1,7 +1,7 @@
 import React from "react";
 import Joi from 'joi-browser';
 import Form from './common/form';
-import * as userService from '../services/userService';
+import { register } from '../services/userService';
 
 class RegisterForm extends Form {
     state = {
@@ -25,7 +25,7 @@ class RegisterForm extends Form {
 
     doSubmit = async () => {
         try {
-           const { data: jwt } = await userService.register(this.state.data);
+           const { data: jwt } = await register(this.state.data);
             localStorage.setItem('token', jwt);
             this.props.history.push('/');
         }

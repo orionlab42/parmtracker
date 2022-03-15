@@ -1,38 +1,25 @@
 import http from "./httpService";
 
-const  apiEndpoint = '/register';
-
-function userUrl(id) {
-    return `${apiEndpoint}/${id}`;
-}
+const  apiEndpointRegister = '/register';
+const  apiEndpointLogin = '/login"';
+const  apiEndpointAllUsers = '/all-users';
 
 export function getUsers() {
-    return http.get(apiEndpoint);
+    return http.get(apiEndpointAllUsers);
 }
-
-export function deleteUser(id) {
-    return http.delete(userUrl(id));
-}
-
-export function getUser(id) {
-    return http.get(userUrl(id));
-}
-
-export function saveUser(user) {
-    if (user.id) {
-        const body = { ...user };
-        delete body.id;
-        return http.put(userUrl(user.id), body);
-    }
-    return http.post(apiEndpoint, user);
-}
-
 
 export function register(user) {
-    return http.post(apiEndpoint, {
+    return http.post(apiEndpointRegister, {
             user_name: user.username,
             password: user.password,
             email: user.email
         });
+}
+
+export function login(user) {
+    return http.post(apiEndpointLogin, {
+        user_name: user.username,
+        password: user.password
+    });
 }
 

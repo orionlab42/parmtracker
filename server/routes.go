@@ -29,12 +29,13 @@ var routes = Routes{
 	Route{"Categories", http.MethodGet, "/api/categories", api.Categories},
 	Route{"CategoryNew", http.MethodPost, "/api/categories", api.CategoryNew},
 	Route{"CategoryDelete", http.MethodDelete, "/api/categories/{id}", api.CategoryDelete},
+
 	Route{"UserRegister", http.MethodPost, "/api/register", api.UserRegister},
 	Route{"UserLogin", http.MethodPost, "/api/login", api.UserLogin},
 	Route{"User", http.MethodGet, "/api/user", api.User},
 	Route{"Logout", http.MethodPost, "/api/logout", api.Logout},
-	Route{"Users", http.MethodGet, "/api/users", api.Users},
-	Route{"User", http.MethodGet, "/api/user/{id}", api.UserGet},
+
+	Route{"Users", http.MethodGet, "/api/all-users", api.Users},
 	Route{"UserAuth", http.MethodPost, "/api/auth", api.UserAuth},
 	Route{"UserUpdate", http.MethodPut, "/api/user/{id}", api.UserUpdate},
 	Route{"UserDelete", http.MethodDelete, "/api/user/{id}", api.UserDelete},
