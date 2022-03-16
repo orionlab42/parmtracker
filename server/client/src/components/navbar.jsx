@@ -1,7 +1,31 @@
 import React from "react";
 import NavLink from "react-router-dom/NavLink";
+import {logout} from '../services/userService'
 
-const NavBar = (props) => {
+const NavBar =  (props) => {
+    const  handleLogout = async () => {
+        try {
+             await logout();
+             props.onChange('');
+        }
+        catch (ex) {}
+    };
+
+    let menu;
+    if (props.user === '') {
+       menu =  (    <React.Fragment>
+                        <NavLink className="navbar-item" to="/login">
+                            Login
+                        </NavLink>
+                        <NavLink className="navbar-item" to="/register">
+                            Register
+                        </NavLink>
+                    </React.Fragment>)
+    } else {
+        menu = (<NavLink className="navbar-item" onClick={handleLogout} to="/login">
+                    Logout
+                </NavLink>)
+    }
     return (
         <nav className="navbar" role="navigation" aria-label="main navigation">
             <div className="navbar-brand">
@@ -13,7 +37,6 @@ const NavBar = (props) => {
                     <span aria-hidden="true"/>
                 </button>
             </div>
-
             <div id="navbarBasicExample" className="navbar-menu">
                 { /* <div className="navbar-start center">
                     <NavLink className="navbar-item" to="/home">
@@ -21,6 +44,10 @@ const NavBar = (props) => {
                     </NavLink>
                 </div> */ }
                 <div className="navbar-end">
+                    <NavLink className="navbar-item" to="/">
+                        <span className="mdi"/>
+                        Home
+                    </NavLink>
                     <NavLink className="navbar-item" to="/incomes">
                         <span className="mdi mdi-home-plus-outline"/>
                         Incomes
@@ -33,14 +60,10 @@ const NavBar = (props) => {
                         <span className="mdi mdi-chart-bar"/>
                         Overview
                     </NavLink>
-                    {!props.user && <React.Fragment>
-                                        <NavLink className="navbar-item" to="/login">
-                                            Login
-                                        </NavLink>
-                                        <NavLink className="navbar-item" to="/register">
-                                            Register
-                                        </NavLink>
-                    </React.Fragment>}
+                    {/*<NavLink className="navbar-item" to="/login">*/}
+                    {/*    Login*/}
+                    {/*</NavLink>*/}
+                    {menu}
                 </div>
             </div>
         </nav>

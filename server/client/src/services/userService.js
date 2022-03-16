@@ -1,7 +1,9 @@
 import http from "./httpService";
 
 const  apiEndpointRegister = '/register';
-const  apiEndpointLogin = '/login"';
+const  apiEndpointLogin = '/login';
+const  apiEndpointGetUser = '/user';
+const  apiEndpointLogout = '/logout';
 const  apiEndpointAllUsers = '/all-users';
 
 export function getUsers() {
@@ -21,5 +23,13 @@ export function login(user) {
         user_name: user.username,
         password: user.password
     });
+}
+
+export function getUser() {
+    return http.get(apiEndpointGetUser);
+}
+
+export function logout() {
+    return http.post(apiEndpointLogout, {});
 }
 

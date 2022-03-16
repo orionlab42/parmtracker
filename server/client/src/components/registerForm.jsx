@@ -25,8 +25,7 @@ class RegisterForm extends Form {
 
     doSubmit = async () => {
         try {
-           const { data: jwt } = await register(this.state.data);
-            localStorage.setItem('token', jwt);
+            await register(this.state.data);
             this.props.history.push('/');
         }
         catch (ex) {

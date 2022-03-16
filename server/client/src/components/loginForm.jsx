@@ -1,7 +1,8 @@
 import React from "react";
 import Joi from 'joi-browser';
 import Form from './common/form';
-import { login } from '../services/userService'
+import {login} from '../services/userService'
+import {getCategories} from "../services/categoryService";
 
 class LoginForm extends Form {
     state = {
@@ -20,9 +21,8 @@ class LoginForm extends Form {
 
     doSubmit = async () => {
         try {
-         const { data: jwt } =  await login(this.state.data);
-         localStorage.setItem('token', jwt);
-         this.props.history.push('/');
+            await login(this.state.data);
+            this.props.history.push('/');
         }
         catch (ex) {
             if (ex.response && ex.response.status === 400) {

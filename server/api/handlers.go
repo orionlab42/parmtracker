@@ -345,7 +345,7 @@ type UserFake struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-// UserLogin is a handler for: /api/user
+// UserLogin is a handler for: /api/login
 func UserLogin(w http.ResponseWriter, r *http.Request) {
 	var userFake UserFake
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
@@ -413,7 +413,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	//r.AddCookie(&cookie)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode("Success!"); err != nil {
+	if err := json.NewEncoder(w).Encode(u); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
 	}
@@ -442,7 +442,7 @@ func User(w http.ResponseWriter, r *http.Request) {
 	issuer, _ := strconv.Atoi(claims.Issuer)
 	_ = user.Load(issuer)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusUnauthorized)
+	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(user); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
@@ -459,7 +459,7 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &cookie)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusUnauthorized)
+	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode("Success logout!"); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
