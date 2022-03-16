@@ -1,6 +1,5 @@
 import React, {Component} from "react";
 import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
-import jwtDecode from 'jwt-decode';
 import NavBar from "./components/navbar";
 import Expenses from './components/expenses';
 import Categories from './components/categories';
@@ -11,8 +10,9 @@ import NotFound from "./components/notFound";
 import LoginForm from "./components/loginForm";
 import RegisterForm from "./components/registerForm";
 import EntryForm from "./components/entryForm";
+import ProtectedRoute from "./components/common/protectedRoute";
 import "./App.css";
-import {getUser} from "./services/userService";
+import {getCurrentUser} from "./services/userService";
 
 console.log("aaa" + process.env.REACT_APP_BASE_URL);
 
@@ -21,41 +21,30 @@ class App extends Component {
         user: []
     };
     async componentDidMount() {
-        try {
-            const { data: user } = await getUser();
-            this.setState({user});
-        }
-        catch (ex) {}
+        const user = await getCurrentUser();
+        this.setState({user});
     }
 
-    handleNameChange = (name) => {
-        const user = {...this.state.user};
-        user.user_name = name;
-        this.setState({user});
-    };
-
     render() {
+        const user = this.state.user
         return (
             <React.Fragment>
                 <BrowserRouter basename={process.env.REACT_APP_BASE_URL}>
                     <div>
-                        <NavBar
-                            user={this.state.user}
-                            onChange={this.handleNameChange}/>
+                        <NavBar user={user}/>
                         <main>
                             <Switch>
-                                <Route path="/incomes" component={Incomes}/>
-                                <Route path="/expenses/:id" component={EntryForm}/>
-                                <Route path="/expenses" component={Expenses}/>
-                                <Route path="/categories" component={Categories}/>
-                                <Route path="/overview" component={Overview}/>
+                                <ProtectedRoute path="/incomes" user={user} component={Incomes}/>
+                                <ProtectedRoute path="/expenses/:id" user={user} component={EntryForm}/>
+                                <ProtectedRoute path="/expenses" user={user} render={props => <Expenses {...props} user={user}/>}/>
+                                <Redirect from="/expense" exact to="/expenses"/>
+                                <ProtectedRoute path="/categories" user={user} component={Categories}/>
+                                <ProtectedRoute path="/overview" user={user} component={Overview}/>
                                 <Route path="/login" component={LoginForm}/>
                                 <Route path="/register" component={RegisterForm}/>
-                                <Route path="/logout" component={Home}/>
-                                <Route path="/" component={() => <Home user={this.state.user}/>}/>
-                                <Redirect from="/expense" exact to="/expenses"/>
+                                <Route path="/" exact render={props => <Home {...props} user={user}/>}/>
                                 <Route path="/not-found" component={NotFound}/>
-                                <Redirect to="/not-found"/>}
+                                <Redirect to="/not-found"/>
                             </Switch>
                         </main>
                     </div>

@@ -136,15 +136,8 @@ class Entries extends Component {
     };
 
     render() {
-        const {
-            pageSize,
-            currentPage,
-            sortColumn,
-            searchQuery,
-            categories,
-            users,
-        } = this.state;
-
+        const { pageSize, currentPage, sortColumn, searchQuery, categories, users} = this.state;
+        const { user } = this.props;
         if (this.state.entries.length === 0) return (
             <div>
                 <h3 className="title is-3 center-text">Expenses</h3>
@@ -156,11 +149,10 @@ class Entries extends Component {
             )
         const {totalCount, entries, total} = this.getPagedData();
         const styleSharedButton = {color: this.state.sharedColor, backgroundColor: this.state.sharedBGColor};
-        // const {history} = this.props;
         return (
-
             <div className="container">
-                <h3 className="title is-3 center-text">Expenses</h3>
+                <div className="user-color"><span style={{backgroundColor: user.user_color}}>user color_needs to be styled</span></div>
+                <h3 className="title is-3 center-text" >Expenses</h3>
                 <div className="add-more">
                     <Link to="/expenses/new" className="button is-link is-medium add-more-button">+</Link>
                 </div>

@@ -25,8 +25,13 @@ export function login(user) {
     });
 }
 
-export function getUser() {
-    return http.get(apiEndpointGetUser);
+export async function  getCurrentUser() {
+    try {
+        const { data: user } = await http.get(apiEndpointGetUser);
+        return user;
+    } catch (ex) {
+        return null;
+    }
 }
 
 export function logout() {

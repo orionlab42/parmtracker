@@ -6,7 +6,7 @@ const NavBar =  (props) => {
     const  handleLogout = async () => {
         try {
              await logout();
-             props.onChange('');
+             window.location = "/login";
         }
         catch (ex) {}
     };
@@ -14,6 +14,7 @@ const NavBar =  (props) => {
     let menu;
     if (props.user === '') {
        menu =  (    <React.Fragment>
+
                         <NavLink className="navbar-item" to="/login">
                             Login
                         </NavLink>
@@ -22,9 +23,23 @@ const NavBar =  (props) => {
                         </NavLink>
                     </React.Fragment>)
     } else {
-        menu = (<NavLink className="navbar-item" onClick={handleLogout} to="/login">
-                    Logout
-                </NavLink>)
+        menu = (    <React.Fragment>
+                    <NavLink className="navbar-item" to="/incomes">
+                        <span className="mdi mdi-home-plus-outline"/>
+                        Incomes
+                    </NavLink>
+                    <NavLink className="navbar-item" to="/expenses">
+                        <span className="mdi mdi-home-minus-outline"/>
+                        Expenses
+                    </NavLink>
+                    <NavLink className="navbar-item" to="/overview">
+                        <span className="mdi mdi-chart-bar"/>
+                        Overview
+                    </NavLink>
+                    <NavLink className="navbar-item" onClick={handleLogout} to="/login">
+                        Logout
+                    </NavLink>
+                </React.Fragment>)
     }
     return (
         <nav className="navbar" role="navigation" aria-label="main navigation">
@@ -38,31 +53,11 @@ const NavBar =  (props) => {
                 </button>
             </div>
             <div id="navbarBasicExample" className="navbar-menu">
-                { /* <div className="navbar-start center">
-                    <NavLink className="navbar-item" to="/home">
-                        Home
-                    </NavLink>
-                </div> */ }
                 <div className="navbar-end">
                     <NavLink className="navbar-item" to="/">
                         <span className="mdi"/>
                         Home
                     </NavLink>
-                    <NavLink className="navbar-item" to="/incomes">
-                        <span className="mdi mdi-home-plus-outline"/>
-                        Incomes
-                    </NavLink>
-                    <NavLink className="navbar-item" to="/expenses">
-                        <span className="mdi mdi-home-minus-outline"/>
-                        Expenses
-                    </NavLink>
-                    <NavLink className="navbar-item" to="/overview">
-                        <span className="mdi mdi-chart-bar"/>
-                        Overview
-                    </NavLink>
-                    {/*<NavLink className="navbar-item" to="/login">*/}
-                    {/*    Login*/}
-                    {/*</NavLink>*/}
                     {menu}
                 </div>
             </div>

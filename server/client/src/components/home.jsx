@@ -2,8 +2,7 @@ import React from "react";
 import NavLink from "react-router-dom/NavLink";
 
 const Home = (props) => {
- console.log("User in Home: ", props.user);
- let menu;
+    let menu;
     if (props.user === '') {
         menu =  ( <h3 className="title">{'You are not logged in' }</h3>)
     } else {
