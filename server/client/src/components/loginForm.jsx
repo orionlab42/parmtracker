@@ -2,7 +2,6 @@ import React from "react";
 import Joi from 'joi-browser';
 import Form from './common/form';
 import {login} from '../services/userService'
-import {getCategories} from "../services/categoryService";
 
 class LoginForm extends Form {
     state = {

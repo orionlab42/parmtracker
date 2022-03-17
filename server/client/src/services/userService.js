@@ -28,9 +28,13 @@ export function login(user) {
 export async function  getCurrentUser() {
     try {
         const { data: user } = await http.get(apiEndpointGetUser);
-        return user;
+        if ((user === "") || (user=== null)) {
+          return "";
+        } else {
+            return user;
+        }
     } catch (ex) {
-        return null;
+        return "";
     }
 }
 

@@ -12,7 +12,7 @@ const NavBar =  (props) => {
     };
 
     let menu;
-    if (props.user === null) {
+    if (props.user === "") {
        menu =  (    <React.Fragment>
 
                         <NavLink className="navbar-item" to="/login">

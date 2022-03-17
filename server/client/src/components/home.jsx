@@ -2,7 +2,7 @@ import React from "react";
 
 const Home = (props) => {
     let menu;
-    if (props.user === null) {
+    if (props.user === "") {
         menu =  ( <h3 className="title">{'You are not logged in' }</h3>)
     } else {
         menu = (<h3 className="title">{'Hello ' + props.user.user_name}</h3>)
