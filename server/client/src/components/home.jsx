@@ -1,12 +1,11 @@
 import React from "react";
-import NavLink from "react-router-dom/NavLink";
 
 const Home = (props) => {
     let menu;
-    if (props.user === '') {
+    if (props.user === null) {
         menu =  ( <h3 className="title">{'You are not logged in' }</h3>)
     } else {
-        menu = (<h3 className="title">{'Hello ' + props.user.user_name }</h3>)
+        menu = (<h3 className="title">{'Hello ' + props.user.user_name}</h3>)
     }
     return (
         <div>

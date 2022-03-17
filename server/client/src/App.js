@@ -13,13 +13,15 @@ import EntryForm from "./components/entryForm";
 import ProtectedRoute from "./components/common/protectedRoute";
 import "./App.css";
 import {getCurrentUser} from "./services/userService";
+import {getCategories} from "./services/categoryService";
 
 console.log("aaa" + process.env.REACT_APP_BASE_URL);
 
 class App extends Component {
     state = {
-        user: []
+        user: {user_name: ""}
     };
+
     async componentDidMount() {
         const user = await getCurrentUser();
         this.setState({user});

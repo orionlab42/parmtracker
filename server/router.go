@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/orionlab42/parmtracker/server/api"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -11,7 +12,11 @@ func NewRouter() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 	for _, route := range routes {
 		var handler http.Handler
-		handler = route.HandlerFunc
+		if route.Auth == true {
+			handler = api.IsAuthorized(route.HandlerFunc)
+		} else {
+			handler = route.HandlerFunc
+		}
 		handler = Logger(handler, route.Name)
 		r.Methods(route.Method).Path(route.Pattern).Name(route.Name).Handler(handler)
 	}

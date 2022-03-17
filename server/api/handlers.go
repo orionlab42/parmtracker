@@ -22,6 +22,38 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Welcome!")
 }
 
+// IsAuthorized checks with the jwt in the cookies if the user is logged in for sending different data
+func IsAuthorized(endpoint func(w http.ResponseWriter, r *http.Request)) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie("jwt")
+		if err != nil {
+			if err == http.ErrNoCookie {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		token, err := jwt.ParseWithClaims(cookie.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(config.GetInstance().JWTSecret), nil
+		})
+		if err != nil {
+			if err == jwt.ErrSignatureInvalid {
+				w.WriteHeader(http.StatusUnauthorized)
+				return
+			}
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+		if token.Valid {
+			endpoint(w, r)
+		} else {
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+	})
+}
+
 // Expenses is a handler for: /api/expenses
 func Expenses(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -390,7 +422,6 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 		Issuer:    strconv.Itoa(u.UserId),
 		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), // expires in 1 day
 	})
-
 	conf := config.GetInstance()
 	token, err := claims.SignedString([]byte(conf.JWTSecret))
 	if err != nil {
@@ -421,22 +452,29 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 
 // User is a handler for: /api/user
 func User(w http.ResponseWriter, r *http.Request) {
-	cookie, _ := r.Cookie("jwt")
-	if cookie == nil {
+	cookie, err := r.Cookie("jwt")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	token, err := jwt.ParseWithClaims(cookie.Value, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(config.GetInstance().JWTSecret), nil
 	})
 	if err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(http.StatusUnauthorized)
-		if err := json.NewEncoder(w).Encode("Unauthenticated"); err != nil {
-			fmt.Printf("Error: %s\n", err)
+		if err == jwt.ErrSignatureInvalid {
+			w.WriteHeader(http.StatusUnauthorized)
 			return
 		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
-
+	if !token.Valid {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	claims := token.Claims.(*jwt.StandardClaims)
 	var user users.User
 	issuer, _ := strconv.Atoi(claims.Issuer)
