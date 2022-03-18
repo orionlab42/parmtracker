@@ -6,7 +6,7 @@
   "MysqlUser": "parmtracker",
   "MysqlPass": "password",
   "MysqlDB": "parmtracker",
-  "WebPort": 8080,
+  "WebPort": "443",
   "WebPrefix": "/client",
   "WebUsername": "admin",
   "WebPassword": "12345",

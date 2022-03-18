@@ -22,7 +22,7 @@ type Config struct {
 	MysqlUser   string
 	MysqlPass   string
 	MysqlDB     string
-	WebPort     uint
+	WebPort     string
 	WebPrefix   string
 	WebUsername string
 	WebPassword string
