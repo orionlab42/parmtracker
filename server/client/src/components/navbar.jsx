@@ -6,7 +6,7 @@ const NavBar =  (props) => {
     const  handleLogout = async () => {
         try {
              await logout();
-             window.location = "/login";
+             window.location = "/client/login";
         }
         catch (ex) {}
     };
