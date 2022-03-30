@@ -36,7 +36,8 @@ class App extends Component {
                         <main>
                             <Switch>
                                 <ProtectedRoute path="/incomes" user={user} component={Incomes}/>
-                                <ProtectedRoute path="/expenses/:id" user={user} component={EntryForm}/>
+                                {/*<ProtectedRoute path="/expenses/:id" user={user} component={EntryForm}/>*/}
+                                <ProtectedRoute path="/expenses/:id" user={user} render={props => <EntryForm {...props} user={user}/>}/>
                                 <ProtectedRoute path="/expenses" user={user} render={props => <Expenses {...props} user={user}/>}/>
                                 <Redirect from="/expense" exact to="/expenses"/>
                                 <ProtectedRoute path="/categories" user={user} component={Categories}/>

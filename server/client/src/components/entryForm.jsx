@@ -14,7 +14,7 @@ class EntryForm extends Form {
             entry_name: '',
             amount: '',
             category: 1,
-            user_id: 1,
+            user_id: 0,
             shared: true,
             entry_date: new Date(),
         },
@@ -53,8 +53,13 @@ class EntryForm extends Form {
 
     populateUsers = async () => {
         const { data } = await getUsers();
-        const users = [...data];
-        this.setState({users});
+        const currentUser = this.props.user
+        if (currentUser !== "") {
+            // bringing to the top position the current user
+            const otherUsers = data.filter(user => user.user_id !== currentUser.user_id);
+            const users = [currentUser,...otherUsers];
+            this.setState({users});
+        }
     }
 
     // setDefaultCategory = () => {

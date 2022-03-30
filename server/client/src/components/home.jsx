@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "react-router-dom/Link";
 
 const Home = (props) => {
     let menu;
@@ -11,6 +12,9 @@ const Home = (props) => {
         <div>
             <h1 className="title">Home</h1>
             {menu}
+            <div className="add-more">
+                <Link to="/expenses/new" className="button is-link is-medium add-more-button">+</Link>
+            </div>
         </div>
     );
 };
