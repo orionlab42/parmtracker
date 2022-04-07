@@ -14,6 +14,7 @@ func TestUserInsertAndFetch(t *testing.T) {
 		Password:  []byte("pass"),
 		Email:     "orion@gmail.com",
 		UserColor: "red",
+		DarkMode:  true,
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}
@@ -31,6 +32,7 @@ func TestUserSave(t *testing.T) {
 		Password:  []byte("pass1"),
 		Email:     "orion2@gmail.com",
 		UserColor: "blue",
+		DarkMode:  true,
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 	}

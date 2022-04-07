@@ -10885,4 +10885,91 @@ form {
   padding: 20px 40px 60px 40px;
 }
 
+/**
+ * Bulma customization dark mode
+ */
+.dark-mode {
+  background-color: #222;
+  color: #bbb8b7;
+}
+.dark-mode .title {
+  color: #bbb8b7;
+}
+.dark-mode main {
+  background-color: #222;
+}
+.dark-mode .navbar {
+  background-color: #222;
+}
+.dark-mode .navbar .navbar-item {
+  color: #bbb8b7;
+}
+.dark-mode .search-box input {
+  background-color: #333;
+  color: #bbb8b7;
+  border: 1px solid #3a3f41;
+}
+.dark-mode .search-box ::placeholder {
+  color: #bbb8b7;
+}
+.dark-mode .search-box .fa-search {
+  color: #bbb8b7;
+}
+.dark-mode .dropdown button {
+  background-color: #333;
+  color: #bbb8b7;
+  border: 1px solid #3a3f41;
+}
+.dark-mode .dropdown .dropdown-content {
+  background-color: #333;
+}
+.dark-mode .table {
+  background-color: #333;
+  color: #bbb8b7;
+}
+.dark-mode .table td, .dark-mode .table th {
+  border: 1px solid #3a3f41;
+}
+.dark-mode .table tr:not(.is-selected):hover {
+  background-color: red;
+}
+.dark-mode .clickable {
+  color: #bbb8b7;
+}
+.dark-mode input {
+  background-color: #333;
+  color: #bbb8b7;
+  border: 1px solid #3a3f41;
+}
+.dark-mode form .label {
+  color: #bbb8b7;
+}
+.dark-mode form #category, .dark-mode form #user_id {
+  background-color: #333;
+  color: #bbb8b7;
+  border: 1px solid #3a3f41;
+}
+.dark-mode form #date-picker input {
+  background-color: #333;
+  color: #bbb8b7;
+  border: 1px solid #3a3f41;
+}
+.dark-mode form .react-datepicker {
+  border: 1px solid #3a3f41;
+}
+.dark-mode form .react-datepicker__triangle, .dark-mode form .react-datepicker-popper {
+  border-top-color: #3a3f41;
+}
+.dark-mode form .react-datepicker__month-container, .dark-mode form .react-datepicker__header {
+  background-color: #333;
+  color: #bbb8b7;
+  border: 1px solid #3a3f41;
+}
+.dark-mode form .react-datepicker__header {
+  background-color: #222;
+}
+.dark-mode form .react-datepicker__current-month, .dark-mode form .react-datepicker__day-name, .dark-mode form .react-datepicker__day {
+  color: #bbb8b7;
+}
+
 /*# sourceMappingURL=App.css.map */

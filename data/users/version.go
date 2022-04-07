@@ -41,5 +41,16 @@ func updateV1M0(version string) string {
 		version = "v1.0-0"
 		settings.UpdateVersion(PackageName, version)
 	}
+	if version == "v1.0-0" {
+		query := `alter table users add dark_mode boolean not null default false after user_color;`
+		_, e := db.Exec(query)
+		if e != nil {
+			log.GetInstance().Errorf(LogPrefix, "Trouble at updating users table: ", e)
+			return version
+		}
+		log.GetInstance().Infof(LogPrefix, "Table users updated.")
+		version = "v1.0-1"
+		settings.UpdateVersion(PackageName, version)
+	}
 	return version
 }

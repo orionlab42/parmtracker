@@ -12,6 +12,7 @@ type User struct {
 	Password  []byte    `json:"-"`
 	Email     string    `json:"email"`
 	UserColor string    `json:"user_color"`
+	DarkMode  bool      `json:"dark_mode"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -32,7 +33,7 @@ func (u *User) Load(id int) error {
 	if rows.Next() {
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&u.UserId, &u.UserName, &u.Password, &u.Email, &u.UserColor, &createdAt, &updatedAt)
+		e := rows.Scan(&u.UserId, &u.UserName, &u.Password, &u.Email, &u.UserColor, &u.DarkMode, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading id %v: %s", id, e.Error())
 			return e
@@ -57,7 +58,7 @@ func (u *User) LoadByName(name string) error {
 	if rows.Next() {
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&u.UserId, &u.UserName, &u.Password, &u.Email, &u.UserColor, &createdAt, &updatedAt)
+		e := rows.Scan(&u.UserId, &u.UserName, &u.Password, &u.Email, &u.UserColor, &u.DarkMode, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading name %v: %s", name, e.Error())
 			return e
@@ -82,7 +83,7 @@ func (u *User) LoadByEmail(email string) error {
 	if rows.Next() {
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&u.UserId, &u.UserName, &u.Password, &u.Email, &u.UserColor, &createdAt, &updatedAt)
+		e := rows.Scan(&u.UserId, &u.UserName, &u.Password, &u.Email, &u.UserColor, &u.DarkMode, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading email %v: %s", email, e.Error())
 			return e
@@ -102,10 +103,10 @@ func (u *User) Insert() error {
 		u.UpdatedAt = time.Now().UTC()
 	}
 	db := mysql.GetInstance().GetConn()
-	stmt, _ := db.Prepare(`insert users set user_id=?, user_name=?, password=?, email=?, user_color=?, created_at=?, updated_at=?`)
+	stmt, _ := db.Prepare(`insert users set user_id=?, user_name=?, password=?, email=?, user_color=?, dark_mode=?, created_at=?, updated_at=?`)
 	defer stmt.Close()
 
-	res, e := stmt.Exec(u.UserId, u.UserName, u.Password, u.Email, u.UserColor, u.CreatedAt, u.UpdatedAt)
+	res, e := stmt.Exec(u.UserId, u.UserName, u.Password, u.Email, u.UserColor, u.DarkMode, u.CreatedAt, u.UpdatedAt)
 	if e != nil {
 		fmt.Printf("Error when inserting new user: %s", e.Error())
 		return e
@@ -120,10 +121,10 @@ func (u *User) Save() error {
 		u.UpdatedAt = time.Now().UTC()
 	}
 	db := mysql.GetInstance().GetConn()
-	stmt, _ := db.Prepare(`update users set user_name=?, password=?, email=?, user_color=?, created_at=?, updated_at=? where user_id=?`)
+	stmt, _ := db.Prepare(`update users set user_name=?, password=?, email=?, user_color=?, dark_mode=?, created_at=?, updated_at=? where user_id=?`)
 	defer stmt.Close()
 
-	_, e := stmt.Exec(u.UserName, u.Password, u.Email, u.UserColor, u.CreatedAt, u.UpdatedAt, u.UserId)
+	_, e := stmt.Exec(u.UserName, u.Password, u.Email, u.UserColor, u.DarkMode, u.CreatedAt, u.UpdatedAt, u.UserId)
 	if e != nil {
 		fmt.Printf("Error when saving user: %s", e.Error())
 		return e
@@ -158,7 +159,7 @@ func GetUsers() Users {
 		u := User{}
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&u.UserId, &u.UserName, &u.Password, &u.Email, &u.UserColor, &createdAt, &updatedAt)
+		e := rows.Scan(&u.UserId, &u.UserName, &u.Password, &u.Email, &u.UserColor, &u.DarkMode, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading users: %s", e.Error())
 			return Users{}

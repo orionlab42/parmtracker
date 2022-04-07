@@ -334,6 +334,119 @@ form {
     }
 }
 
+/**
+ * Bulma customization dark mode
+ */
 
+// brand colors
+$dark: #222;
+$dark-darker: #1d1d1d;
+$dark-light: #333;
+$dark-lighter: #444;
+$grey: #3a3f41;
+$grey-light: #bbb8b7;
+$grey-lighter: #cbc8c7;
+$blue: #4493de;
+$blue-light: #5ba5ea;
+$green: #2c7b41;
+$green-light: #2a9747;
+
+.dark-mode {
+    background-color: $dark;
+    color: $grey-light;
+    .title {
+        color: $grey-light;
+    }
+    main {
+        background-color: $dark;
+    }
+    .navbar {
+        background-color: $dark;
+        .navbar-item {
+            color: $grey-light;
+        }
+    }
+    .search-box {
+        input {
+            background-color: $dark-light;
+            color: $grey-light;
+            border: 1px solid $grey;
+
+        }
+        ::placeholder {
+            color: $grey-light;
+        }
+        .fa-search {
+            color: $grey-light;
+        }
+    }
+    .dropdown {
+        button {
+            background-color: $dark-light;
+            color: $grey-light;
+            border: 1px solid $grey;
+        }
+        .dropdown-content {
+            background-color: $dark-light;
+        }
+    }
+    .table {
+            background-color: $dark-light;
+            color: $grey-light;
+            td, th {
+                border: 1px solid $grey;
+            }
+            tr {
+                &:not(.is-selected) {
+                    &:hover {
+                        background-color: red;
+                    }
+                }
+            }
+        }
+    .clickable {
+        color: $grey-light;
+    }
+    input {
+        background-color: $dark-light;
+        color: $grey-light;
+        border: 1px solid $grey;
+    }
+    form {
+        .label {
+            color: $grey-light;
+        }
+        #category, #user_id {
+            background-color: $dark-light;
+            color: $grey-light;
+            border: 1px solid $grey;
+        }
+        #date-picker {
+            input {
+                background-color: $dark-light;
+                color: $grey-light;
+                border: 1px solid $grey;
+            }
+        }
+        .react-datepicker {
+            border: 1px solid $grey;
+        }
+//this does not work:
+        .react-datepicker__triangle,  .react-datepicker-popper {
+            border-top-color: $grey;
+        }
+       .react-datepicker__month-container, .react-datepicker__header {
+            background-color: $dark-light;
+            color: $grey-light;
+            border: 1px solid $grey;
+       }
+       .react-datepicker__header {
+            background-color: $dark;
+       }
+       .react-datepicker__current-month,  .react-datepicker__day-name, .react-datepicker__day {
+            color: $grey-light;
+       }
+    }
+}
 
 

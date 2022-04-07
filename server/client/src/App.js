@@ -18,7 +18,7 @@ console.log("aaa" + process.env.REACT_APP_BASE_URL);
 
 class App extends Component {
     state = {
-        user: {user_name: ""}
+        user: {user_name: "",dark_mode: 0,}
     };
 
     async componentDidMount() {
@@ -31,7 +31,7 @@ class App extends Component {
         return (
             <React.Fragment>
                 <BrowserRouter basename={process.env.REACT_APP_BASE_URL}>
-                    <div>
+                    <div className={user.dark_mode ? "dark-mode" : ""}>
                         <NavBar user={user}/>
                         <main>
                             <Switch>
