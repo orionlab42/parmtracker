@@ -420,7 +420,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		Issuer:    strconv.Itoa(u.UserId),
-		ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), // expires in 1 day
+		ExpiresAt: time.Now().Add(time.Hour * 24 * 30).Unix(), // expires in 1 month
 	})
 	conf := config.GetInstance()
 	token, err := claims.SignedString([]byte(conf.JWTSecret))
@@ -436,7 +436,7 @@ func UserLogin(w http.ResponseWriter, r *http.Request) {
 	cookie := http.Cookie{
 		Name:     "jwt",
 		Value:    token,
-		Expires:  time.Now().Add(time.Hour * 24),
+		Expires:  time.Now().Add(time.Hour * 24 * 30), // cookie is valid a month, needs to be checked later
 		HttpOnly: true,
 	}
 	http.SetCookie(w, &cookie)
@@ -502,139 +502,4 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Error: %s\n", err)
 		return
 	}
-}
-
-// UserGet is a handler for: /api/user/{id}
-func UserGet(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	userId := vars["id"]
-	var user users.User
-	id, err := strconv.Atoi(userId)
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-	if err := user.Load(id); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(404) // not found
-		message := "The user with the given ID not found."
-		if err := json.NewEncoder(w).Encode(message); err != nil {
-			fmt.Printf("Error: %s\n", err)
-			return
-		}
-	}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(user); err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-}
-
-// UserAuth is a handler for: /api/auth
-func UserAuth(w http.ResponseWriter, r *http.Request) {
-	var user users.User
-	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-	if err := r.Body.Close(); err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-	if err := json.Unmarshal(body, &user); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(422) // unprocessable entity
-		if err := json.NewEncoder(w).Encode(err); err != nil {
-			fmt.Printf("Error: %s\n", err)
-			return
-		}
-	}
-	var u users.User
-	_ = u.LoadByName(user.UserName)
-	if u.UserName == "" {
-		_ = u.LoadByEmail(user.Email)
-	}
-	jasonWebToken := "blablabla"
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(jasonWebToken); err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-
-}
-
-// UserUpdate is a handler for: /api/user/{id}
-func UserUpdate(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	userId := vars["id"]
-	var user users.User
-	id, err := strconv.Atoi(userId)
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-	if err := r.Body.Close(); err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-	if err := user.Load(id); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(404) // not found
-		message := "The user with the given ID not found."
-		if err := json.NewEncoder(w).Encode(message); err != nil {
-			fmt.Printf("Error: %s\n", err)
-			return
-		}
-	}
-	if err := json.Unmarshal(body, &user); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(422) // unprocessable entity
-		if err := json.NewEncoder(w).Encode(err); err != nil {
-			fmt.Printf("Error: %s\n", err)
-			return
-		}
-	}
-	err = user.Save()
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-}
-
-// UserDelete is a handler for: /api/user/{id}
-func UserDelete(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	userId := vars["id"]
-	var user users.User
-	id, err := strconv.Atoi(userId)
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-	if err := user.Load(id); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(404) // not found
-		message := "The user with the given ID not found."
-		if err := json.NewEncoder(w).Encode(message); err != nil {
-			fmt.Printf("Error: %s\n", err)
-			return
-		}
-	}
-	err = user.Delete()
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
 }
