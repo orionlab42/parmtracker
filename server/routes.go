@@ -37,7 +37,4 @@ var routes = Routes{
 	Route{"Logout", http.MethodPost, "/api/logout", false, api.Logout},
 
 	Route{"Users", http.MethodGet, "/api/all-users", true, api.Users},
-	Route{"UserAuth", http.MethodPost, "/api/auth", true, api.UserAuth},
-	Route{"UserUpdate", http.MethodPut, "/api/user/{id}", true, api.UserUpdate},
-	Route{"UserDelete", http.MethodDelete, "/api/user/{id}", true, api.UserDelete},
 }
