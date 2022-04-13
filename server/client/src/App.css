@@ -10904,6 +10904,9 @@ form {
 .dark-mode .navbar .navbar-item {
   color: #bbb8b7;
 }
+.dark-mode .navbar .navbar-item:hover {
+  background-color: #333;
+}
 .dark-mode .search-box input {
   background-color: #333;
   color: #bbb8b7;

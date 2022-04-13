@@ -364,6 +364,9 @@ $green-light: #2a9747;
         background-color: $dark;
         .navbar-item {
             color: $grey-light;
+            &:hover {
+            background-color: $dark-light;
+            }
         }
     }
     .search-box {
