@@ -14,7 +14,6 @@ const NavBar =  (props) => {
     let menu;
     if (props.user === "") {
        menu =  (    <React.Fragment>
-
                         <NavLink className="navbar-item" to="/login">
                             Login
                         </NavLink>
@@ -45,6 +44,8 @@ const NavBar =  (props) => {
         <nav className="navbar" role="navigation" aria-label="main navigation">
             <div className="navbar-brand">
                 <h4 className="title is-4 center-navbar-title">ParmTracker</h4>
+                <img className="logo-navbar" src='parm-logo.png'/>
+                <img className="logo-navbar" src='../../public/parm-logo.png'/>
                 <button className="navbar-burger" aria-label="menu" aria-expanded="false"
                    data-target="navbarBasicExample">
                     <span aria-hidden="true"/>
