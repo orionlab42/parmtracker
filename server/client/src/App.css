@@ -10614,7 +10614,7 @@ button:active, button:hover, button:focus {
 }
 @media (max-width: 376px) {
   .filters {
-    padding: 30px 15px;
+    padding: 30px 15px 30px 30px;
     width: auto;
     display: flex;
     flex-wrap: wrap;
@@ -10654,6 +10654,16 @@ button:active, button:hover, button:focus {
     margin-right: 0;
   }
 }
+.filters .filter-user {
+  margin-right: 10px;
+}
+@media (max-width: 376px) {
+  .filters .filter-user {
+    padding-top: 8px;
+    padding-left: 20px;
+    margin-right: 4px;
+  }
+}
 .filters .add-category {
   padding-top: 20px;
   float: left;
@@ -10674,6 +10684,13 @@ button:active, button:hover, button:focus {
   padding-top: 20px;
   padding-right: 10px;
 }
+@media (max-width: 376px) {
+  .filters .add-shared {
+    padding-top: 8px;
+    padding-right: 0px;
+    margin-right: 6px;
+  }
+}
 .filters .search-box {
   float: left;
   width: 295px;
@@ -10684,9 +10701,12 @@ button:active, button:hover, button:focus {
 @media (max-width: 376px) {
   .filters .search-box {
     float: left;
-    padding-bottom: 4px;
+    padding: 0 20px 4px 20px;
     width: 292px;
     margin-right: 0;
+  }
+  .filters .search-box .control {
+    width: 100%;
   }
 }
 
@@ -10719,6 +10739,7 @@ button:active, button:hover, button:focus {
 /** Categories page */
 .category-container {
   width: 100%;
+  overflow: hidden;
 }
 .category-container .category-table {
   width: 70%;
@@ -10866,6 +10887,12 @@ form {
   padding-top: 8px;
 }
 
+@media (max-width: 376px) {
+  #shared {
+    padding-left: 65px;
+  }
+}
+
 #Save {
   width: 130px;
 }
@@ -10936,8 +10963,19 @@ form {
 .dark-mode .table td, .dark-mode .table th {
   border: 1px solid #3a3f41;
 }
-.dark-mode .table tr:not(.is-selected):hover {
-  background-color: red;
+.dark-mode .table td button, .dark-mode .table th button {
+  border: 1px solid #3a3f41;
+}
+.dark-mode .table tbody tr:hover {
+  background-color: #3a3f41 !important;
+}
+.dark-mode .pagination button {
+  background-color: #333;
+  color: #bbb8b7;
+  border: 1px solid #3a3f41;
+}
+.dark-mode .end-text {
+  padding-bottom: 100px;
 }
 .dark-mode .clickable {
   color: #bbb8b7;
@@ -10950,7 +10988,7 @@ form {
 .dark-mode form .label {
   color: #bbb8b7;
 }
-.dark-mode form #category, .dark-mode form #user_id {
+.dark-mode form #category, .dark-mode form #user_id, .dark-mode form #category_color {
   background-color: #333;
   color: #bbb8b7;
   border: 1px solid #3a3f41;
@@ -10976,6 +11014,16 @@ form {
 }
 .dark-mode form .react-datepicker__current-month, .dark-mode form .react-datepicker__day-name, .dark-mode form .react-datepicker__day {
   color: #bbb8b7;
+}
+.dark-mode form button {
+  margin-bottom: 100px;
+}
+.dark-mode .category-table {
+  background-color: #222;
+  padding-bottom: 100px;
+}
+.dark-mode .add-new-category {
+  background-color: #222;
 }
 
 /*# sourceMappingURL=App.css.map */

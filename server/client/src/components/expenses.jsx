@@ -201,7 +201,7 @@ class Entries extends Component {
                             currentPage={currentPage}
                             onPageChange={this.handlePageChange}
                 />
-                <h5 className="title is-5 center-text total-text">There are {totalCount} entries. <br/> Total amount of expenses is {this.totalCalculation(total)} €. </h5>
+                <h5 className="title is-5 center-text total-text end-text">There are {totalCount} entries. <br/> Total amount of expenses is {this.totalCalculation(total)} €. </h5>
             </div>
         );
     }

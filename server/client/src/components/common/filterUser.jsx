@@ -3,7 +3,7 @@ import React from "react";
 
 const FilterUser = ({selectedItem, items, onItemSelect, textProperty, valueProperty}) => {
     return (
-        <div className="dropdown is-hoverable filter-position filter-category">
+        <div className="dropdown is-hoverable filter-position filter-user">
             <div className="dropdown-trigger">
                 <button className="button" aria-haspopup="true" aria-controls="dropdown-menu4">
                     <span>Filter by User</span>

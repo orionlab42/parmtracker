@@ -131,7 +131,7 @@ class EntryForm extends Form {
 
     render() {
         return (
-            <div className="container">
+            <div className="container entry-form">
                 {this.renderDuplicateButton()}
                 <form onSubmit={this.handleSubmit}>
 

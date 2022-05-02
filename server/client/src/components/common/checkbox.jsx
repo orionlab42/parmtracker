@@ -5,7 +5,7 @@ import React from "react";
 const Checkbox = ({ name, label, error, ...rest }) => {
     return (
         <React.Fragment>
-            <label htmlFor={name} className="checkbox label">
+            <label htmlFor={name} className="checkbox label" id={name}>
                 <input
                     name={name}
                     id={name}
