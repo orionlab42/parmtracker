@@ -23,7 +23,7 @@ const NavBar =  (props) => {
                     </React.Fragment>)
         logo = (
             <div>
-                <img className="logo-navbar" src={process.env.PUBLIC_URL + '/img/parm-logo-light-mode.png'}/>
+                <img className="logo-navbar" alt="ParmTracker" src={process.env.PUBLIC_URL + '/img/parm-logo-light-mode.png'}/>
             </div>
         )
     } else {
@@ -44,11 +44,9 @@ const NavBar =  (props) => {
                         Logout
                     </NavLink>
                 </React.Fragment>)
-        logo = (
-            <div>
-                <img className="logo-navbar" src={process.env.PUBLIC_URL + '/img/parm-logo-dark-mode.png'}/>
-            </div>
-        )
+
+        props.user.dark_mode    ? logo = (<div><img className="logo-navbar" alt="ParmTracker" src={process.env.PUBLIC_URL + '/img/parm-logo-dark-mode.png'}/></div>)
+                                : logo = (<div><img className="logo-navbar" alt="ParmTracker" src={process.env.PUBLIC_URL + '/img/parm-logo-light-mode.png'}/></div>)
     }
     return (
         <nav className="navbar" role="navigation" aria-label="main navigation">
