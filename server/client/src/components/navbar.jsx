@@ -1,6 +1,6 @@
 import React from "react";
 import NavLink from "react-router-dom/NavLink";
-import {logout} from '../services/userService'
+import {logout} from '../services/userService';
 
 const NavBar =  (props) => {
     const  handleLogout = async () => {
@@ -11,7 +11,7 @@ const NavBar =  (props) => {
         catch (ex) {}
     };
 
-    let menu;
+    let menu, logo;
     if (props.user === "") {
        menu =  (    <React.Fragment>
                         <NavLink className="navbar-item" to="/login">
@@ -21,6 +21,11 @@ const NavBar =  (props) => {
                             Register
                         </NavLink>
                     </React.Fragment>)
+        logo = (
+            <div>
+                <img className="logo-navbar" src={process.env.PUBLIC_URL + '/img/parm-logo-light-mode.png'}/>
+            </div>
+        )
     } else {
         menu = (    <React.Fragment>
                     <NavLink className="navbar-item" to="/incomes">
@@ -39,13 +44,17 @@ const NavBar =  (props) => {
                         Logout
                     </NavLink>
                 </React.Fragment>)
+        logo = (
+            <div>
+                <img className="logo-navbar" src={process.env.PUBLIC_URL + '/img/parm-logo-dark-mode.png'}/>
+            </div>
+        )
     }
     return (
         <nav className="navbar" role="navigation" aria-label="main navigation">
             <div className="navbar-brand">
-                <h4 className="title is-4 center-navbar-title">ParmTracker</h4>
-                <img className="logo-navbar" src='parm-logo.png'/>
-                <img className="logo-navbar" src='../../public/parm-logo.png'/>
+                {/*<h4 className="title is-4 center-navbar-title">ParmTracker</h4>*/}
+                {logo}
                 <button className="navbar-burger" aria-label="menu" aria-expanded="false"
                    data-target="navbarBasicExample">
                     <span aria-hidden="true"/>
