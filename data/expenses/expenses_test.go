@@ -113,3 +113,10 @@ func TestGetExpenseEntriesPieByMonth(t *testing.T) {
 	}
 	fmt.Println(total)
 }
+
+func TestFirstDayOfISOWeek(t *testing.T) {
+	week := FirstDayOfISOWeek(2021, 52)
+	fmt.Println(week)
+	fmt.Println(week.Format("2006-01-02"))
+	fmt.Println(week.Format("02/01/06"))
+}

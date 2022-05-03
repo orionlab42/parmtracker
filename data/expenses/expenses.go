@@ -99,7 +99,7 @@ func (entry *ExpenseEntry) Delete() error {
 
 func GetExpenseEntries() Expenses {
 	db := mysql.GetInstance().GetConn()
-	stmt, _ := db.Prepare(`select * from expenses order by entry_date asc;`)
+	stmt, _ := db.Prepare(`select * from expenses order by entry_date desc;`)
 	defer stmt.Close()
 	rows, e := stmt.Query()
 	if e != nil {
@@ -219,7 +219,8 @@ func GetExpenseEntriesMergedByWeek() Expenses {
 			}
 		}
 		if isSaved == false {
-			val.Name = "Week nr." + fmt.Sprint(week1) + "/" + fmt.Sprint(year1)
+			//val.Name = "Week nr." + fmt.Sprint(week1) + "/" + fmt.Sprint(year1)
+			val.Name = fmt.Sprint(FirstDayOfISOWeek(year1, week1).Day()) + "-" + fmt.Sprint(FirstDayOfISOWeek(year1, week1).AddDate(0, 0, 6).Day()) + " " + fmt.Sprint(FirstDayOfISOWeek(year1, week1).Format("Jan 06"))
 			expensesNew = append(expensesNew, val)
 		}
 	}
@@ -234,12 +235,15 @@ func GetExpenseEntriesMergedByMonth() Expenses {
 		for i, _ := range expensesNew {
 			if val.Date.Month() == expensesNew[i].Date.Month() && val.Date.Year() == expensesNew[i].Date.Year() {
 				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
+				//fmt.Printf("Added from date%v the value %v\n", val.Date, val.Amount)
+				//fmt.Printf("With new expense %v\n", expensesNew)
 				isSaved = true
 				break
 			}
 		}
 		if isSaved == false {
 			val.Name = "Total expenses of " + fmt.Sprint(val.Date.Month()) + " " + fmt.Sprint(val.Date.Year())
+			fmt.Printf("Saved as %+v\n", val)
 			expensesNew = append(expensesNew, val)
 		}
 	}
@@ -256,4 +260,25 @@ func GetExpenseEntriesPieByMonth() Expenses {
 		expensesByCategory[i].Amount = expensesByCategory[i].Amount * 100 / totalExpenses
 	}
 	return expensesByCategory
+}
+
+func FirstDayOfISOWeek(year int, week int) time.Time {
+	date := time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
+	isoYear, isoWeek := date.ISOWeek()
+	// iterate back to Monday
+	for date.Weekday() != time.Monday {
+		date = date.AddDate(0, 0, -1)
+		isoYear, isoWeek = date.ISOWeek()
+	}
+	// iterate forward to the first day of the first week
+	for isoYear < year {
+		date = date.AddDate(0, 0, 7)
+		isoYear, isoWeek = date.ISOWeek()
+	}
+	// iterate forward to the first day of the given week
+	for isoWeek < week {
+		date = date.AddDate(0, 0, 7)
+		isoYear, isoWeek = date.ISOWeek()
+	}
+	return date
 }

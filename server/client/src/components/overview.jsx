@@ -205,10 +205,10 @@ const Overview = (props) => {
 
     return (
         <div className="chart-container">
-                <div className="chart-item">
-                    <HighchartsReact highcharts={Highcharts}
-                                     options={optionsEntriesDate} />
-                </div>
+                {/*<div className="chart-item">*/}
+                {/*    <HighchartsReact highcharts={Highcharts}*/}
+                {/*                     options={optionsEntriesDate} />*/}
+                {/*</div>*/}
                 <div className="chart-item-right">
                     <HighchartsReact highcharts={Highcharts}
                                      options={optionsEntriesByWeek} />
