@@ -21,7 +21,7 @@ class LoginForm extends Form {
     doSubmit = async () => {
         try {
             await login(this.state.data);
-            window.location = '/client'; // this causes a full reload of the application, so App will mount again
+            window.location = '/client/home'; // this causes a full reload of the application, so App will mount again
         }
         catch (ex) {
             if (ex.response && ex.response.status === 400) {

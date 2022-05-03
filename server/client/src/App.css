@@ -10550,6 +10550,10 @@ button:active, button:hover, button:focus {
   background-color: Transparent;
 }
 
+html {
+  background-color: #ffffff00;
+}
+
 /** Navbar */
 .navbar {
   margin: 0 auto;
@@ -10570,7 +10574,8 @@ button:active, button:hover, button:focus {
   }
 }
 .navbar .navbar-brand .navbar-burger {
-  margin-right: 5px;
+  margin-top: 10px;
+  margin-right: 10px;
 }
 .navbar .navbar-item .mdi {
   margin-right: 5px;
@@ -10590,6 +10595,11 @@ button:active, button:hover, button:focus {
 }
 .navbar .logo-navbar {
   margin-top: 25px;
+}
+@media (max-width: 376px) {
+  .navbar .logo-navbar {
+    margin-left: 30px;
+  }
 }
 
 /** --- Expenses page --- */
@@ -10941,7 +10951,15 @@ form {
   }
 }
 .dark-mode .navbar .navbar-menu {
-  background-color: #333;
+  background-color: #222;
+}
+.dark-mode .navbar .navbar-menu .active {
+  background-color: #3a3f41;
+}
+@media (max-width: 376px) {
+  .dark-mode .navbar .navbar-menu {
+    background-color: #222;
+  }
 }
 .dark-mode .search-box input {
   background-color: #333;

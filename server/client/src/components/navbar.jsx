@@ -62,7 +62,7 @@ const NavBar =  (props) => {
             </div>
             <div id="navbarBasicExample" className="navbar-menu">
                 <div className="navbar-end">
-                    <NavLink className="navbar-item" to="/">
+                    <NavLink className="navbar-item" to="/home">
                         <span className="mdi"/>
                         Home
                     </NavLink>

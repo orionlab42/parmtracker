@@ -44,7 +44,7 @@ class App extends Component {
                                 <ProtectedRoute path="/overview" user={user} component={Overview}/>
                                 <Route path="/login" component={LoginForm}/>
                                 <Route path="/register" component={RegisterForm}/>
-                                <Route path="/" exact render={props => <Home {...props} user={user}/>}/>
+                                <Route path="/home" exact render={props => <Home {...props} user={user}/>}/>
                                 <Route path="/not-found" component={NotFound}/>
                                 <Redirect to="/not-found"/>
                             </Switch>
