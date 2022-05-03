@@ -10619,7 +10619,6 @@ button:active, button:hover, button:focus {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    justify-content: center;
   }
 }
 .filters .filter-position {
@@ -10660,7 +10659,6 @@ button:active, button:hover, button:focus {
 @media (max-width: 376px) {
   .filters .filter-user {
     padding-top: 8px;
-    padding-left: 20px;
     margin-right: 4px;
   }
 }
@@ -10701,7 +10699,7 @@ button:active, button:hover, button:focus {
 @media (max-width: 376px) {
   .filters .search-box {
     float: left;
-    padding: 0 20px 4px 20px;
+    padding: 0 20px 4px 2px;
     width: 292px;
     margin-right: 0;
   }
@@ -10935,6 +10933,14 @@ form {
   color: #bbb8b7;
 }
 .dark-mode .navbar .navbar-item:hover {
+  background-color: #333;
+}
+@media (max-width: 376px) {
+  .dark-mode .navbar .navbar-item:hover {
+    background-color: #bbb8b7;
+  }
+}
+.dark-mode .navbar .navbar-menu {
   background-color: #333;
 }
 .dark-mode .search-box input {
