@@ -10717,6 +10717,9 @@ html {
     width: 100%;
   }
 }
+.filters .dropdown-menu {
+  top: 70%;
+}
 
 /** Table area */
 .table-wrapper {

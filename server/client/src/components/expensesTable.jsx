@@ -25,7 +25,7 @@ class ExpensesTable extends Component {
         {key:'delete', content: entry => (
                 // eslint-disable-next-line no-restricted-globals
                 <button onClick={() => confirm("Are you sure you want to delete this entry?") ? this.props.onDelete(entry) : ""}
-                        className="button is-link is-light">-
+                        className="button is-link is-light"> <span className="mdi mdi-trash-can-outline"/>
                 </button>
             )
         },
