@@ -3,6 +3,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {getCategories} from "../services/categoryService";
 import {getEntriesByDate, getEntriesByWeek, getEntriesByMonth, getEntriesByCategory, getEntriesPieByCategory} from "../services/chartsService";
+import FilterTime from "./common/filterTime";
 
 
 const Overview = (props) => {
@@ -12,6 +13,7 @@ const Overview = (props) => {
     const [categories, setCategories] = useState([]);
     const [entriesByCat, setEntriesByCat] = useState([]);
     const [entriesPieByCat, setEntriesPieByCat] = useState([]);
+    const [filterTime, setFilterTime] = useState("Current week")
 
     useEffect( () => {
         async function getEntriesByTime() {
@@ -209,6 +211,10 @@ const Overview = (props) => {
                 {/*    <HighchartsReact highcharts={Highcharts}*/}
                 {/*                     options={optionsEntriesDate} />*/}
                 {/*</div>*/}
+            <div className="chart-filter">
+                <h4>Time related charts</h4>
+            </div>
+            <div className="chart-time">
                 <div className="chart-item-right">
                     <HighchartsReact highcharts={Highcharts}
                                      options={optionsEntriesByWeek} />
@@ -217,6 +223,17 @@ const Overview = (props) => {
                     <HighchartsReact highcharts={Highcharts}
                                      options={optionsEntriesByMonth} />
                 </div>
+            </div>
+
+            <h4>Category related charts</h4>
+            <FilterTime currentTimeFilter={filterTime}
+                        onChange={filter => setFilterTime(filter)}
+            />
+            {/*<div className="chart-filter">*/}
+            {/*    <h4>Category related charts</h4>*/}
+            {/*    <p>Hello</p>*/}
+            {/*</div>*/}
+            <div>
                 <div className="chart-item-right">
                     <HighchartsReact highcharts={Highcharts}
                                      options={optionsEntriesPieByCat} />
@@ -226,6 +243,8 @@ const Overview = (props) => {
                                      options={optionsEntriesByCat} />
                 </div>
             </div>
+
+        </div>
     );
 };
 

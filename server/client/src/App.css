@@ -10922,8 +10922,13 @@ form {
   float: left;
   padding: 20px 20px 60px 40px;
 }
-.chart-container .chart-item {
-  padding: 20px 40px 60px 40px;
+.chart-container .chart-filter {
+  display: inline-block;
+  width: 100%;
+}
+.chart-container .chart-time {
+  overflow: hidden;
+  background-color: white;
 }
 
 /**

@@ -369,7 +369,15 @@ form {
         padding: 20px 20px 60px 40px;
     }
     .chart-item {
-        padding: 20px 40px 60px 40px;
+//         padding: 20px 40px 60px 40px;
+    }
+    .chart-filter {
+        display: inline-block;
+        width: 100%;
+    }
+    .chart-time {
+        overflow:hidden;
+        background-color: white;
     }
 }
 
