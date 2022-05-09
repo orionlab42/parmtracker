@@ -76,11 +76,13 @@ func ChartsExpensesByDate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// ChartsExpensesByCategory is a handler for: /api/charts-expenses-by-category
+// ChartsExpensesByCategory is a handler for: /api/charts-expenses-by-category/{filter}
 func ChartsExpensesByCategory(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	filter := vars["filter"]
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	exp := expenses.GetExpenseEntriesMergedByCategory()
+	exp := expenses.GetExpenseEntriesMergedByCategory(filter)
 	if err := json.NewEncoder(w).Encode(exp); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
@@ -111,9 +113,11 @@ func ChartsExpensesByMonth(w http.ResponseWriter, r *http.Request) {
 
 // ChartsPieExpensesByCategory is a handler for: /api/charts-pie-expenses-by-category
 func ChartsPieExpensesByCategory(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	filter := vars["filter"]
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	exp := expenses.GetExpenseEntriesPieByMonth()
+	exp := expenses.GetExpenseEntriesPieByMonth(filter)
 	if err := json.NewEncoder(w).Encode(exp); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return

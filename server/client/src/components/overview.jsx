@@ -4,6 +4,7 @@ import HighchartsReact from 'highcharts-react-official';
 import {getCategories} from "../services/categoryService";
 import {getEntriesByDate, getEntriesByWeek, getEntriesByMonth, getEntriesByCategory, getEntriesPieByCategory} from "../services/chartsService";
 import FilterTime from "./common/filterTime";
+import FilterCategory from "./common/filterCategories";
 
 
 const Overview = (props) => {
@@ -14,22 +15,23 @@ const Overview = (props) => {
     const [entriesByCat, setEntriesByCat] = useState([]);
     const [entriesPieByCat, setEntriesPieByCat] = useState([]);
     const [filterTime, setFilterTime] = useState("Current week")
+    const [filterCategory, setFilterCategory] = useState(0)
 
     useEffect( () => {
         async function getEntriesByTime() {
             const { data: entriesDate } = await getEntriesByDate();
             setEntriesByDate(entriesDate);
-            const { data: entriesWeek } = await getEntriesByWeek();
+            const { data: entriesWeek } = await getEntriesByWeek(filterCategory);
             setEntriesByWeek(entriesWeek);
-            const { data: entriesMonth } = await getEntriesByMonth();
+            const { data: entriesMonth } = await getEntriesByMonth(filterCategory);
             setEntriesByMonth(entriesMonth);
         }
         async function getEntriesByCat() {
             const { data: categories } = await getCategories();
             setCategories(categories);
-            const { data: entriesCat } = await getEntriesByCategory();
+            const { data: entriesCat } = await getEntriesByCategory(filterTime);
             setEntriesByCat(entriesCat);
-            const { data: entriesPieByCat } = await getEntriesPieByCategory();
+            const { data: entriesPieByCat } = await getEntriesPieByCategory(filterTime);
             setEntriesPieByCat(entriesPieByCat);
         }
         getEntriesByTime();
@@ -204,7 +206,8 @@ const Overview = (props) => {
             colorByPoint: true,
             data: getCategoryNames(entriesPieByCat)}]
     };
-
+ // console.log("FilterTime: ", filterTime);
+ // console.log("FilterCategory: ", filterCategory);
     return (
         <div className="chart-container">
                 {/*<div className="chart-item">*/}
@@ -214,6 +217,11 @@ const Overview = (props) => {
             <div className="chart-filter">
                 <h4>Time related charts</h4>
             </div>
+            <FilterCategory
+                items={categories}
+                selectedItem={filterCategory}
+                onItemSelect={filter => setFilterCategory(filter)}
+            />
             <div className="chart-time">
                 <div className="chart-item-right">
                     <HighchartsReact highcharts={Highcharts}

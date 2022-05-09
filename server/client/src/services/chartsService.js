@@ -11,18 +11,18 @@ export function getEntriesByDate() {
     return http.get(apiEndpointExpByDate);
 }
 
-export function getEntriesByCategory() {
-    return http.get(apiEndpointExpByCat);
+export function getEntriesByWeek(filter) {
+    return http.get(`${apiEndpointExpByWeek}/${filter}`);
 }
 
-export function getEntriesByWeek() {
-    return http.get(apiEndpointExpByWeek);
+export function getEntriesByMonth(filter) {
+    return http.get(`${apiEndpointExpByMonth}/${filter}`);
 }
 
-export function getEntriesByMonth() {
-    return http.get(apiEndpointExpByMonth);
+export function getEntriesByCategory(filter) {
+    return http.get(`${apiEndpointExpByCat}/${filter}`);
 }
 
-export function getEntriesPieByCategory() {
-    return http.get(apiEndpointExpPieByCat);
+export function getEntriesPieByCategory(filter) {
+    return http.get(`${apiEndpointExpPieByCat}/${filter}`);
 }

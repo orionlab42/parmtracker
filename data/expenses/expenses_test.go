@@ -84,7 +84,7 @@ func TestGetExpenseEntriesMergedByDate(t *testing.T) {
 }
 
 func TestGetExpenseEntriesMergedByCategory(t *testing.T) {
-	entries := GetExpenseEntriesMergedByCategory()
+	entries := GetExpenseEntriesMergedByCategory("Current week")
 	for _, entry := range entries {
 		fmt.Printf("%+v\n", entry)
 	}
@@ -105,7 +105,7 @@ func TestGetExpenseEntriesMergedByMonth(t *testing.T) {
 }
 
 func TestGetExpenseEntriesPieByMonth(t *testing.T) {
-	entries := GetExpenseEntriesPieByMonth()
+	entries := GetExpenseEntriesPieByMonth("Current week")
 	var total float64
 	for _, entry := range entries {
 		total += entry.Amount
