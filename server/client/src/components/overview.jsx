@@ -14,7 +14,7 @@ const Overview = (props) => {
     const [categories, setCategories] = useState([]);
     const [entriesByCat, setEntriesByCat] = useState([]);
     const [entriesPieByCat, setEntriesPieByCat] = useState([]);
-    const [filterTime, setFilterTime] = useState("Current week")
+    const [filterTime, setFilterTime] = useState("")
     const [filterCategory, setFilterCategory] = useState(0)
 
     useEffect( () => {
@@ -29,6 +29,7 @@ const Overview = (props) => {
         async function getEntriesByCat() {
             const { data: categories } = await getCategories();
             setCategories(categories);
+            console.log("in use effect", filterTime);
             const { data: entriesCat } = await getEntriesByCategory(filterTime);
             setEntriesByCat(entriesCat);
             const { data: entriesPieByCat } = await getEntriesPieByCategory(filterTime);
@@ -206,7 +207,7 @@ const Overview = (props) => {
             colorByPoint: true,
             data: getCategoryNames(entriesPieByCat)}]
     };
- // console.log("FilterTime: ", filterTime);
+ console.log("FilterTime: ", filterTime);
  // console.log("FilterCategory: ", filterCategory);
     return (
         <div className="chart-container">

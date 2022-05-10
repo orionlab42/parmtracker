@@ -5,23 +5,33 @@ import (
 	"time"
 )
 
+const (
+	CurrentWeek  = "Current week"
+	CurrentMonth = "Current month"
+	CurrentYear  = "Current year"
+	LastWeek     = "Last week"
+	LastMonth    = "Last month"
+	LastYear     = "Last year"
+)
+
 func GetExpenseEntriesMergedByCategory(filter string) Expenses {
+	fmt.Println("what is the filter:", filter)
 	expenses := GetExpenseEntries()
 	var expensesNew Expenses
-	if filter == "Current week" {
-		for _, val := range expenses {
-			isSaved := false
-			for i, _ := range expensesNew {
-				if val.Category == expensesNew[i].Category {
-					expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
-					isSaved = true
-					break
-				}
+	startDate, endDate := GetFilterDate(filter)
+	fmt.Println("Dates:", startDate, endDate)
+	for _, val := range expenses {
+		isSaved := false
+		for i, _ := range expensesNew {
+			if val.Category == expensesNew[i].Category && startDate.Before(val.Date) && endDate.After(val.Date) {
+				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
+				isSaved = true
+				break
 			}
-			if isSaved == false {
-				val.Name = "Total expenses of " + fmt.Sprint(val.Category)
-				expensesNew = append(expensesNew, val)
-			}
+		}
+		if isSaved == false && startDate.Before(val.Date) && endDate.After(val.Date) {
+			val.Name = "Total expenses of " + fmt.Sprint(val.Category)
+			expensesNew = append(expensesNew, val)
 		}
 	}
 	return expensesNew
@@ -30,18 +40,18 @@ func GetExpenseEntriesMergedByCategory(filter string) Expenses {
 func GetFilterDate(filter string) (time.Time, time.Time) {
 	var startDate, endDate time.Time
 	switch filter {
-	case "Current week":
+	case CurrentWeek:
 		startDate, endDate = GetFilterDateCurrentWeek()
-	case "Current year":
-		startDate, endDate = GetFilterDateCurrentYear()
-	case "Last week":
-		startDate, endDate = GetFilterDateLastWeek()
-	case "Last month":
-		startDate, endDate = GetFilterDateLastMonth()
-	case "Last year":
-		startDate, endDate = GetFilterDateLastYear()
-	default:
+	case CurrentMonth:
 		startDate, endDate = GetFilterDateCurrentMonth()
+	case CurrentYear:
+		startDate, endDate = GetFilterDateCurrentYear()
+	case LastWeek:
+		startDate, endDate = GetFilterDateLastWeek()
+	case LastMonth:
+		startDate, endDate = GetFilterDateLastMonth()
+	case LastYear:
+		startDate, endDate = GetFilterDateLastYear()
 	}
 	return startDate, endDate
 }

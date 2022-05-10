@@ -1,6 +1,7 @@
 package expenses
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -52,4 +53,15 @@ func TestGetFilterDateLastYear(t *testing.T) {
 	assert.Equal(t, 1, endLastYear.Day())
 	assert.Equal(t, time.Month(1), endLastYear.Month())
 	assert.Equal(t, now.Year(), endLastYear.Year())
+}
+
+func TestGetExpenseEntriesMergedByCategory2(t *testing.T) {
+	entries := GetExpenseEntriesMergedByCategory(CurrentMonth)
+	for _, entry := range entries {
+		fmt.Printf("%+v\n", entry)
+	}
+	fmt.Printf("%+v\n", len(entries))
+	//fmt.Printf("%+v\n", entries[0])
+	//fmt.Printf("%+v\n", entries[len(entries)-1])
+
 }
