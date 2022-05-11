@@ -76,6 +76,66 @@ func ChartsExpensesByDate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// ChartsExpensesByWeek is a handler for: /api/charts-expenses-by-week/{filter}
+func ChartsExpensesByWeek(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	filter := vars["filter"]
+	categoryId, err := strconv.Atoi(filter)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	var category categories.Category
+	if err := category.Load(categoryId); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The filter category with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	exp := expenses.GetExpenseEntriesMergedByWeek(categoryId)
+	if err := json.NewEncoder(w).Encode(exp); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+// ChartsExpensesByMonth is a handler for: /api/charts-expenses-by-month/{filter}
+func ChartsExpensesByMonth(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	filter := vars["filter"]
+	categoryId, err := strconv.Atoi(filter)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	var category categories.Category
+	if err := category.Load(categoryId); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The filter category with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	exp := expenses.GetExpenseEntriesMergedByMonth(categoryId)
+	if err := json.NewEncoder(w).Encode(exp); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
 // ChartsExpensesByCategory is a handler for: /api/charts-expenses-by-category/{filter}
 func ChartsExpensesByCategory(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -96,28 +156,6 @@ func ChartsPieExpensesByCategory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	exp := expenses.GetExpenseEntriesPieByCategory(filter)
-	if err := json.NewEncoder(w).Encode(exp); err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-}
-
-// ChartsExpensesByWeek is a handler for: /api/charts-expenses-by-week
-func ChartsExpensesByWeek(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-	exp := expenses.GetExpenseEntriesMergedByWeek()
-	if err := json.NewEncoder(w).Encode(exp); err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-}
-
-// ChartsExpensesByMonth is a handler for: /api/charts-expenses-by-month
-func ChartsExpensesByMonth(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusOK)
-	exp := expenses.GetExpenseEntriesMergedByMonth()
 	if err := json.NewEncoder(w).Encode(exp); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return

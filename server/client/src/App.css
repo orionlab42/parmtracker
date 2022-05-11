@@ -10927,7 +10927,7 @@ form {
   display: inline-block;
   width: 100%;
 }
-.chart-container .chart-filter .filter-time {
+.chart-container .chart-filter .filter-time, .chart-container .chart-filter .filter-category {
   float: right;
   padding: 10px 10px 10px 10px;
 }

@@ -12,11 +12,19 @@ export function getEntriesByDate() {
 }
 
 export function getEntriesByWeek(filter) {
-    return http.get(`${apiEndpointExpByWeek}/${filter}`);
+    let entries = http.get(`${apiEndpointExpByWeek}/${filter}`);
+    if (entries == null) {
+        return [];
+    }
+    return entries;
 }
 
 export function getEntriesByMonth(filter) {
-    return http.get(`${apiEndpointExpByMonth}/${filter}`);
+    let entries = http.get(`${apiEndpointExpByMonth}/${filter}`);
+    if (entries == null) {
+        return [];
+    }
+    return entries;
 }
 
 export function getEntriesByCategory(filter) {

@@ -184,52 +184,6 @@ func GetExpenseEntriesMergedByDate() Expenses {
 	return expensesNew
 }
 
-func GetExpenseEntriesMergedByWeek() Expenses {
-	expenses := GetExpenseEntries()
-	var expensesNew Expenses
-	for _, val := range expenses {
-		isSaved := false
-		year1, week1 := val.Date.ISOWeek()
-		for i, _ := range expensesNew {
-			year2, week2 := expensesNew[i].Date.ISOWeek()
-			if year1 == year2 && week1 == week2 {
-				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
-				isSaved = true
-				break
-			}
-		}
-		if isSaved == false {
-			//val.Name = "Week nr." + fmt.Sprint(week1) + "/" + fmt.Sprint(year1)
-			val.Name = fmt.Sprint(FirstDayOfISOWeek(year1, week1).Day()) + "-" + fmt.Sprint(FirstDayOfISOWeek(year1, week1).AddDate(0, 0, 6).Day()) + " " + fmt.Sprint(FirstDayOfISOWeek(year1, week1).Format("Jan 06"))
-			expensesNew = append(expensesNew, val)
-		}
-	}
-	return expensesNew
-}
-
-func GetExpenseEntriesMergedByMonth() Expenses {
-	expenses := GetExpenseEntries()
-	var expensesNew Expenses
-	for _, val := range expenses {
-		isSaved := false
-		for i, _ := range expensesNew {
-			if val.Date.Month() == expensesNew[i].Date.Month() && val.Date.Year() == expensesNew[i].Date.Year() {
-				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
-				//fmt.Printf("Added from date%v the value %v\n", val.Date, val.Amount)
-				//fmt.Printf("With new expense %v\n", expensesNew)
-				isSaved = true
-				break
-			}
-		}
-		if isSaved == false {
-			val.Name = "Total expenses of " + fmt.Sprint(val.Date.Month()) + " " + fmt.Sprint(val.Date.Year())
-			fmt.Printf("Saved as %+v\n", val)
-			expensesNew = append(expensesNew, val)
-		}
-	}
-	return expensesNew
-}
-
 func FirstDayOfISOWeek(year int, week int) time.Time {
 	date := time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
 	isoYear, isoWeek := date.ISOWeek()

@@ -14,6 +14,60 @@ const (
 	LastYear     = "Last year"
 )
 
+func GetExpenseEntriesMergedByWeek(filter int) Expenses {
+	expenses := GetExpenseEntries()
+	var expensesNew Expenses
+	for _, val := range expenses {
+		isSaved := false
+		isFilter := false
+		if filter == 0 || val.Category == filter {
+			isFilter = true
+		}
+		year1, week1 := val.Date.ISOWeek()
+		for i, _ := range expensesNew {
+			year2, week2 := expensesNew[i].Date.ISOWeek()
+			if year1 == year2 && week1 == week2 && isFilter {
+				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
+				isSaved = true
+				break
+			}
+		}
+		if isSaved == false && isFilter {
+			//val.Name = "Week nr." + fmt.Sprint(week1) + "/" + fmt.Sprint(year1)
+			val.Name = fmt.Sprint(FirstDayOfISOWeek(year1, week1).Day()) + "-" + fmt.Sprint(FirstDayOfISOWeek(year1, week1).AddDate(0, 0, 6).Day()) + " " + fmt.Sprint(FirstDayOfISOWeek(year1, week1).Format("Jan 06"))
+			expensesNew = append(expensesNew, val)
+		}
+	}
+	return expensesNew
+}
+
+func GetExpenseEntriesMergedByMonth(filter int) Expenses {
+	expenses := GetExpenseEntries()
+	var expensesNew Expenses
+	for _, val := range expenses {
+		isSaved := false
+		isFilter := false
+		if filter == 0 || val.Category == filter {
+			isFilter = true
+		}
+		for i, _ := range expensesNew {
+			if val.Date.Month() == expensesNew[i].Date.Month() && val.Date.Year() == expensesNew[i].Date.Year() && isFilter {
+				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
+				//fmt.Printf("Added from date%v the value %v\n", val.Date, val.Amount)
+				//fmt.Printf("With new expense %v\n", expensesNew)
+				isSaved = true
+				break
+			}
+		}
+		if isSaved == false && isFilter {
+			val.Name = "Total expenses of " + fmt.Sprint(val.Date.Month()) + " " + fmt.Sprint(val.Date.Year())
+			fmt.Printf("Saved as %+v\n", val)
+			expensesNew = append(expensesNew, val)
+		}
+	}
+	return expensesNew
+}
+
 func GetExpenseEntriesMergedByCategory(filter string) Expenses {
 	expenses := GetExpenseEntries()
 	var expensesNew Expenses
