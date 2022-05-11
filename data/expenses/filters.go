@@ -15,11 +15,9 @@ const (
 )
 
 func GetExpenseEntriesMergedByCategory(filter string) Expenses {
-	fmt.Println("what is the filter:", filter)
 	expenses := GetExpenseEntries()
 	var expensesNew Expenses
 	startDate, endDate := GetFilterDate(filter)
-	fmt.Println("Dates:", startDate, endDate)
 	for _, val := range expenses {
 		isSaved := false
 		for i, _ := range expensesNew {
@@ -35,6 +33,18 @@ func GetExpenseEntriesMergedByCategory(filter string) Expenses {
 		}
 	}
 	return expensesNew
+}
+
+func GetExpenseEntriesPieByCategory(filter string) Expenses {
+	expensesByCategory := GetExpenseEntriesMergedByCategory(filter)
+	var totalExpenses float64
+	for _, val := range expensesByCategory {
+		totalExpenses += val.Amount
+	}
+	for i, _ := range expensesByCategory {
+		expensesByCategory[i].Amount = expensesByCategory[i].Amount * 100 / totalExpenses
+	}
+	return expensesByCategory
 }
 
 func GetFilterDate(filter string) (time.Time, time.Time) {

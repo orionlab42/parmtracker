@@ -14,7 +14,7 @@ const Overview = (props) => {
     const [categories, setCategories] = useState([]);
     const [entriesByCat, setEntriesByCat] = useState([]);
     const [entriesPieByCat, setEntriesPieByCat] = useState([]);
-    const [filterTime, setFilterTime] = useState("")
+    const [filterTime, setFilterTime] = useState("Current week")
     const [filterCategory, setFilterCategory] = useState(0)
 
     useEffect( () => {
@@ -29,7 +29,6 @@ const Overview = (props) => {
         async function getEntriesByCat() {
             const { data: categories } = await getCategories();
             setCategories(categories);
-            console.log("in use effect", filterTime);
             const { data: entriesCat } = await getEntriesByCategory(filterTime);
             setEntriesByCat(entriesCat);
             const { data: entriesPieByCat } = await getEntriesPieByCategory(filterTime);
@@ -37,7 +36,7 @@ const Overview = (props) => {
         }
         getEntriesByTime();
         getEntriesByCat();
-    }, []);
+    }, [filterTime]);
 
     const optionsEntriesDate = {
         title: {text: 'Expenses in time'},
@@ -161,7 +160,7 @@ const Overview = (props) => {
         chart: {
             type: 'column'
         },
-        title: {text: 'Expenses by categories'},
+        title: {text: ''},
         xAxis: {
             categories: getCategoryNames(entriesByCat).map(cat => cat.name)
         },
@@ -173,7 +172,10 @@ const Overview = (props) => {
                 enableMouseTracking: false
             }
         },
-        series: [{data: getCategoryNames(entriesByCat).map(cat => cat.y)}]
+        series: [{data: getCategoryNames(entriesByCat).map(cat => cat.y),
+            name: 'categories',
+            lineWidth: 0.5,
+        }]
     };
 
     const optionsEntriesPieByCat = {
@@ -183,7 +185,7 @@ const Overview = (props) => {
             plotShadow: false,
             type: 'pie'
         },
-        title: {text: 'Expenses distribution by categories'},
+        title: {text: ''},
         tooltip: {
             pointFormat: '<b>{point.percentage:.1f}%</b>'
         },
@@ -207,6 +209,7 @@ const Overview = (props) => {
             colorByPoint: true,
             data: getCategoryNames(entriesPieByCat)}]
     };
+
  console.log("FilterTime: ", filterTime);
  // console.log("FilterCategory: ", filterCategory);
     return (
@@ -234,14 +237,16 @@ const Overview = (props) => {
                 </div>
             </div>
 
-            <h4>Category related charts</h4>
-            <FilterTime currentTimeFilter={filterTime}
-                        onChange={filter => setFilterTime(filter)}
-            />
-            {/*<div className="chart-filter">*/}
-            {/*    <h4>Category related charts</h4>*/}
-            {/*    <p>Hello</p>*/}
-            {/*</div>*/}
+            {/*<h4>Category related charts</h4>*/}
+            {/*<FilterTime currentTimeFilter={filterTime}*/}
+            {/*            onChange={filter => setFilterTime(filter)}*/}
+            {/*/>*/}
+            <div className="chart-filter">
+                <h4 className="title is-5 center-text chart-title">Expenses by categories</h4>
+                <FilterTime currentTimeFilter={filterTime}
+                            onChange={filter => setFilterTime(filter)}
+                />
+            </div>
             <div>
                 <div className="chart-item-right">
                     <HighchartsReact highcharts={Highcharts}

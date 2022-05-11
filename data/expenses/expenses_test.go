@@ -83,13 +83,6 @@ func TestGetExpenseEntriesMergedByDate(t *testing.T) {
 	}
 }
 
-func TestGetExpenseEntriesMergedByCategory(t *testing.T) {
-	entries := GetExpenseEntriesMergedByCategory(LastWeek)
-	for _, entry := range entries {
-		fmt.Printf("%+v\n", entry)
-	}
-}
-
 func TestGetExpenseEntriesMergedByWeek(t *testing.T) {
 	entries := GetExpenseEntriesMergedByWeek()
 	for _, entry := range entries {
@@ -102,16 +95,6 @@ func TestGetExpenseEntriesMergedByMonth(t *testing.T) {
 	for _, entry := range entries {
 		fmt.Printf("%+v\n", entry)
 	}
-}
-
-func TestGetExpenseEntriesPieByMonth(t *testing.T) {
-	entries := GetExpenseEntriesPieByMonth(LastMonth)
-	var total float64
-	for _, entry := range entries {
-		total += entry.Amount
-		fmt.Printf("%+v\n", entry)
-	}
-	fmt.Println(total)
 }
 
 func TestFirstDayOfISOWeek(t *testing.T) {

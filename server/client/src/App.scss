@@ -107,6 +107,7 @@ body {
     }
     .filter-time {
         margin-right: 10px;
+        float:  right;
         @media (max-width: 376px){
                     padding-top: 4px;
                     margin-right: 0;
@@ -374,11 +375,21 @@ form {
     .chart-filter {
         display: inline-block;
         width: 100%;
+        .filter-time{
+            float: right;
+            padding: 10px 10px 10px 10px;
+        }
+        .chart-title {
+            padding-top: 30px;
+            margin: 0;
+        }
+
     }
     .chart-time {
         overflow:hidden;
         background-color: white;
     }
+
 }
 
 /**

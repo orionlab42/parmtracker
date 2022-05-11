@@ -10924,16 +10924,7 @@ form {
   padding: 20px 20px 60px 40px;
 }
 .chart-container .chart-filter {
-  display: inline-block;
   width: 100%;
-}
-.chart-container .chart-filter .filter-time {
-  float: right;
-  padding: 10px 10px 10px 10px;
-}
-.chart-container .chart-filter .chart-title {
-  padding-top: 30px;
-  margin: 0;
 }
 .chart-container .chart-time {
   overflow: hidden;
@@ -11067,4 +11058,4 @@ form {
   background-color: #222;
 }
 
-/*# sourceMappingURL=App.css.map */
+/*# sourceMappingURL=App.scc.map */

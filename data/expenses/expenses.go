@@ -184,28 +184,6 @@ func GetExpenseEntriesMergedByDate() Expenses {
 	return expensesNew
 }
 
-//func GetExpenseEntriesMergedByCategory(filter string) Expenses {
-//	expenses := GetExpenseEntries()
-//	var expensesNew Expenses
-//	if filter == "Current week" {
-//		for _, val := range expenses {
-//			isSaved := false
-//			for i, _ := range expensesNew {
-//				if val.Category == expensesNew[i].Category {
-//					expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
-//					isSaved = true
-//					break
-//				}
-//			}
-//			if isSaved == false {
-//				val.Name = "Total expenses of " + fmt.Sprint(val.Category)
-//				expensesNew = append(expensesNew, val)
-//			}
-//		}
-//	}
-//	return expensesNew
-//}
-
 func GetExpenseEntriesMergedByWeek() Expenses {
 	expenses := GetExpenseEntries()
 	var expensesNew Expenses
@@ -250,18 +228,6 @@ func GetExpenseEntriesMergedByMonth() Expenses {
 		}
 	}
 	return expensesNew
-}
-
-func GetExpenseEntriesPieByMonth(filter string) Expenses {
-	expensesByCategory := GetExpenseEntriesMergedByCategory(filter)
-	var totalExpenses float64
-	for _, val := range expensesByCategory {
-		totalExpenses += val.Amount
-	}
-	for i, _ := range expensesByCategory {
-		expensesByCategory[i].Amount = expensesByCategory[i].Amount * 100 / totalExpenses
-	}
-	return expensesByCategory
 }
 
 func FirstDayOfISOWeek(year int, week int) time.Time {

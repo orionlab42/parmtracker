@@ -20,7 +20,6 @@ export function getEntriesByMonth(filter) {
 }
 
 export function getEntriesByCategory(filter) {
-    console.log("Chart filter:", filter);
     return http.get(`${apiEndpointExpByCat}/${filter}`);
 }
 
