@@ -12,7 +12,8 @@ const categoryIcon = ["mdi mdi-cat", "mdi mdi-castle", "mdi-airplane", "mdi-tabl
     ""
 ]
 
-const  apiEndpoint = '/categories';
+const  apiEndpoint = '/categories/all';
+const  apiEndpoint2 = '/categories/filled';
 
 function categoryUrl(id) {
     return `${apiEndpoint}/${id}`;
@@ -28,6 +29,10 @@ export function getCategoryIcon() {
 
 export function getCategories() {
     return http.get(apiEndpoint);
+}
+
+export function getFilledCategories() {
+    return http.get(apiEndpoint2);
 }
 
 export function deleteCategory(id) {

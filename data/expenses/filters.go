@@ -6,12 +6,12 @@ import (
 )
 
 const (
-	CurrentWeek  = "Current week"
-	CurrentMonth = "Current month"
-	CurrentYear  = "Current year"
-	LastWeek     = "Last week"
-	LastMonth    = "Last month"
-	LastYear     = "Last year"
+	CurrentWeek  = "current week"
+	CurrentMonth = "current month"
+	CurrentYear  = "current year"
+	LastWeek     = "last week"
+	LastMonth    = "last month"
+	LastYear     = "last year"
 )
 
 func GetExpenseEntriesMergedByWeek(filter int) Expenses {

@@ -14,7 +14,7 @@ const Overview = (props) => {
     const [categories, setCategories] = useState([]);
     const [entriesByCat, setEntriesByCat] = useState([]);
     const [entriesPieByCat, setEntriesPieByCat] = useState([]);
-    const [filterTime, setFilterTime] = useState("Current week")
+    const [filterTime, setFilterTime] = useState("current week")
     const [filterCategory, setFilterCategory] = useState(0)
 
     useEffect( () => {
@@ -151,6 +151,9 @@ const Overview = (props) => {
 
     function getCategoryNames(entries) {
         let categoryNames = []
+        if (entries == null) {
+            return categoryNames
+        }
         for (let i = 0; i < entries.length; i++) {
             for (let j = 0; j < categories.length; j++) {
                 if (categories[j].id === entries[i].category) {
@@ -162,6 +165,17 @@ const Overview = (props) => {
             }
         }
         return categoryNames
+    }
+
+    function getCategoryName(entry) {
+        if (entry === 0) {
+            return "all"
+        }
+        for (let i = 0; i < categories.length; i++) {
+            if (categories[i].id === entry) {
+                return categories[i].category_name
+            }
+        }
     }
 
     const optionsEntriesByCat = {
@@ -217,7 +231,7 @@ const Overview = (props) => {
             colorByPoint: true,
             data: getCategoryNames(entriesPieByCat)}]
     };
-    console.log("entriesWeek2", entriesByWeek);
+
     return (
         <div className="chart-container">
                 {/*<div className="chart-item">*/}
@@ -225,7 +239,7 @@ const Overview = (props) => {
                 {/*                     options={optionsEntriesDate} />*/}
                 {/*</div>*/}
             <div className="chart-filter">
-                <h4 className="title is-5 center-text chart-title">Expenses by time</h4>
+                <h4 className="title is-5 center-text chart-title">Expenses by time for {getCategoryName(filterCategory)}</h4>
                 <FilterCategory
                     items={categories}
                     selectedItem={filterCategory}
@@ -243,7 +257,7 @@ const Overview = (props) => {
                 </div>
             </div>
             <div className="chart-filter">
-                <h4 className="title is-5 center-text chart-title">Expenses by categories</h4>
+                <h4 className="title is-5 center-text chart-title">Expenses by categories for {filterTime}</h4>
                 <FilterTime currentTimeFilter={filterTime}
                             onChange={filter => setFilterTime(filter)}
                 />

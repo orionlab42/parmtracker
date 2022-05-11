@@ -162,11 +162,18 @@ func ChartsPieExpensesByCategory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Categories is a handler for: /api/categories
+// Categories is a handler for: /api/categories/{id}
 func Categories(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	cat := categories.GetCategories()
+	var cat categories.Categories
+	if id == "all" {
+		cat = categories.GetCategories()
+	} else {
+		cat = categories.GetFilledCategories()
+	}
 	if err := json.NewEncoder(w).Encode(cat); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return

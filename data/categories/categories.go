@@ -118,3 +118,39 @@ func GetCategories() Categories {
 	}
 	return categories
 }
+
+//func GetFilledCategoriesIds() []int {
+//	expenses := expenses.GetExpenseEntries()
+//	var ids []int
+//	for _, val := range expenses {
+//		if val.Category
+//	}
+//
+//}
+
+func GetFilledCategories() Categories {
+	db := mysql.GetInstance().GetConn()
+	stmt, _ := db.Prepare(`select * from categories order by category_name ASC`)
+	defer stmt.Close()
+	rows, e := stmt.Query()
+	if e != nil {
+		fmt.Printf("Error when preparing stmt in getting all expenses: %s", e.Error())
+		return Categories{}
+	}
+	defer rows.Close()
+	categories := Categories{}
+	for rows.Next() {
+		cat := Category{}
+		var createdAt string
+		var updatedAt string
+		e := rows.Scan(&cat.Id, &cat.CategoryName, &cat.CategoryColor, &cat.CategoryIcon, &createdAt, &updatedAt)
+		if e != nil {
+			fmt.Printf("Error when loading categories: %s", e.Error())
+			return Categories{}
+		}
+		cat.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
+		cat.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
+		categories = append(categories, cat)
+	}
+	return categories
+}
