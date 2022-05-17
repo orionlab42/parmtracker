@@ -2,6 +2,7 @@ package categories
 
 import (
 	"fmt"
+	"github.com/orionlab42/parmtracker/data/expenses"
 	"github.com/orionlab42/parmtracker/mysql"
 	"time"
 )
@@ -119,14 +120,14 @@ func GetCategories() Categories {
 	return categories
 }
 
-//func GetFilledCategoriesIds() []int {
-//	expenses := expenses.GetExpenseEntries()
-//	var ids []int
-//	for _, val := range expenses {
-//		if val.Category
-//	}
-//
-//}
+func GetFilledCategoriesIds() map[int]int {
+	expensesAll := expenses.GetExpenseEntries()
+	ids := make(map[int]int)
+	for _, val := range expensesAll {
+		ids[val.Category]++
+	}
+	return ids
+}
 
 func GetFilledCategories() Categories {
 	db := mysql.GetInstance().GetConn()
@@ -139,6 +140,7 @@ func GetFilledCategories() Categories {
 	}
 	defer rows.Close()
 	categories := Categories{}
+	ids := GetFilledCategoriesIds()
 	for rows.Next() {
 		cat := Category{}
 		var createdAt string
@@ -150,7 +152,11 @@ func GetFilledCategories() Categories {
 		}
 		cat.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
 		cat.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
-		categories = append(categories, cat)
+		for id, _ := range ids {
+			if cat.Id == id {
+				categories = append(categories, cat)
+			}
+		}
 	}
 	return categories
 }

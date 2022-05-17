@@ -1,6 +1,7 @@
 package categories
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -56,4 +57,19 @@ func TestCategoriesSaveSeedData(t *testing.T) {
 	}
 	entries := GetCategories()
 	assert.NotEqual(t, len(entries), 0)
+}
+
+func TestGetFilledCategoriesIds(t *testing.T) {
+	categories := GetFilledCategoriesIds()
+	for i, row := range categories {
+		fmt.Printf("%+v\t", i)
+		fmt.Printf("%+v\n", row)
+	}
+}
+
+func TestGetFilledCategories(t *testing.T) {
+	categories := GetFilledCategories()
+	for _, row := range categories {
+		fmt.Printf("%+v\n", row)
+	}
 }

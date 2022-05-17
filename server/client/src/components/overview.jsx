@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import {getCategories} from "../services/categoryService";
+import {getCategories, getFilledCategories} from "../services/categoryService";
 import {getEntriesByDate, getEntriesByWeek, getEntriesByMonth, getEntriesByCategory, getEntriesPieByCategory} from "../services/chartsService";
 import FilterTime from "./common/filterTime";
 import FilterCategory from "./common/filterCategories";
@@ -19,7 +19,7 @@ const Overview = (props) => {
 
     useEffect( () => {
         async function getEntriesByCat() {
-            const { data: categories } = await getCategories();
+            const { data: categories } = await getFilledCategories();
             setCategories(categories);
             const { data: entriesCat } = await getEntriesByCategory(filterTime);
             setEntriesByCat(entriesCat);
