@@ -162,9 +162,9 @@ class Entries extends Component {
                         value={searchQuery}
                         onChange={this.handleSearch}
                     />
-                    {/*<FilterTime onFilterChange={this.handleTimeFilterChange}*/}
-                    {/*            currentTimeFilter={this.state.currentTimeFilter}*/}
-                    {/*/>*/}
+                    <FilterTime onFilterChange={this.handleTimeFilterChange}
+                                currentTimeFilter={this.state.currentTimeFilter}
+                    />
                     <FilterCategory
                         items={this.state.categories}
                         selectedItem={this.state.selectedCategory}
