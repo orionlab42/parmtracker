@@ -7,6 +7,12 @@ import (
 	"time"
 )
 
+func TestGetFilterDateAll(t *testing.T) {
+	_, endCurrentDay := GetFilterDateAll()
+	now := time.Now()
+	assert.Equal(t, now.Day()+1, endCurrentDay.Day())
+}
+
 func TestGetFilterDateCurrentWeek(t *testing.T) {
 	startCurrentWeek, endCurrentDay := GetFilterDateCurrentWeek()
 	now := time.Now()
@@ -55,16 +61,27 @@ func TestGetFilterDateLastYear(t *testing.T) {
 	assert.Equal(t, now.Year(), endLastYear.Year())
 }
 
+func TestGetFilterDateLastTwoYears(t *testing.T) {
+	startLastYear, endNow := GetFilterDateLastTwoYears()
+	now := time.Now()
+	assert.Equal(t, now.Day(), startLastYear.Day())
+	assert.Equal(t, now.Month(), startLastYear.Month())
+	assert.Equal(t, now.Year()-2, startLastYear.Year())
+	assert.Equal(t, now.Day()+1, endNow.Day())
+	assert.Equal(t, now.Month(), endNow.Month())
+	assert.Equal(t, now.Year(), endNow.Year())
+}
+
 func TestGetExpenseEntriesMergedByWeek(t *testing.T) {
 	entries := GetExpenseEntriesMergedByWeek(1)
-	//for _, entry := range entries {
-	//	fmt.Printf("%+v\n", entry)
-	//}
+	for _, entry := range entries {
+		fmt.Printf("%+v\n", entry)
+	}
 	fmt.Println(entries)
 }
 
 func TestGetExpenseEntriesMergedByMonth(t *testing.T) {
-	entries := GetExpenseEntriesMergedByMonth(7)
+	entries := GetExpenseEntriesMergedByMonth(1)
 	//for _, entry := range entries {
 	//	fmt.Printf("%+v\n", entry)
 	//}

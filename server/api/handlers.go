@@ -85,17 +85,19 @@ func ChartsExpensesByWeek(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Error: %s\n", err)
 		return
 	}
-	var category categories.Category
-	if err := category.Load(categoryId); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(404) // not found
-		message := "The filter category with the given ID not found."
-		if err := json.NewEncoder(w).Encode(message); err != nil {
+	if categoryId != 0 {
+		var category categories.Category
+		if err := category.Load(categoryId); err != nil {
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			w.WriteHeader(404) // not found
+			message := "The filter category with the given ID not found."
+			if err := json.NewEncoder(w).Encode(message); err != nil {
+				fmt.Printf("Error: %s\n", err)
+				return
+			}
 			fmt.Printf("Error: %s\n", err)
 			return
 		}
-		fmt.Printf("Error: %s\n", err)
-		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
@@ -115,17 +117,19 @@ func ChartsExpensesByMonth(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Error: %s\n", err)
 		return
 	}
-	var category categories.Category
-	if err := category.Load(categoryId); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(404) // not found
-		message := "The filter category with the given ID not found."
-		if err := json.NewEncoder(w).Encode(message); err != nil {
+	if categoryId != 0 {
+		var category categories.Category
+		if err := category.Load(categoryId); err != nil {
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			w.WriteHeader(404) // not found
+			message := "The filter category with the given ID not found."
+			if err := json.NewEncoder(w).Encode(message); err != nil {
+				fmt.Printf("Error: %s\n", err)
+				return
+			}
 			fmt.Printf("Error: %s\n", err)
 			return
 		}
-		fmt.Printf("Error: %s\n", err)
-		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)

@@ -3,7 +3,7 @@ import React from "react";
 
 const FilterTime = props => {
     const timeLength = ['Get all entries','Last week','This month','Last month']
-    const timeLength2 = ['current week','last week','current month','last month','current year','last year']
+    const timeLength2 = ['all','current week','last week','current month','last month','current year','last year']
     return (
         <div className="dropdown is-hoverable filter-position filter-time">
             <div className="dropdown-trigger">

@@ -17,6 +17,7 @@ const (
 func GetExpenseEntriesMergedByWeek(filter int) Expenses {
 	expenses := GetExpenseEntries()
 	var expensesNew Expenses
+	startDate, endDate := GetFilterDateLastTwoYears()
 	for _, val := range expenses {
 		isSaved := false
 		isFilter := false
@@ -26,13 +27,13 @@ func GetExpenseEntriesMergedByWeek(filter int) Expenses {
 		year1, week1 := val.Date.ISOWeek()
 		for i, _ := range expensesNew {
 			year2, week2 := expensesNew[i].Date.ISOWeek()
-			if year1 == year2 && week1 == week2 && isFilter {
+			if year1 == year2 && week1 == week2 && startDate.Before(val.Date) && endDate.After(val.Date) && isFilter {
 				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
 				isSaved = true
 				break
 			}
 		}
-		if isSaved == false && isFilter {
+		if isSaved == false && startDate.Before(val.Date) && endDate.After(val.Date) && isFilter {
 			//val.Name = "Week nr." + fmt.Sprint(week1) + "/" + fmt.Sprint(year1)
 			val.Name = fmt.Sprint(FirstDayOfISOWeek(year1, week1).Day()) + "-" + fmt.Sprint(FirstDayOfISOWeek(year1, week1).AddDate(0, 0, 6).Day()) + " " + fmt.Sprint(FirstDayOfISOWeek(year1, week1).Format("Jan 06"))
 			expensesNew = append(expensesNew, val)
@@ -44,6 +45,7 @@ func GetExpenseEntriesMergedByWeek(filter int) Expenses {
 func GetExpenseEntriesMergedByMonth(filter int) Expenses {
 	expenses := GetExpenseEntries()
 	var expensesNew Expenses
+	startDate, endDate := GetFilterDateLastTwoYears()
 	for _, val := range expenses {
 		isSaved := false
 		isFilter := false
@@ -51,7 +53,7 @@ func GetExpenseEntriesMergedByMonth(filter int) Expenses {
 			isFilter = true
 		}
 		for i, _ := range expensesNew {
-			if val.Date.Month() == expensesNew[i].Date.Month() && val.Date.Year() == expensesNew[i].Date.Year() && isFilter {
+			if val.Date.Month() == expensesNew[i].Date.Month() && val.Date.Year() == expensesNew[i].Date.Year() && startDate.Before(val.Date) && endDate.After(val.Date) && isFilter {
 				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
 				//fmt.Printf("Added from date%v the value %v\n", val.Date, val.Amount)
 				//fmt.Printf("With new expense %v\n", expensesNew)
@@ -59,9 +61,9 @@ func GetExpenseEntriesMergedByMonth(filter int) Expenses {
 				break
 			}
 		}
-		if isSaved == false && isFilter {
+		if isSaved == false && startDate.Before(val.Date) && endDate.After(val.Date) && isFilter {
 			val.Name = "Total expenses of " + fmt.Sprint(val.Date.Month()) + " " + fmt.Sprint(val.Date.Year())
-			fmt.Printf("Saved as %+v\n", val)
+			//fmt.Printf("Saved as %+v\n", val)
 			expensesNew = append(expensesNew, val)
 		}
 	}
@@ -116,8 +118,19 @@ func GetFilterDate(filter string) (time.Time, time.Time) {
 		startDate, endDate = GetFilterDateLastMonth()
 	case LastYear:
 		startDate, endDate = GetFilterDateLastYear()
+	default:
+		startDate, endDate = GetFilterDateAll()
 	}
 	return startDate, endDate
+}
+
+func GetFilterDateAll() (time.Time, time.Time) {
+	now := time.Now()
+	endCurrentDay := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, time.UTC)
+	exp := GetExpenseEntries()
+	startAll := exp[len(exp)-1].Date
+	startAll = time.Date(startAll.Year(), startAll.Month(), startAll.Day(), 0, 0, 0, 0, time.UTC)
+	return startAll, endCurrentDay
 }
 
 func GetFilterDateCurrentWeek() (time.Time, time.Time) {
@@ -166,4 +179,11 @@ func GetFilterDateLastYear() (time.Time, time.Time) {
 	startLastYear := time.Date(now.Year()-1, 1, 1, 0, 0, 0, 0, time.UTC)
 	endLastYear := time.Date(now.Year(), 1, 1, 0, 0, 0, 0, time.UTC)
 	return startLastYear, endLastYear
+}
+
+func GetFilterDateLastTwoYears() (time.Time, time.Time) {
+	now := time.Now()
+	endCurrentDay := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, time.UTC)
+	startOfMaxTime := time.Date(now.Year()-2, now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+	return startOfMaxTime, endCurrentDay
 }

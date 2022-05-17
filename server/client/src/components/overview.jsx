@@ -14,20 +14,8 @@ const Overview = (props) => {
     const [categories, setCategories] = useState([]);
     const [entriesByCat, setEntriesByCat] = useState([]);
     const [entriesPieByCat, setEntriesPieByCat] = useState([]);
-    const [filterTime, setFilterTime] = useState("current week")
+    const [filterTime, setFilterTime] = useState("all")
     const [filterCategory, setFilterCategory] = useState(0)
-
-    useEffect( () => {
-        async function getEntriesByCat() {
-            const { data: categories } = await getFilledCategories();
-            setCategories(categories);
-            const { data: entriesCat } = await getEntriesByCategory(filterTime);
-            setEntriesByCat(entriesCat);
-            const { data: entriesPieByCat } = await getEntriesPieByCategory(filterTime);
-            setEntriesPieByCat(entriesPieByCat);
-        }
-        getEntriesByCat();
-    }, [filterTime]);
 
     useEffect( () => {
         async function getEntriesByTime() {
@@ -37,7 +25,6 @@ const Overview = (props) => {
             if (entriesWeek != null) {
                 setEntriesByWeek(entriesWeek);
             }
-            console.log("entriesWeek", entriesWeek);
             const { data: entriesMonth } = await getEntriesByMonth(filterCategory);
             if (entriesMonth != null) {
                 setEntriesByMonth(entriesMonth);
@@ -45,6 +32,21 @@ const Overview = (props) => {
         }
         getEntriesByTime();
     }, [filterCategory]);
+
+    useEffect( () => {
+        async function getEntriesByCat() {
+            const { data } = await getFilledCategories();
+            const categories = [{id:0 , category_name: "All categories"}, ...data];
+            setCategories(categories);
+            const { data: entriesCat } = await getEntriesByCategory(filterTime);
+            setEntriesByCat(entriesCat);
+            console.log("entriesCat",entriesCat);
+            const { data: entriesPieByCat } = await getEntriesPieByCategory(filterTime);
+            setEntriesPieByCat(entriesPieByCat);
+            console.log("entriesPieByCat", entriesPieByCat);
+        }
+        getEntriesByCat();
+    }, [filterTime]);
 
     const optionsEntriesDate = {
         title: {text: 'Expenses in time'},
@@ -232,6 +234,61 @@ const Overview = (props) => {
             data: getCategoryNames(entriesPieByCat)}]
     };
 
+    let categoriesCharts, chartFilter;
+    if (entriesByCat === null) {
+        chartFilter = (
+            <div className="chart-filter">
+                <h4 className="title is-5 center-text chart-title">Expenses by categories for {filterTime}</h4>
+                <h4 className="title is-5 center-text chart-title">There are none - choose another time frame!</h4>
+                <FilterTime currentTimeFilter={filterTime}
+                            onChange={filter => setFilterTime(filter)}
+                />
+            </div>
+        )
+    } else if (filterTime === "all") {
+        chartFilter = (
+            <div className="chart-filter">
+                <h4 className="title is-5 center-text chart-title">Expenses by categories</h4>
+                <FilterTime currentTimeFilter={filterTime}
+                            onChange={filter => setFilterTime(filter)}
+                />
+            </div>
+        )
+        categoriesCharts = (
+            <div>
+                <div className="chart-item-right">
+                    <HighchartsReact highcharts={Highcharts}
+                                     options={optionsEntriesPieByCat} />
+                </div>
+                <div className="chart-item-left">
+                    <HighchartsReact highcharts={Highcharts}
+                                     options={optionsEntriesByCat} />
+                </div>
+            </div>
+        )
+    } else {
+        chartFilter = (
+            <div className="chart-filter">
+                <h4 className="title is-5 center-text chart-title">Expenses by categories for {filterTime}</h4>
+                <FilterTime currentTimeFilter={filterTime}
+                            onChange={filter => setFilterTime(filter)}
+                />
+            </div>
+        )
+        categoriesCharts = (
+            <div>
+                <div className="chart-item-right">
+                    <HighchartsReact highcharts={Highcharts}
+                                     options={optionsEntriesPieByCat} />
+                </div>
+                <div className="chart-item-left">
+                    <HighchartsReact highcharts={Highcharts}
+                                     options={optionsEntriesByCat} />
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="chart-container">
                 {/*<div className="chart-item">*/}
@@ -256,23 +313,10 @@ const Overview = (props) => {
                                      options={optionsEntriesByMonth} />
                 </div>
             </div>
-            <div className="chart-filter">
-                <h4 className="title is-5 center-text chart-title">Expenses by categories for {filterTime}</h4>
-                <FilterTime currentTimeFilter={filterTime}
-                            onChange={filter => setFilterTime(filter)}
-                />
-            </div>
             <div>
-                <div className="chart-item-right">
-                    <HighchartsReact highcharts={Highcharts}
-                                     options={optionsEntriesPieByCat} />
-                </div>
-                <div className="chart-item-left">
-                    <HighchartsReact highcharts={Highcharts}
-                                     options={optionsEntriesByCat} />
-                </div>
+                { chartFilter }
+                { categoriesCharts }
             </div>
-
         </div>
     );
 };

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {getEntries, deleteEntry} from '../services/entryService';
-import {getCategories} from '../services/categoryService';
+import {getFilledCategories} from '../services/categoryService';
 import {getUsers} from '../services/userService';
 import ExpensesTable from './expensesTable';
 import Pagination from './common/pagination';
@@ -34,7 +34,7 @@ class Entries extends Component {
     };
 
     async componentDidMount() {
-        const { data } = await getCategories();
+        const { data } = await getFilledCategories();
         const categories = [{id:0 , category_name: "Get all entries"}, ...data];
         const { data:u } = await getUsers();
         const users = [{user_id:0 , user_name: "Get all entries"},...u];
