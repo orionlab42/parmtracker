@@ -65,6 +65,19 @@ func Expenses(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// ExpensesByDate is a handler for: /api/expenses/by-date/{filter}
+func ExpensesByDate(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	filter := vars["filter"]
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	exp := expenses.GetExpenseEntriesByDate(filter)
+	if err := json.NewEncoder(w).Encode(exp); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
 // ChartsExpensesByDate is a handler for: /api/charts-expenses-by-date
 func ChartsExpensesByDate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

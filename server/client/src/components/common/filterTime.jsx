@@ -2,8 +2,7 @@ import React from "react";
 
 
 const FilterTime = props => {
-    const timeLength = ['Get all entries','Last week','This month','Last month']
-    const timeLength2 = ['all','current week','last week','current month','last month','current year','last year']
+    const timeLength = ['get all','current week','last week','current month','last month','current year','last year']
     return (
         <div className="dropdown is-hoverable filter-position filter-time">
             <div className="dropdown-trigger">
@@ -13,7 +12,7 @@ const FilterTime = props => {
             </div>
             <div className="dropdown-menu" id="dropdown-menu4" role="menu">
                 <div className="dropdown-content">
-                    {timeLength2.map(filter =>
+                    {timeLength.map(filter =>
                         <button key={filter} className={filter === props.currentTimeFilter ? "dropdown-item is-active" : "dropdown-item"}
                             onClick={() => props.onChange(filter)}>{filter}
                         </button>)}

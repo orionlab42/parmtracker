@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {getEntries, deleteEntry} from '../services/entryService';
+import {getEntries, getEntriesbyDate, deleteEntry} from '../services/entryService';
 import {getFilledCategories} from '../services/categoryService';
 import {getUsers} from '../services/userService';
 import ExpensesTable from './expensesTable';
@@ -8,7 +8,7 @@ import {paginate} from '../utils/paginate';
 import FilterTime from "./common/filterTime";
 import FilterCategory from "./common/filterCategories";
 import FilterUser from "./common/filterUser";
-import {filterByCategory, filterByUser, filterByShared, filterByTime} from "../utils/filters";
+import {filterByCategory, filterByUser, filterByShared} from "../utils/filters";
 import {searchKeyword} from "../utils/search";
 import _ from 'lodash';
 import Link from "react-router-dom/Link";
@@ -21,8 +21,9 @@ class Entries extends Component {
         entries: [],
         categories: [],
         users: [],
+        entriesFilteredByTime: [],
         currentPage: 1,
-        currentTimeFilter: "Get all entries",
+        currentTimeFilter: "get all",
         selectedCategory: 0,
         selectedUser: 0,
         shared: false,
@@ -35,11 +36,19 @@ class Entries extends Component {
 
     async componentDidMount() {
         const { data } = await getFilledCategories();
-        const categories = [{id:0 , category_name: "Get all entries"}, ...data];
+        const categories = [{id:0 , category_name: "get all entries"}, ...data];
         const { data:u } = await getUsers();
-        const users = [{user_id:0 , user_name: "Get all entries"},...u];
+        const users = [{user_id:0 , user_name: "get all user entries"},...u];
         const { data: entries } = await getEntries();
-        this.setState({entries, users, categories});
+        const {data: entriesFilteredByTime} = await getEntriesbyDate(this.state.currentTimeFilter);
+        this.setState({entries, users, categories, entriesFilteredByTime});
+    }
+
+    async componentDidUpdate(prevProps, prevState) {
+        if (prevState.currentTimeFilter !== this.state.currentTimeFilter) {
+            const {data: entriesFilteredByTime} = await getEntriesbyDate(this.state.currentTimeFilter);
+            this.setState({entriesFilteredByTime});
+        }
     }
 
     totalCalculation = entries => {
@@ -69,6 +78,7 @@ class Entries extends Component {
     };
 
     handleTimeFilterChange = time => {
+        console.log("HandleTimeFilterChange", time);
         this.setState({currentTimeFilter: time, searchQuery: "", currentPage: 1});
     };
 
@@ -103,20 +113,28 @@ class Entries extends Component {
             currentPage,
             sortColumn,
             searchQuery,
-            entries: allEntries
+            entries: allEntries,
+            entriesFilteredByTime: dateEntries,
         } = this.state;
 
         // filtering
-        const entriesFilteredByTime = filterByTime(allEntries, this.state.currentTimeFilter);
+        const entriesFilteredByTime = dateEntries;
         const entriesFilteredByCategory = filterByCategory(allEntries, this.state.selectedCategory);
         const entriesFilteredByUser = filterByUser(allEntries, this.state.selectedUser);
         const entriesFilteredByShared = filterByShared(allEntries, this.state.shared);
+
         let filteredAll = [];
         filteredAll.push(entriesFilteredByTime, entriesFilteredByCategory, entriesFilteredByUser, entriesFilteredByShared);
+
         // filtering out only the common elements of the 3 array
         let filtered = filteredAll.shift().filter(function(v) {
             return filteredAll.every(function(a) {
-                return a.indexOf(v) !== -1;
+                for (let i = 0; i < a.length; i++) {
+                    if (a[i].id === v.id) {
+                        return true;
+                    }
+                }
+                return false;
             });
         });
 
@@ -162,7 +180,7 @@ class Entries extends Component {
                         value={searchQuery}
                         onChange={this.handleSearch}
                     />
-                    <FilterTime onFilterChange={this.handleTimeFilterChange}
+                    <FilterTime onChange={this.handleTimeFilterChange}
                                 currentTimeFilter={this.state.currentTimeFilter}
                     />
                     <FilterCategory
@@ -208,3 +226,5 @@ class Entries extends Component {
 }
 
 export default Entries;
+
+

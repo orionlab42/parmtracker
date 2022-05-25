@@ -64,6 +64,8 @@ func TestGetFilterDateLastYear(t *testing.T) {
 func TestGetFilterDateLastTwoYears(t *testing.T) {
 	startLastYear, endNow := GetFilterDateLastTwoYears()
 	now := time.Now()
+	fmt.Println(startLastYear)
+	fmt.Println(endNow)
 	assert.Equal(t, now.Day(), startLastYear.Day())
 	assert.Equal(t, now.Month(), startLastYear.Month())
 	assert.Equal(t, now.Year()-2, startLastYear.Year())

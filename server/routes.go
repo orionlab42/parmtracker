@@ -18,6 +18,7 @@ type Routes []Route
 var routes = Routes{
 	//Route{"Index", http.MethodGet, "/", api.Index},
 	Route{"Expenses", http.MethodGet, "/api/expenses", true, api.Expenses},
+	Route{"ExpensesByDate", http.MethodGet, "/api/expenses/by-date/{filter}", true, api.ExpensesByDate},
 	Route{"ChartsExpensesByDate", http.MethodGet, "/api/charts-expenses-by-date", true, api.ChartsExpensesByDate},
 	Route{"ChartsExpensesByCategory", http.MethodGet, "/api/charts-expenses-by-category/{filter}", true, api.ChartsExpensesByCategory},
 	Route{"ChartsExpensesByWeek", http.MethodGet, "/api/charts-expenses-by-week/{filter}", true, api.ChartsExpensesByWeek},

@@ -135,6 +135,18 @@ func GetExpenseEntries() Expenses {
 	return expenses
 }
 
+func GetExpenseEntriesByDate(filter string) Expenses {
+	expenses := GetExpenseEntries()
+	var expensesNew Expenses
+	startDate, endDate := GetFilterDate(filter)
+	for _, val := range expenses {
+		if startDate.Before(val.Date) && endDate.After(val.Date) {
+			expensesNew = append(expensesNew, val)
+		}
+	}
+	return expensesNew
+}
+
 func GetExpenseEntry(entryId int) Expenses {
 	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`select * from expenses where id = ?`)

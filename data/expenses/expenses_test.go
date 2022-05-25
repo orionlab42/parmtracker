@@ -83,6 +83,14 @@ func TestGetExpenseEntriesMergedByDate(t *testing.T) {
 	}
 }
 
+func TestGetExpenseEntriesByDate(t *testing.T) {
+	entries := GetExpenseEntriesByDate("")
+	fmt.Println("Length: ", len(entries))
+	for _, entry := range entries {
+		fmt.Printf("%+v\n", entry)
+	}
+}
+
 func TestFirstDayOfISOWeek(t *testing.T) {
 	week := FirstDayOfISOWeek(2021, 52)
 	fmt.Println(week)

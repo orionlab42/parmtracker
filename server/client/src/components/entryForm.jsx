@@ -58,7 +58,9 @@ class EntryForm extends Form {
             // bringing to the top position the current user
             const otherUsers = data.filter(user => user.user_id !== currentUser.user_id);
             const users = [currentUser,...otherUsers];
-            this.setState({users});
+            const dataUser = this.state.data;
+            dataUser.user_id = currentUser.user_id;
+            this.setState({data: dataUser, users});
         }
     }
 

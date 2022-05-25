@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import {getCategories, getFilledCategories} from "../services/categoryService";
-import {getEntriesByDate, getEntriesByWeek, getEntriesByMonth, getEntriesByCategory, getEntriesPieByCategory} from "../services/chartsService";
+import {getFilledCategories} from "../services/categoryService";
+import {getEntriesByWeek, getEntriesByMonth, getEntriesByCategory, getEntriesPieByCategory} from "../services/chartsService";
 import FilterTime from "./common/filterTime";
 import FilterCategory from "./common/filterCategories";
 
 
 const Overview = (props) => {
-    const [entriesByDate, setEntriesByDate] = useState([]);
+    // const [entriesByDate, setEntriesByDate] = useState([]);
     const [entriesByWeek, setEntriesByWeek] = useState([]);
     const [entriesByMonth, setEntriesByMonth] = useState([]);
     const [categories, setCategories] = useState([]);
     const [entriesByCat, setEntriesByCat] = useState([]);
     const [entriesPieByCat, setEntriesPieByCat] = useState([]);
-    const [filterTime, setFilterTime] = useState("all")
+    const [filterTime, setFilterTime] = useState("get all")
     const [filterCategory, setFilterCategory] = useState(0)
 
     useEffect( () => {
         async function getEntriesByTime() {
-            const { data: entriesDate } = await getEntriesByDate();
-            setEntriesByDate(entriesDate);
+            // const { data: entriesDate } = await getEntriesByDate();
+            // setEntriesByDate(entriesDate);
             const { data: entriesWeek } = await getEntriesByWeek(filterCategory);
             if (entriesWeek != null) {
                 setEntriesByWeek(entriesWeek);
@@ -36,7 +36,7 @@ const Overview = (props) => {
     useEffect( () => {
         async function getEntriesByCat() {
             const { data } = await getFilledCategories();
-            const categories = [{id:0 , category_name: "All categories"}, ...data];
+            const categories = [{id:0 , category_name: "all categories"}, ...data];
             setCategories(categories);
             const { data: entriesCat } = await getEntriesByCategory(filterTime);
             setEntriesByCat(entriesCat);
@@ -46,25 +46,25 @@ const Overview = (props) => {
         getEntriesByCat();
     }, [filterTime]);
 
-    const optionsEntriesDate = {
-        title: {text: 'Expenses in time'},
-        xAxis: {
-            categories: entriesByDate.map(entry => new Date(entry.entry_date).toLocaleString('en-GB', {
-                day: 'numeric', // numeric, 2-digit
-                year: '2-digit', // numeric, 2-digit
-                month: 'short', // numeric, 2-digit, long, short, narrow
-            }))
-        },
-        plotOptions: {
-            line: {
-                dataLabels: {
-                    enabled: true
-                },
-                enableMouseTracking: false
-            }
-        },
-        series: [{data: entriesByDate.map(entry => entry.amount)}]
-    };
+    // const optionsEntriesDate = {
+    //     title: {text: 'Expenses in time'},
+    //     xAxis: {
+    //         categories: entriesByDate.map(entry => new Date(entry.entry_date).toLocaleString('en-GB', {
+    //             day: 'numeric', // numeric, 2-digit
+    //             year: '2-digit', // numeric, 2-digit
+    //             month: 'short', // numeric, 2-digit, long, short, narrow
+    //         }))
+    //     },
+    //     plotOptions: {
+    //         line: {
+    //             dataLabels: {
+    //                 enabled: true
+    //             },
+    //             enableMouseTracking: false
+    //         }
+    //     },
+    //     series: [{data: entriesByDate.map(entry => entry.amount)}]
+    // };
 
     const optionsEntriesByWeek = {
         chart: {
@@ -169,7 +169,7 @@ const Overview = (props) => {
 
     function getCategoryName(entry) {
         if (entry === 0) {
-            return "all"
+            return "get all"
         }
         for (let i = 0; i < categories.length; i++) {
             if (categories[i].id === entry) {
@@ -254,7 +254,7 @@ const Overview = (props) => {
                 />
             </div>
         )
-    } else if (filterTime === "all") {
+    } else if (filterTime === "get all") {
         chartFilterTime = (
             <div className="chart-filter">
                 <h4 className="title is-5 center-text chart-title">Expenses by categories</h4>

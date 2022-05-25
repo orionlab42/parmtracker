@@ -1,6 +1,7 @@
 import http from './httpService';
 
 const  apiEndpoint = '/expenses';
+const  apiEndpointByDate = '/expenses/by-date';
 
 
 function entryUrl(id) {
@@ -9,6 +10,10 @@ function entryUrl(id) {
 
 export function getEntries() {
     return http.get(apiEndpoint);
+}
+
+export function getEntriesbyDate(filter) {
+    return http.get(`${apiEndpointByDate}/${filter}`);
 }
 
 export function deleteEntry(id) {

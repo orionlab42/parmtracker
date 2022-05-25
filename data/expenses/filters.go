@@ -183,7 +183,7 @@ func GetFilterDateLastYear() (time.Time, time.Time) {
 
 func GetFilterDateLastTwoYears() (time.Time, time.Time) {
 	now := time.Now()
-	endCurrentDay := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, time.UTC)
 	startOfMaxTime := time.Date(now.Year()-2, now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+	endCurrentDay := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, time.UTC)
 	return startOfMaxTime, endCurrentDay
 }
