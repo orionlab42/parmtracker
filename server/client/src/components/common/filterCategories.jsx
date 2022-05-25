@@ -1,12 +1,17 @@
 import React from "react";
 
+function getCategoryName(items, selectedItem) {
+    const category = items.filter(cat => cat.id === selectedItem);
+    if (category.length === 0) return "";
+    return category[0].category_name;
+}
 
 const FilterCategory = ({selectedItem, items, onItemSelect, textProperty, valueProperty}) => {
     return (
         <div className="dropdown is-hoverable filter-position filter-category">
             <div className="dropdown-trigger">
                 <button className="button" aria-haspopup="true" aria-controls="dropdown-menu4">
-                    <span>Filter by Category</span>
+                    <span>Filter by category: {getCategoryName(items, selectedItem)}</span>
                 </button>
             </div>
             <div className="dropdown-menu" id="dropdown-menu4" role="menu">
