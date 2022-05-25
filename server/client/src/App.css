@@ -10936,6 +10936,9 @@ form {
   padding-top: 30px;
   margin: 0;
 }
+.chart-container .chart-filter .dropdown-menu {
+  top: 87%;
+}
 .chart-container .chart-time {
   overflow: hidden;
   background-color: white;
