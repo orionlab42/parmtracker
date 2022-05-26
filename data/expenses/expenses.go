@@ -20,7 +20,7 @@ type ExpenseEntry struct {
 
 type Expenses []ExpenseEntry
 
-// Load expense entry
+// Load loads an expense entry from the expenses table.
 func (entry *ExpenseEntry) Load(id int) error {
 	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`select * from expenses where id = ?`)
@@ -47,7 +47,7 @@ func (entry *ExpenseEntry) Load(id int) error {
 	return nil
 }
 
-// Insert a new entry
+// Insert inserts a new expense entry to the expenses table.
 func (entry *ExpenseEntry) Insert() error {
 	if entry.CreatedAt.IsZero() {
 		entry.CreatedAt = time.Now().UTC()
@@ -69,6 +69,7 @@ func (entry *ExpenseEntry) Insert() error {
 	return nil
 }
 
+// Save saves a change to an expense entry already inserted to the expenses table.
 func (entry *ExpenseEntry) Save() error {
 	if entry.UpdatedAt.IsZero() {
 		entry.UpdatedAt = time.Now().UTC()
@@ -85,6 +86,7 @@ func (entry *ExpenseEntry) Save() error {
 	return nil
 }
 
+// Delete deletes an expense entry from the expenses table.
 func (entry *ExpenseEntry) Delete() error {
 	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`delete from expenses where id=?`)
@@ -97,6 +99,7 @@ func (entry *ExpenseEntry) Delete() error {
 	return e
 }
 
+// GetExpenseEntries returns a slice of struct ExpenseEntry (a struct of Expenses) with all expense entries from the expenses table.
 func GetExpenseEntries() Expenses {
 	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`select * from expenses order by entry_date desc;`)
@@ -135,6 +138,7 @@ func GetExpenseEntries() Expenses {
 	return expenses
 }
 
+// GetExpenseEntriesByDate returns a slice of struct ExpenseEntry (a struct of Expenses) within a time frame(filter) all expense entries from the expenses table.
 func GetExpenseEntriesByDate(filter string) Expenses {
 	expenses := GetExpenseEntries()
 	var expensesNew Expenses
@@ -145,74 +149,4 @@ func GetExpenseEntriesByDate(filter string) Expenses {
 		}
 	}
 	return expensesNew
-}
-
-func GetExpenseEntry(entryId int) Expenses {
-	db := mysql.GetInstance().GetConn()
-	stmt, _ := db.Prepare(`select * from expenses where id = ?`)
-	defer stmt.Close()
-	rows, e := stmt.Query(entryId)
-	if e != nil {
-		fmt.Printf("Error when preparing stmt in getting entry with id %d: %s", entryId, e.Error())
-		return Expenses{}
-	}
-	defer rows.Close()
-	expenses := Expenses{}
-	for rows.Next() {
-		entry := ExpenseEntry{}
-		var date string
-		var createdAt string
-		var updatedAt string
-		e := rows.Scan(&entry.Id, &entry.Name, &entry.Amount, &entry.Category, &entry.UserId, &entry.Shared, &date, &createdAt, &updatedAt)
-		if e != nil {
-			fmt.Printf("Error when loading entry with id %d: %s", entryId, e.Error())
-			return Expenses{}
-		}
-		entry.Date, _ = time.Parse(mysql.MysqlDateFormat, date)
-		entry.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
-		entry.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
-		expenses = append(expenses, entry)
-	}
-	return expenses
-}
-
-func GetExpenseEntriesMergedByDate() Expenses {
-	expenses := GetExpenseEntries()
-	var expensesNew Expenses
-	for _, val := range expenses {
-		isSaved := false
-		for i, _ := range expensesNew {
-			if val.Date == expensesNew[i].Date {
-				expensesNew[i].Name = "Total expenses of the day: " + fmt.Sprint(expensesNew[i].Date)
-				expensesNew[i].Amount = expensesNew[i].Amount + val.Amount
-				isSaved = true
-				break
-			}
-		}
-		if isSaved == false {
-			expensesNew = append(expensesNew, val)
-		}
-	}
-	return expensesNew
-}
-
-func FirstDayOfISOWeek(year int, week int) time.Time {
-	date := time.Date(year, 1, 1, 0, 0, 0, 0, time.UTC)
-	isoYear, isoWeek := date.ISOWeek()
-	// iterate back to Monday
-	for date.Weekday() != time.Monday {
-		date = date.AddDate(0, 0, -1)
-		isoYear, isoWeek = date.ISOWeek()
-	}
-	// iterate forward to the first day of the first week
-	for isoYear < year {
-		date = date.AddDate(0, 0, 7)
-		isoYear, isoWeek = date.ISOWeek()
-	}
-	// iterate forward to the first day of the given week
-	for isoWeek < week {
-		date = date.AddDate(0, 0, 7)
-		isoYear, isoWeek = date.ISOWeek()
-	}
-	return date
 }

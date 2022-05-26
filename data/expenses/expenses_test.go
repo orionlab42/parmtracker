@@ -1,7 +1,6 @@
 package expenses
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -46,54 +45,40 @@ func TestExpenseSave(t *testing.T) {
 	assert.Nil(t, e)
 }
 
-func TestExpenseSaveSeedData(t *testing.T) {
-	layout := "2006-01-02T15:04:05.000Z"
-	strStart := "2020-12-12T08:00:00.371Z"
-	t1, _ := time.Parse(layout, strStart)
-	table := []ExpenseEntry{
-		{Name: "Weekly big food", Amount: 22.8, Date: t1},
-		{Name: "Weekly big food", Amount: 11.65, Category: 1, Date: time.Now().UTC()},
-		{Name: "Sushi Wednesday", Amount: 17.87, Category: 2, Date: time.Now().UTC()},
-		{Name: "Lunch", Amount: 2.7, Category: 2, Date: time.Now().UTC()},
-		{Name: "B-day gift Roser", Amount: 35, Category: 3, Date: time.Now().UTC()},
-		{Name: "Weekly big food", Amount: 47.66, Category: 1, Date: time.Now().UTC()},
-		{Name: "Weekly big food", Amount: 1.1, Category: 1, Date: time.Now().UTC()},
-		{Name: "Burger Wednesday", Amount: 32.5, Category: 2, Date: time.Now().UTC()},
-		{Name: "Lunch", Amount: 8.9, Category: 2, Date: time.Now().UTC()},
-		{Name: "B-day gift Gabri", Amount: 102.77, Category: 3, Date: time.Now().UTC()}}
+//func TestExpenseSaveSeedData(t *testing.T) {
+//	layout := "2006-01-02T15:04:05.000Z"
+//	strStart := "2020-12-12T08:00:00.371Z"
+//	t1, _ := time.Parse(layout, strStart)
+//	table := []ExpenseEntry{
+//		{Name: "Weekly big food", Amount: 22.8, Date: t1},
+//		{Name: "Weekly big food", Amount: 11.65, Category: 1, Date: time.Now().UTC()},
+//		{Name: "Sushi Wednesday", Amount: 17.87, Category: 2, Date: time.Now().UTC()},
+//		{Name: "Lunch", Amount: 2.7, Category: 2, Date: time.Now().UTC()},
+//		{Name: "B-day gift Roser", Amount: 35, Category: 3, Date: time.Now().UTC()},
+//		{Name: "Weekly big food", Amount: 47.66, Category: 1, Date: time.Now().UTC()},
+//		{Name: "Weekly big food", Amount: 1.1, Category: 1, Date: time.Now().UTC()},
+//		{Name: "Burger Wednesday", Amount: 32.5, Category: 2, Date: time.Now().UTC()},
+//		{Name: "Lunch", Amount: 8.9, Category: 2, Date: time.Now().UTC()},
+//		{Name: "B-day gift Gabri", Amount: 102.77, Category: 3, Date: time.Now().UTC()}}
+//
+//	for _, row := range table {
+//		row.Insert()
+//	}
+//	entries := GetExpenseEntries()
+//	assert.Equal(t, len(entries), 10)
+//}
 
-	for _, row := range table {
-		row.Insert()
-	}
-	entries := GetExpenseEntries()
-	assert.Equal(t, len(entries), 10)
-}
+//func TestGetExpenseEntries(t *testing.T) {
+//	entries := GetExpenseEntries()
+//	for _, entry := range entries {
+//		fmt.Printf("%+v\n", entry)
+//	}
+//}
 
-func TestGetExpenseEntries(t *testing.T) {
-	entries := GetExpenseEntries()
-	for _, entry := range entries {
-		fmt.Printf("%+v\n", entry)
-	}
-}
-
-func TestGetExpenseEntriesMergedByDate(t *testing.T) {
-	entries := GetExpenseEntriesMergedByDate()
-	for _, entry := range entries {
-		fmt.Printf("%+v\n", entry)
-	}
-}
-
-func TestGetExpenseEntriesByDate(t *testing.T) {
-	entries := GetExpenseEntriesByDate("")
-	fmt.Println("Length: ", len(entries))
-	for _, entry := range entries {
-		fmt.Printf("%+v\n", entry)
-	}
-}
-
-func TestFirstDayOfISOWeek(t *testing.T) {
-	week := FirstDayOfISOWeek(2021, 52)
-	fmt.Println(week)
-	fmt.Println(week.Format("2006-01-02"))
-	fmt.Println(week.Format("02/01/06"))
-}
+//func TestGetExpenseEntriesByDate(t *testing.T) {
+//	entries := GetExpenseEntriesByDate("")
+//	fmt.Println("Length: ", len(entries))
+//	for _, entry := range entries {
+//		fmt.Printf("%+v\n", entry)
+//	}
+//}

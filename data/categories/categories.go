@@ -18,7 +18,7 @@ type Category struct {
 
 type Categories []Category
 
-// Load category
+// Load loads a category based on the id from the categories table.
 func (cat *Category) Load(id int) error {
 	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`select * from categories where id = ?`)
@@ -43,7 +43,7 @@ func (cat *Category) Load(id int) error {
 	return nil
 }
 
-// Insert a new trade
+// Insert inserts a new category to the categories table.
 func (cat *Category) Insert() error {
 	if cat.CreatedAt.IsZero() {
 		cat.CreatedAt = time.Now().UTC()
@@ -65,6 +65,7 @@ func (cat *Category) Insert() error {
 	return nil
 }
 
+// Save saves a change to a category already inserted to the categories table.
 func (cat *Category) Save() error {
 	if cat.UpdatedAt.IsZero() {
 		cat.UpdatedAt = time.Now().UTC()
@@ -81,6 +82,7 @@ func (cat *Category) Save() error {
 	return nil
 }
 
+// Delete deletes a category from the categories table.
 func (cat *Category) Delete() error {
 	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`delete from categories where id=?`)
@@ -93,6 +95,7 @@ func (cat *Category) Delete() error {
 	return e
 }
 
+// GetCategories returns a slice of struct Category with all existing categories in the categories table.
 func GetCategories() Categories {
 	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`select * from categories order by category_name ASC`)
@@ -120,6 +123,8 @@ func GetCategories() Categories {
 	return categories
 }
 
+// GetFilledCategoriesIds creates a map with only the categories which already have entries saved. The key will be the id
+// of the category and the value is the count of how many entries are of this category.
 func GetFilledCategoriesIds() map[int]int {
 	expensesAll := expenses.GetExpenseEntries()
 	ids := make(map[int]int)
@@ -129,6 +134,7 @@ func GetFilledCategoriesIds() map[int]int {
 	return ids
 }
 
+// GetFilledCategories returns a slice of struct Category with only the categories which already have entries saved.
 func GetFilledCategories() Categories {
 	db := mysql.GetInstance().GetConn()
 	stmt, _ := db.Prepare(`select * from categories order by category_name ASC`)

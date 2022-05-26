@@ -1,7 +1,6 @@
 package categories
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -40,36 +39,40 @@ func TestCategorySave(t *testing.T) {
 	assert.Nil(t, e)
 }
 
-func TestCategoriesSaveSeedData(t *testing.T) {
-	table := []Category{
-		{CategoryName: "groceries", CategoryColor: "#dfc6c6", CategoryIcon: "mdi-food-apple"},
-		{CategoryName: "restaurant", CategoryColor: "#a4a4a4", CategoryIcon: "mdi-food-fork-drink"},
-		{CategoryName: "gift", CategoryColor: "#f08080", CategoryIcon: "mdi-gift"},
-		{CategoryName: "housing", CategoryColor: "#badcea", CategoryIcon: "mdi-home"},
-		{CategoryName: "transportation", CategoryColor: "#fff68f", CategoryIcon: "mdi-tram"},
-		{CategoryName: "utilities", CategoryColor: "#ffc000", CategoryIcon: "mdi-hand-water"},
-		{CategoryName: "insurance", CategoryColor: "#817171", CategoryIcon: "mdi-shield-home"},
-		{CategoryName: "saving", CategoryColor: "#b0a368", CategoryIcon: "mdi-bank"},
-		{CategoryName: "services", CategoryColor: "#e6e6fa", CategoryIcon: "mdi-home-plus-outline"},
-		{CategoryName: "healthcare", CategoryColor: "#c39797", CategoryIcon: "mdi-medical-bag"}}
-	for _, row := range table {
-		row.Insert()
-	}
-	entries := GetCategories()
-	assert.NotEqual(t, len(entries), 0)
-}
+// If all the categories needs to be reset, first truncate table and then by running this test it will be saved all of them again
+//func TestCategoriesSaveSeedData(t *testing.T) {
+//	table := []Category{
+//		{CategoryName: "groceries", CategoryColor: "#dfc6c6", CategoryIcon: "mdi-food-apple"},
+//		{CategoryName: "restaurant", CategoryColor: "#a4a4a4", CategoryIcon: "mdi-food-fork-drink"},
+//		{CategoryName: "gift", CategoryColor: "#f08080", CategoryIcon: "mdi-gift"},
+//		{CategoryName: "housing", CategoryColor: "#badcea", CategoryIcon: "mdi-home"},
+//		{CategoryName: "transportation", CategoryColor: "#fff68f", CategoryIcon: "mdi-tram"},
+//		{CategoryName: "utilities", CategoryColor: "#ffc000", CategoryIcon: "mdi-hand-water"},
+//		{CategoryName: "insurance", CategoryColor: "#817171", CategoryIcon: "mdi-shield-home"},
+//		{CategoryName: "saving", CategoryColor: "#b0a368", CategoryIcon: "mdi-bank"},
+//		{CategoryName: "services", CategoryColor: "#e6e6fa", CategoryIcon: "mdi-home-plus-outline"},
+//		{CategoryName: "healthcare", CategoryColor: "#c39797", CategoryIcon: "mdi-medical-bag"},
+//		{CategoryName: "leisure", CategoryColor: "#abcbae", CategoryIcon: "mdi-airballoon"},
+//		{CategoryName: "clothes", CategoryColor: "#ffc0cb", CategoryIcon: "mdi-tshirt-crew"},
+//		{CategoryName: "work", CategoryColor: "#ecefae", CategoryIcon: "mdi-monitor"}}
+//	for _, row := range table {
+//		row.Insert()
+//	}
+//	entries := GetCategories()
+//	assert.NotEqual(t, len(entries), 0)
+//}
 
-func TestGetFilledCategoriesIds(t *testing.T) {
-	categories := GetFilledCategoriesIds()
-	for i, row := range categories {
-		fmt.Printf("%+v\t", i)
-		fmt.Printf("%+v\n", row)
-	}
-}
+//func TestGetFilledCategoriesIds(t *testing.T) {
+//	categories := GetFilledCategoriesIds()
+//	for i, row := range categories {
+//		fmt.Printf("%+v\t", i)
+//		fmt.Printf("%+v\n", row)
+//	}
+//}
 
-func TestGetFilledCategories(t *testing.T) {
-	categories := GetFilledCategories()
-	for _, row := range categories {
-		fmt.Printf("%+v\n", row)
-	}
-}
+//func TestGetFilledCategories(t *testing.T) {
+//	categories := GetFilledCategories()
+//	for _, row := range categories {
+//		fmt.Printf("%+v\n", row)
+//	}
+//}

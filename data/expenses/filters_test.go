@@ -74,37 +74,51 @@ func TestGetFilterDateLastTwoYears(t *testing.T) {
 	assert.Equal(t, now.Year(), endNow.Year())
 }
 
-func TestGetExpenseEntriesMergedByWeek(t *testing.T) {
-	entries := GetExpenseEntriesMergedByWeek(1)
-	for _, entry := range entries {
-		fmt.Printf("%+v\n", entry)
-	}
-	fmt.Println(entries)
-}
+//func TestGetExpenseEntriesMergedByWeek(t *testing.T) {
+//	entries := GetExpenseEntriesMergedByWeek(1)
+//	for _, entry := range entries {
+//		fmt.Printf("%+v\n", entry)
+//	}
+//	fmt.Println(entries)
+//}
 
-func TestGetExpenseEntriesMergedByMonth(t *testing.T) {
-	entries := GetExpenseEntriesMergedByMonth(1)
-	//for _, entry := range entries {
-	//	fmt.Printf("%+v\n", entry)
-	//}
-	fmt.Println(entries)
-}
+//func TestGetExpenseEntriesMergedByMonth(t *testing.T) {
+//	entries := GetExpenseEntriesMergedByMonth(1)
+//	//for _, entry := range entries {
+//	//	fmt.Printf("%+v\n", entry)
+//	//}
+//	fmt.Println(entries)
+//}
 
-func TestGetExpenseEntriesMergedByCategory(t *testing.T) {
-	entries := GetExpenseEntriesMergedByCategory(CurrentMonth)
-	now := time.Now()
-	assert.Equal(t, now.Month(), entries[0].Date.Month())
-	//for _, entry := range entries {
-	//	fmt.Printf("%+v\n", entry)
-	//}
-}
+//func TestGetExpenseEntriesMergedByDate(t *testing.T) {
+//	entries := GetExpenseEntriesMergedByDate()
+//	for _, entry := range entries {
+//		fmt.Printf("%+v\n", entry)
+//	}
+//}
 
-func TestGetExpenseEntriesPieByCategory(t *testing.T) {
-	entries := GetExpenseEntriesPieByCategory(LastMonth)
-	var total float64
-	for _, entry := range entries {
-		total += entry.Amount
-	}
-	assert.Equal(t, 100.00, total)
-	//fmt.Println(total)
-}
+//func TestGetExpenseEntriesMergedByCategory(t *testing.T) {
+//	entries := GetExpenseEntriesMergedByCategory(CurrentMonth)
+//	now := time.Now()
+//	assert.Equal(t, now.Month(), entries[0].Date.Month())
+//	//for _, entry := range entries {
+//	//	fmt.Printf("%+v\n", entry)
+//	//}
+//}
+
+//func TestGetExpenseEntriesPieByCategory(t *testing.T) {
+//	entries := GetExpenseEntriesPieByCategory(LastMonth)
+//	var total float64
+//	for _, entry := range entries {
+//		total += entry.Amount
+//	}
+//	assert.Equal(t, 100.00, total)
+//	//fmt.Println(total)
+//}
+
+//func TestFirstDayOfISOWeek(t *testing.T) {
+//	week := FirstDayOfISOWeek(2021, 52)
+//	fmt.Println(week)
+//	fmt.Println(week.Format("2006-01-02"))
+//	fmt.Println(week.Format("02/01/06"))
+//}
