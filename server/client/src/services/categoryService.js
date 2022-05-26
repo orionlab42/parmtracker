@@ -12,11 +12,12 @@ const categoryIcon = ["mdi mdi-cat", "mdi mdi-castle", "mdi-airplane", "mdi-tabl
     ""
 ]
 
-const  apiEndpoint = '/categories/all';
+const  apiEndpoint0 = '/categories';
+const  apiEndpoint1 = '/categories/all';
 const  apiEndpoint2 = '/categories/filled';
 
 function categoryUrl(id) {
-    return `${apiEndpoint}/${id}`;
+    return `${apiEndpoint0}/${id}`;
 }
 
 export function getCategoryColor() {
@@ -28,7 +29,7 @@ export function getCategoryIcon() {
 }
 
 export function getCategories() {
-    return http.get(apiEndpoint);
+    return http.get(apiEndpoint1);
 }
 
 export function getFilledCategories() {
@@ -40,6 +41,6 @@ export function deleteCategory(id) {
 }
 
 export function saveCategory(cat) {
-    return http.post(apiEndpoint, cat);
+    return http.post(apiEndpoint0, cat);
 }
 
