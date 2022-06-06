@@ -14,8 +14,8 @@ const Overview = (props) => {
     const [categories, setCategories] = useState([]);
     const [entriesByCat, setEntriesByCat] = useState([]);
     const [entriesPieByCat, setEntriesPieByCat] = useState([]);
-    const [filterTime, setFilterTime] = useState("get all")
-    const [filterCategory, setFilterCategory] = useState(0)
+    const [filterTime, setFilterTime] = useState("get all");
+    const [filterCategory, setFilterCategory] = useState(0);
 
     useEffect( () => {
         async function getEntriesByTime() {
@@ -149,7 +149,7 @@ const Overview = (props) => {
             data: entriesByMonth.map(entry => entry.amount)}]
     };
 
-    function getCategoryNames(entries) {
+    function getCategoryNamesForOptions(entries) {
         let categoryNames = []
         if (entries == null) {
             return categoryNames
@@ -184,7 +184,7 @@ const Overview = (props) => {
         },
         title: {text: ''},
         xAxis: {
-            categories: getCategoryNames(entriesByCat).map(cat => cat.name)
+            categories: getCategoryNamesForOptions(entriesByCat).map(cat => cat.name)
         },
         plotOptions: {
             line: {
@@ -194,7 +194,7 @@ const Overview = (props) => {
                 enableMouseTracking: false
             }
         },
-        series: [{data: getCategoryNames(entriesByCat).map(cat => cat.y),
+        series: [{data: getCategoryNamesForOptions(entriesByCat).map(cat => cat.y),
             name: 'categories',
             lineWidth: 0.5,
         }]
@@ -229,7 +229,50 @@ const Overview = (props) => {
         },
         series: [{
             colorByPoint: true,
-            data: getCategoryNames(entriesPieByCat)}]
+            data: getCategoryNamesForOptions(entriesPieByCat)}]
+    };
+
+    // function getUserNamesForOptions(entries) {
+    //     let categoryNames = []
+    //     if (entries == null) {
+    //         return categoryNames
+    //     }
+    //     for (let i = 0; i < entries.length; i++) {
+    //         for (let j = 0; j < categories.length; j++) {
+    //             if (categories[j].id === entries[i].category) {
+    //                 categoryNames.push({
+    //                     "name": categories[j].category_name,
+    //                     "y": entries[i].amount
+    //                 })
+    //             }
+    //         }
+    //     }
+    //     return categoryNames
+    // }
+
+    const users = [
+        {"series": {"name": "Orion", "data": [1, 2, 3]}, "categories": ["gift", "rest", "bla"]},
+        {"series": {"name": "Atik", "data": [5, 6, 7]}, "categories": ["maN", "rest", "bla3"]}];
+    const users2 = entriesByCat;
+    console.log("Users", users);
+    console.log("Users2", users2);
+    const optionsEntriesByUsers = {
+        chart: {
+            type: 'column'
+        },
+        title: {text: 'Users'},
+        xAxis: {
+            categories: users[0].categories
+        },
+        plotOptions: {
+            line: {
+                dataLabels: {
+                    enabled: true
+                },
+                enableMouseTracking: false
+            }
+        },
+        series: users.map(user => user.series)
     };
 
     let chartFilterCategory;
@@ -325,6 +368,10 @@ const Overview = (props) => {
             <div>
                 { chartFilterTime }
                 { categoriesCharts }
+            </div>
+            <div className="chart-item-left">
+                <HighchartsReact highcharts={Highcharts}
+                                 options={optionsEntriesByUsers} />
             </div>
         </div>
     );

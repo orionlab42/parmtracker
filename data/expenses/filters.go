@@ -138,6 +138,15 @@ func GetExpenseEntriesPieByCategory(filter string) Expenses {
 	return expensesByCategory
 }
 
+//
+//func GetAllExistingIds() {
+//
+//}
+//
+//func GetExpenseEntriesMergedByCategoryForEachUser(filter string) Expenses {
+//
+//}
+
 // GetFilterDate returns for a certain time filter(string) a start and an end date, in case there is no recognized filter
 // it will return the oldest expense entry's date from the expenses table as starting date and now as end date.
 func GetFilterDate(filter string) (time.Time, time.Time) {

@@ -136,31 +136,13 @@ func GetFilledCategoriesIds() map[int]int {
 
 // GetFilledCategories returns a slice of struct Category with only the categories which already have entries saved.
 func GetFilledCategories() Categories {
-	db := mysql.GetInstance().GetConn()
-	stmt, _ := db.Prepare(`select * from categories order by category_name ASC`)
-	defer stmt.Close()
-	rows, e := stmt.Query()
-	if e != nil {
-		fmt.Printf("Error when preparing stmt in getting all expenses: %s", e.Error())
-		return Categories{}
-	}
-	defer rows.Close()
-	categories := Categories{}
+	allCategories := GetCategories()
 	ids := GetFilledCategoriesIds()
-	for rows.Next() {
-		cat := Category{}
-		var createdAt string
-		var updatedAt string
-		e := rows.Scan(&cat.Id, &cat.CategoryName, &cat.CategoryColor, &cat.CategoryIcon, &createdAt, &updatedAt)
-		if e != nil {
-			fmt.Printf("Error when loading categories: %s", e.Error())
-			return Categories{}
-		}
-		cat.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
-		cat.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
+	categories := Categories{}
+	for _, val := range allCategories {
 		for id, _ := range ids {
-			if cat.Id == id {
-				categories = append(categories, cat)
+			if val.Id == id {
+				categories = append(categories, val)
 			}
 		}
 	}

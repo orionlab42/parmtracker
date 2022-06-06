@@ -2,6 +2,7 @@ package users
 
 import (
 	"fmt"
+	"github.com/orionlab42/parmtracker/data/expenses"
 	"github.com/orionlab42/parmtracker/mysql"
 	"time"
 )
@@ -167,6 +168,32 @@ func GetUsers() Users {
 		u.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
 		u.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
 		users = append(users, u)
+	}
+	return users
+}
+
+// GetFilledUserIds creates a map with only the users which already have entries saved. The key will be the id
+// of the user and the value is the count of how many entries are of this user.
+func GetFilledUserIds() map[int]int {
+	expensesAll := expenses.GetExpenseEntries()
+	ids := make(map[int]int)
+	for _, val := range expensesAll {
+		ids[val.UserId]++
+	}
+	return ids
+}
+
+// GetFilledUsers returns a slice of struct User with only the users which already have entries saved.
+func GetFilledUsers() Users {
+	allUsers := GetUsers()
+	ids := GetFilledUserIds()
+	users := Users{}
+	for _, val := range allUsers {
+		for id, _ := range ids {
+			if val.UserId == id {
+				users = append(users, val)
+			}
+		}
 	}
 	return users
 }

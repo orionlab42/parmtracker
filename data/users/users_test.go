@@ -85,3 +85,20 @@ func TestUsersLoadByName2(t *testing.T) {
 //		fmt.Printf("%+v\n", u)
 //	}
 //}
+
+func TestGetFilledUserIds(t *testing.T) {
+	userIds := users.GetFilledUserIds()
+	fmt.Println(userIds)
+	for i, u := range userIds {
+		fmt.Printf("%+v\n", i)
+		fmt.Printf("%+v\n", u)
+	}
+}
+
+func TestGetFilledUsers(t *testing.T) {
+	users := users.GetFilledUsers()
+	fmt.Println(users)
+	for _, u := range users {
+		fmt.Printf("%+v\n", u)
+	}
+}
