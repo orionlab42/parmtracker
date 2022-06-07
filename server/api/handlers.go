@@ -8,6 +8,7 @@ import (
 	"github.com/orionlab42/parmtracker/config"
 	"github.com/orionlab42/parmtracker/data/categories"
 	"github.com/orionlab42/parmtracker/data/expenses"
+	"github.com/orionlab42/parmtracker/data/filters"
 	"github.com/orionlab42/parmtracker/data/users"
 	"golang.org/x/crypto/bcrypt"
 	"io"
@@ -71,7 +72,7 @@ func ExpensesByDate(w http.ResponseWriter, r *http.Request) {
 	filter := vars["filter"]
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	exp := expenses.GetExpenseEntriesByDate(filter)
+	exp := filters.GetExpenseEntriesByDate(filter)
 	if err := json.NewEncoder(w).Encode(exp); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
@@ -82,7 +83,7 @@ func ExpensesByDate(w http.ResponseWriter, r *http.Request) {
 func ChartsExpensesByDate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	exp := expenses.GetExpenseEntriesMergedByDate()
+	exp := filters.GetExpenseEntriesMergedByDate()
 	if err := json.NewEncoder(w).Encode(exp); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
@@ -114,7 +115,7 @@ func ChartsExpensesByWeek(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	exp := expenses.GetExpenseEntriesMergedByWeek(categoryId)
+	exp := filters.GetExpenseEntriesMergedByWeek(categoryId)
 	if err := json.NewEncoder(w).Encode(exp); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
@@ -146,7 +147,7 @@ func ChartsExpensesByMonth(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	exp := expenses.GetExpenseEntriesMergedByMonth(categoryId)
+	exp := filters.GetExpenseEntriesMergedByMonth(categoryId)
 	if err := json.NewEncoder(w).Encode(exp); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
@@ -159,7 +160,7 @@ func ChartsExpensesByCategory(w http.ResponseWriter, r *http.Request) {
 	filter := vars["filter"]
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	exp := expenses.GetExpenseEntriesMergedByCategory(filter)
+	exp := filters.GetExpenseEntriesMergedByCategory(filter, expenses.Expenses{})
 	if err := json.NewEncoder(w).Encode(exp); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
@@ -172,7 +173,7 @@ func ChartsPieExpensesByCategory(w http.ResponseWriter, r *http.Request) {
 	filter := vars["filter"]
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	exp := expenses.GetExpenseEntriesPieByCategory(filter)
+	exp := filters.GetExpenseEntriesPieByCategory(filter)
 	if err := json.NewEncoder(w).Encode(exp); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return

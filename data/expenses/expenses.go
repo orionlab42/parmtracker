@@ -137,16 +137,3 @@ func GetExpenseEntries() Expenses {
 	}
 	return expenses
 }
-
-// GetExpenseEntriesByDate returns a slice of struct ExpenseEntry (a struct of Expenses) within a time frame(filter) all expense entries from the expenses table.
-func GetExpenseEntriesByDate(filter string) Expenses {
-	expenses := GetExpenseEntries()
-	var expensesNew Expenses
-	startDate, endDate := GetFilterDate(filter)
-	for _, val := range expenses {
-		if startDate.Before(val.Date) && endDate.After(val.Date) {
-			expensesNew = append(expensesNew, val)
-		}
-	}
-	return expensesNew
-}

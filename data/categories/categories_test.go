@@ -1,6 +1,7 @@
 package categories
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -76,3 +77,8 @@ func TestCategorySave(t *testing.T) {
 //		fmt.Printf("%+v\n", row)
 //	}
 //}
+
+func TestGetCategoryName(t *testing.T) {
+	category := GetCategoryName(2)
+	fmt.Println(category)
+}

@@ -1,7 +1,12 @@
-package expenses
+package filters
 
 import (
 	"fmt"
+	"github.com/orionlab42/parmtracker/data/categories"
+	"github.com/orionlab42/parmtracker/data/expenses"
+	"github.com/orionlab42/parmtracker/data/users"
+	"sort"
+	"strconv"
 	"time"
 )
 
@@ -17,11 +22,11 @@ const (
 // GetExpenseEntriesMergedByWeek returns a slice of struct of ExpenseEntry (struct of Expenses) in which the entries of
 // a week are merged into one entry, so for each week it returns one entry with the name being the dates of the week (ex. 23-29 May 22).
 // The filter is to select a certain category, if the filter is 0 than all categories are added.
-func GetExpenseEntriesMergedByWeek(filter int) Expenses {
-	expenses := GetExpenseEntries()
-	var expensesNew Expenses
+func GetExpenseEntriesMergedByWeek(filter int) expenses.Expenses {
+	expensesAll := expenses.GetExpenseEntries()
+	var expensesNew expenses.Expenses
 	startDate, endDate := GetFilterDateLastTwoYears()
-	for _, val := range expenses {
+	for _, val := range expensesAll {
 		isSaved := false
 		isFilter := false
 		if filter == 0 || val.Category == filter {
@@ -48,11 +53,11 @@ func GetExpenseEntriesMergedByWeek(filter int) Expenses {
 // GetExpenseEntriesMergedByMonth returns a slice of struct of ExpenseEntry (struct of Expenses) in which the entries of
 // a month are merged into one entry, so for each month it returns one entry with the name being the month and year (ex. May 2022).
 // The filter is to select a certain category, if the filter is 0 than all categories are added.
-func GetExpenseEntriesMergedByMonth(filter int) Expenses {
-	expenses := GetExpenseEntries()
-	var expensesNew Expenses
+func GetExpenseEntriesMergedByMonth(filter int) expenses.Expenses {
+	expensesAll := expenses.GetExpenseEntries()
+	var expensesNew expenses.Expenses
 	startDate, endDate := GetFilterDateLastTwoYears()
-	for _, val := range expenses {
+	for _, val := range expensesAll {
 		isSaved := false
 		isFilter := false
 		if filter == 0 || val.Category == filter {
@@ -79,10 +84,10 @@ func GetExpenseEntriesMergedByMonth(filter int) Expenses {
 // GetExpenseEntriesMergedByDate returns a slice of struct of ExpenseEntry (struct of Expenses) in which the entries of
 // a day are merged into one entry, so for each day it returns one entry.
 // THIS FUNCTION IS NOT IN USE & IT IS FROM AN OLDER VERSION
-func GetExpenseEntriesMergedByDate() Expenses {
-	expenses := GetExpenseEntries()
-	var expensesNew Expenses
-	for _, val := range expenses {
+func GetExpenseEntriesMergedByDate() expenses.Expenses {
+	expensesAll := expenses.GetExpenseEntries()
+	var expensesNew expenses.Expenses
+	for _, val := range expensesAll {
 		isSaved := false
 		for i, _ := range expensesNew {
 			if val.Date == expensesNew[i].Date {
@@ -102,11 +107,13 @@ func GetExpenseEntriesMergedByDate() Expenses {
 // GetExpenseEntriesMergedByCategory returns a slice of struct of ExpenseEntry (struct of Expenses) in which the entries of
 // a category are merged into one entry, so for each category it returns one entry with the name of the category.
 // The filter is to select a certain time frame, if the filter is "" than it gets the last 2 years.
-func GetExpenseEntriesMergedByCategory(filter string) Expenses {
-	expenses := GetExpenseEntries()
-	var expensesNew Expenses
+func GetExpenseEntriesMergedByCategory(filter string, exp expenses.Expenses) expenses.Expenses {
+	if len(exp) == 0 {
+		exp = expenses.GetExpenseEntries()
+	}
+	var expensesNew expenses.Expenses
 	startDate, endDate := GetFilterDate(filter)
-	for _, val := range expenses {
+	for _, val := range exp {
 		isSaved := false
 		for i, _ := range expensesNew {
 			if val.Category == expensesNew[i].Category && startDate.Before(val.Date) && endDate.After(val.Date) {
@@ -126,8 +133,8 @@ func GetExpenseEntriesMergedByCategory(filter string) Expenses {
 // GetExpenseEntriesPieByCategory returns a slice of struct of ExpenseEntry (struct of Expenses) in which the results of
 // GetExpenseEntriesMergedByCategory() are turned into a percentage.
 // The filter is to select a certain time frame, if the filter is "" than it gets the last 2 years.
-func GetExpenseEntriesPieByCategory(filter string) Expenses {
-	expensesByCategory := GetExpenseEntriesMergedByCategory(filter)
+func GetExpenseEntriesPieByCategory(filter string) expenses.Expenses {
+	expensesByCategory := GetExpenseEntriesMergedByCategory(filter, []expenses.ExpenseEntry{})
 	var totalExpenses float64
 	for _, val := range expensesByCategory {
 		totalExpenses += val.Amount
@@ -138,14 +145,95 @@ func GetExpenseEntriesPieByCategory(filter string) Expenses {
 	return expensesByCategory
 }
 
-//
-//func GetAllExistingIds() {
-//
-//}
-//
-//func GetExpenseEntriesMergedByCategoryForEachUser(filter string) Expenses {
-//
-//}
+// CompleteEntriesMergedByCategories orders the slices of entries of the argument by the category ids in ascending order
+// and completed with an extra entry with value 0, for each category which id is in the catIds list but has no entry in entries,
+func CompleteEntriesMergedByCategories(entries expenses.Expenses, catIds []int) expenses.Expenses {
+	var orderedEntries expenses.Expenses
+	for _, id := range catIds {
+		isCategoryHere := false
+		for _, val := range entries {
+			if val.Category == id {
+				orderedEntries = append(orderedEntries, val)
+				isCategoryHere = true
+				break
+			}
+		}
+		if isCategoryHere == false {
+			orderedEntries = append(orderedEntries, expenses.ExpenseEntry{Name: "Zero entry for category: " + strconv.Itoa(id), Amount: 0.0, Category: id})
+		}
+	}
+	return orderedEntries
+}
+
+// GetAllCategoryIdsFromFilledUsers returns a slice of all the ids of the categories present in the map which has the
+// entries by users. The ids are ordered in ascending order.
+func GetAllCategoryIdsFromFilledUsers(entries map[int]expenses.Expenses) []int {
+	catIds := make(map[int]int)
+	for _, val := range entries {
+		for _, entries := range val {
+			catIds[entries.Category]++
+		}
+	}
+	var categoriesIds []int
+	for id, _ := range catIds {
+		categoriesIds = append(categoriesIds, id)
+	}
+	sort.Slice(categoriesIds, func(i, j int) bool {
+		return categoriesIds[i] < categoriesIds[j]
+	})
+	return categoriesIds
+}
+
+// GetExpenseEntriesForEachUser returns a map where the keys are the ids of the users and the values are slices of entries
+// from that specific user. The map will contain only users that have an expense entry in the expenses table.
+func GetExpenseEntriesForEachUser() map[int]expenses.Expenses {
+	expensesAll := expenses.GetExpenseEntries()
+	filledUsers := GetFilledUsers()
+	entriesByUser := make(map[int]expenses.Expenses)
+	for _, val := range expensesAll {
+		for _, user := range filledUsers {
+			if val.UserId == user.UserId {
+				entriesByUser[user.UserId] = append(entriesByUser[user.UserId], val)
+			}
+		}
+	}
+	return entriesByUser
+}
+
+type SeriesByUserAll struct {
+	UserId int          `json:"user_id"`
+	Series SeriesByUser `json:"series"`
+}
+
+type SeriesByUser struct {
+	Name       string    `json:"name"`
+	Data       []float64 `json:"data"`
+	Categories []string  `json:"categories"`
+}
+
+// ConvertExpenseEntriesToSeriesByUser returns for each user the series what is necessary for highcharts. Each user has
+// a data field which is a slice of all the values of the merged categories and a categories field which is a slice of all
+// the names of the merged categories. The order in the two slices of course is the same. If there is a category which has
+// an entry only for one of the users, the category will still appear for all users with the value 0.
+// Example of the result: [{UserId:2 Series:{Name:Orion Data:[16 13.95 0 12.95] Categories:[groceries gift services leisure]}}, {UserId:3 Series:{Name:Atik Data:[199 24.27 21.9 0] Categories:[groceries gift services leisure]}}
+func ConvertExpenseEntriesToSeriesByUser(filter string) []SeriesByUserAll {
+	entriesForEachUser := GetExpenseEntriesForEachUser()
+	catIds := GetAllCategoryIdsFromFilledUsers(entriesForEachUser)
+	var seriesByUserAll []SeriesByUserAll
+	for id, val := range entriesForEachUser {
+		mergedEntriesOneUser := GetExpenseEntriesMergedByCategory(filter, val)
+		mergedEntriesOneUser = CompleteEntriesMergedByCategories(mergedEntriesOneUser, catIds)
+		var data []float64
+		var cat []string
+		for _, entries := range mergedEntriesOneUser {
+			data = append(data, entries.Amount)
+			cat = append(cat, categories.GetCategoryName(entries.Category))
+		}
+		seriesByUser := SeriesByUser{Name: users.GetUserName(id), Data: data, Categories: cat}
+		seriesByUserAll = append(seriesByUserAll, SeriesByUserAll{UserId: id, Series: seriesByUser})
+	}
+	return seriesByUserAll
+}
 
 // GetFilterDate returns for a certain time filter(string) a start and an end date, in case there is no recognized filter
 // it will return the oldest expense entry's date from the expenses table as starting date and now as end date.
@@ -174,7 +262,7 @@ func GetFilterDate(filter string) (time.Time, time.Time) {
 func GetFilterDateAll() (time.Time, time.Time) {
 	now := time.Now()
 	endCurrentDay := time.Date(now.Year(), now.Month(), now.Day()+1, 0, 0, 0, 0, time.UTC)
-	exp := GetExpenseEntries()
+	exp := expenses.GetExpenseEntries()
 	startAll := exp[len(exp)-1].Date
 	startAll = time.Date(startAll.Year(), startAll.Month(), startAll.Day(), 0, 0, 0, 0, time.UTC)
 	return startAll, endCurrentDay
@@ -262,4 +350,43 @@ func FirstDayOfISOWeek(year int, week int) time.Time {
 		isoYear, isoWeek = date.ISOWeek()
 	}
 	return date
+}
+
+// GetFilledUserIds creates a map with only the users which already have entries saved. The key will be the id
+// of the user and the value is the count of how many entries are of this user.
+func GetFilledUserIds() map[int]int {
+	expensesAll := expenses.GetExpenseEntries()
+	ids := make(map[int]int)
+	for _, val := range expensesAll {
+		ids[val.UserId]++
+	}
+	return ids
+}
+
+// GetFilledUsers returns a slice of struct User with only the users which already have entries saved.
+func GetFilledUsers() users.Users {
+	allUsers := users.GetUsers()
+	ids := GetFilledUserIds()
+	u := users.Users{}
+	for _, val := range allUsers {
+		for id, _ := range ids {
+			if val.UserId == id {
+				u = append(u, val)
+			}
+		}
+	}
+	return u
+}
+
+// GetExpenseEntriesByDate returns a slice of struct ExpenseEntry (a struct of Expenses) within a time frame(filter) all expense entries from the expenses table.
+func GetExpenseEntriesByDate(filter string) expenses.Expenses {
+	expensesAll := expenses.GetExpenseEntries()
+	var expensesNew expenses.Expenses
+	startDate, endDate := GetFilterDate(filter)
+	for _, val := range expensesAll {
+		if startDate.Before(val.Date) && endDate.After(val.Date) {
+			expensesNew = append(expensesNew, val)
+		}
+	}
+	return expensesNew
 }

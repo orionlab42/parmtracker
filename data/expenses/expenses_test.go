@@ -74,11 +74,3 @@ func TestExpenseSave(t *testing.T) {
 //		fmt.Printf("%+v\n", entry)
 //	}
 //}
-
-//func TestGetExpenseEntriesByDate(t *testing.T) {
-//	entries := GetExpenseEntriesByDate("")
-//	fmt.Println("Length: ", len(entries))
-//	for _, entry := range entries {
-//		fmt.Printf("%+v\n", entry)
-//	}
-//}

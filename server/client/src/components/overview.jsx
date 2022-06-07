@@ -251,8 +251,9 @@ const Overview = (props) => {
     // }
 
     const users = [
-        {"series": {"name": "Orion", "data": [1, 2, 3]}, "categories": ["gift", "rest", "bla"]},
-        {"series": {"name": "Atik", "data": [5, 6, 7]}, "categories": ["maN", "rest", "bla3"]}];
+        {"series": {"id": 0, "name": "Orion", "data": [100, 12.95], "categories": ["groceries", "gift"]}},
+        {"series": {"id": 1, "name": "Atik", "data": [23.2, 21.9, 199, 1], "categories": ["gift", "services", "groceries", "leisure"]}}];
+
     const users2 = entriesByCat;
     console.log("Users", users);
     console.log("Users2", users2);
@@ -262,7 +263,7 @@ const Overview = (props) => {
         },
         title: {text: 'Users'},
         xAxis: {
-            categories: users[0].categories
+            categories: users[0].series.categories
         },
         plotOptions: {
             line: {

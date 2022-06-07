@@ -148,3 +148,14 @@ func GetFilledCategories() Categories {
 	}
 	return categories
 }
+
+// GetCategoryName returns based on the id the category name. If it doesn't find it returns an empty string.
+func GetCategoryName(id int) string {
+	allCategories := GetCategories()
+	for _, category := range allCategories {
+		if category.Id == id {
+			return category.CategoryName
+		}
+	}
+	return ""
+}
