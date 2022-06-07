@@ -59,7 +59,12 @@ const Overview = (props) => {
     useEffect( () => {
         async function getEntriesByCatAndUser() {
             const { data: entriesCatAndUser } = await getEntriesByCategoryAndUser(filterTimeForUsers);
-            setEntriesByCatAndUser(entriesCatAndUser);
+            if (entriesCatAndUser != null) {
+                setEntriesByCatAndUser(entriesCatAndUser);
+            } else {
+                let entriesCatAndUserEmpty = [];
+                setEntriesByCatAndUser(entriesCatAndUserEmpty);
+            }
         }
         getEntriesByCatAndUser();
     }, [filterTimeForUsers]);
@@ -270,7 +275,7 @@ const Overview = (props) => {
 
     function isEntriesByCatAndUserZero() {
         let isZero = true;
-        if ( entriesByCatAndUser[0] === undefined) {
+        if (entriesByCatAndUser[0] === undefined) {
             return true;
         }
         for (let i = 0; i < entriesByCatAndUser.length; i++) {
@@ -283,11 +288,12 @@ const Overview = (props) => {
         }
         return isZero;
     }
-
     let users = entriesByCatAndUser;
     let user_categories = "";
-    if ( users[0] !== undefined) {
-        user_categories = users[0].series.categories
+    if ( users !== null) {
+        if ( users[0] !== undefined) {
+            user_categories = users[0].series.categories
+        }
     }
     const optionsEntriesByUsers = {
         chart: {

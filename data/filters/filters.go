@@ -186,13 +186,14 @@ func GetAllCategoryIdsFromFilledUsers(entries map[int]expenses.Expenses) []int {
 
 // GetExpenseEntriesForEachUser returns a map where the keys are the ids of the users and the values are slices of entries
 // from that specific user. The map will contain only users that have an expense entry in the expenses table.
-func GetExpenseEntriesForEachUser() map[int]expenses.Expenses {
+func GetExpenseEntriesForEachUser(filter string) map[int]expenses.Expenses {
 	expensesAll := expenses.GetExpenseEntries()
+	startDate, endDate := GetFilterDate(filter)
 	filledUsers := GetFilledUsers()
 	entriesByUser := make(map[int]expenses.Expenses)
 	for _, val := range expensesAll {
 		for _, user := range filledUsers {
-			if val.UserId == user.UserId {
+			if val.UserId == user.UserId && startDate.Before(val.Date) && endDate.After(val.Date) {
 				entriesByUser[user.UserId] = append(entriesByUser[user.UserId], val)
 			}
 		}
@@ -217,7 +218,7 @@ type SeriesByUser struct {
 // an entry only for one of the users, the category will still appear for all users with the value 0.
 // Example of the result: [{UserId:2 Series:{Name:Orion Data:[16 13.95 0 12.95] Categories:[groceries gift services leisure]}}, {UserId:3 Series:{Name:Atik Data:[199 24.27 21.9 0] Categories:[groceries gift services leisure]}}
 func GetExpenseEntriesToSeriesByUser(filter string) []SeriesByUserAll {
-	entriesForEachUser := GetExpenseEntriesForEachUser()
+	entriesForEachUser := GetExpenseEntriesForEachUser(filter)
 	catIds := GetAllCategoryIdsFromFilledUsers(entriesForEachUser)
 	var seriesByUserAll []SeriesByUserAll
 	for id, val := range entriesForEachUser {
