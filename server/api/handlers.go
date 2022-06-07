@@ -167,6 +167,19 @@ func ChartsExpensesByCategory(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// ChartsExpensesByCategoryAndUser is a handler for: /api/charts-expenses-by-category-and-user/{filter}
+func ChartsExpensesByCategoryAndUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	filter := vars["filter"]
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	exp := filters.GetExpenseEntriesToSeriesByUser(filter)
+	if err := json.NewEncoder(w).Encode(exp); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
 // ChartsPieExpensesByCategory is a handler for: /api/charts-pie-expenses-by-category
 func ChartsPieExpensesByCategory(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)

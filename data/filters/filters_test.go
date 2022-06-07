@@ -173,7 +173,7 @@ func TestGetExpenseEntriesForEachUser(t *testing.T) {
 }
 
 func TestConvertExpenseEntriesToSeriesByUser(t *testing.T) {
-	expensesAll := filters.ConvertExpenseEntriesToSeriesByUser("")
+	expensesAll := filters.GetExpenseEntriesToSeriesByUser("")
 	for _, val := range expensesAll {
 		fmt.Printf("%+v\n", val)
 	}

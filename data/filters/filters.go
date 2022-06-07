@@ -211,12 +211,12 @@ type SeriesByUser struct {
 	Categories []string  `json:"categories"`
 }
 
-// ConvertExpenseEntriesToSeriesByUser returns for each user the series what is necessary for highcharts. Each user has
+// GetExpenseEntriesToSeriesByUser returns for each user the series what is necessary for highcharts. Each user has
 // a data field which is a slice of all the values of the merged categories and a categories field which is a slice of all
 // the names of the merged categories. The order in the two slices of course is the same. If there is a category which has
 // an entry only for one of the users, the category will still appear for all users with the value 0.
 // Example of the result: [{UserId:2 Series:{Name:Orion Data:[16 13.95 0 12.95] Categories:[groceries gift services leisure]}}, {UserId:3 Series:{Name:Atik Data:[199 24.27 21.9 0] Categories:[groceries gift services leisure]}}
-func ConvertExpenseEntriesToSeriesByUser(filter string) []SeriesByUserAll {
+func GetExpenseEntriesToSeriesByUser(filter string) []SeriesByUserAll {
 	entriesForEachUser := GetExpenseEntriesForEachUser()
 	catIds := GetAllCategoryIdsFromFilledUsers(entriesForEachUser)
 	var seriesByUserAll []SeriesByUserAll

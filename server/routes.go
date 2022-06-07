@@ -21,6 +21,7 @@ var routes = Routes{
 	Route{"ExpensesByDate", http.MethodGet, "/api/expenses/by-date/{filter}", true, api.ExpensesByDate},
 	Route{"ChartsExpensesByDate", http.MethodGet, "/api/charts-expenses-by-date", true, api.ChartsExpensesByDate},
 	Route{"ChartsExpensesByCategory", http.MethodGet, "/api/charts-expenses-by-category/{filter}", true, api.ChartsExpensesByCategory},
+	Route{"ChartsExpensesByCategoryAndUser", http.MethodGet, "/api/charts-expenses-by-category-and-user/{filter}", true, api.ChartsExpensesByCategoryAndUser},
 	Route{"ChartsExpensesByWeek", http.MethodGet, "/api/charts-expenses-by-week/{filter}", true, api.ChartsExpensesByWeek},
 	Route{"ChartsExpensesByMonth", http.MethodGet, "/api/charts-expenses-by-month/{filter}", true, api.ChartsExpensesByMonth},
 	Route{"ChartsPieExpensesByCategory", http.MethodGet, "/api/charts-pie-expenses-by-category/{filter}", true, api.ChartsPieExpensesByCategory},
