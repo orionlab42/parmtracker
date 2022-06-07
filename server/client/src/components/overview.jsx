@@ -22,6 +22,7 @@ const Overview = (props) => {
     const [entriesByCatAndUser, setEntriesByCatAndUser] = useState([]);
     const [entriesPieByCat, setEntriesPieByCat] = useState([]);
     const [filterTime, setFilterTime] = useState("get all");
+    const [filterTimeForUsers, setFilterTimeForUsers] = useState("get all");
     const [filterCategory, setFilterCategory] = useState(0);
 
     useEffect( () => {
@@ -47,13 +48,21 @@ const Overview = (props) => {
             setCategories(categories);
             const { data: entriesCat } = await getEntriesByCategory(filterTime);
             setEntriesByCat(entriesCat);
-            const { data: entriesCatAndUser } = await getEntriesByCategoryAndUser(filterTime);
+            const { data: entriesCatAndUser } = await getEntriesByCategoryAndUser(filterTimeForUsers);
             setEntriesByCatAndUser(entriesCatAndUser);
             const { data: entriesPieByCat } = await getEntriesPieByCategory(filterTime);
             setEntriesPieByCat(entriesPieByCat);
         }
         getEntriesByCat();
     }, [filterTime]);
+
+    useEffect( () => {
+        async function getEntriesByCatAndUser() {
+            const { data: entriesCatAndUser } = await getEntriesByCategoryAndUser(filterTimeForUsers);
+            setEntriesByCatAndUser(entriesCatAndUser);
+        }
+        getEntriesByCatAndUser();
+    }, [filterTimeForUsers]);
 
     // const optionsEntriesDate = {
     //     title: {text: 'Expenses in time'},
@@ -259,6 +268,22 @@ const Overview = (props) => {
     //     return categoryNames
     // }
 
+    function isEntriesByCatAndUserZero() {
+        let isZero = true;
+        if ( entriesByCatAndUser[0] === undefined) {
+            return true;
+        }
+        for (let i = 0; i < entriesByCatAndUser.length; i++) {
+            for (let j = 0; j < entriesByCatAndUser[i].series.categories.length; j++) {
+                if (entriesByCatAndUser[i].series.data[j] !== 0) {
+                    isZero = false;
+                    break;
+                }
+            }
+        }
+        return isZero;
+    }
+
     let users = entriesByCatAndUser;
     let user_categories = "";
     if ( users[0] !== undefined) {
@@ -268,7 +293,7 @@ const Overview = (props) => {
         chart: {
             type: 'column'
         },
-        title: {text: 'Users'},
+        title: {text: ''},
         xAxis: {
             categories: user_categories
         },
@@ -349,6 +374,49 @@ const Overview = (props) => {
         )
     }
 
+    let categoriesByUserChart, chartFilterTimeForUsers;
+    if (isEntriesByCatAndUserZero()) {
+        chartFilterTimeForUsers = (
+            <div className="chart-filter">
+                <h4 className="title is-5 center-text chart-title">Expenses by users for { filterTimeForUsers }</h4>
+                <h4 className="title is-5 center-text chart-title">There are none - choose another time frame!</h4>
+                <FilterTime currentTimeFilter={filterTimeForUsers}
+                            onChange={filter => setFilterTimeForUsers(filter)}
+                />
+            </div>
+            )
+    } else if (filterTimeForUsers === "get all") {
+        chartFilterTimeForUsers = (
+            <div className="chart-filter">
+                <h4 className="title is-5 center-text chart-title">Expenses by users</h4>
+                <FilterTime currentTimeFilter={filterTimeForUsers}
+                            onChange={filter => setFilterTimeForUsers(filter)}
+                />
+            </div>
+        )
+        categoriesByUserChart = (
+            <div className="chart-item-left">
+                <HighchartsReact highcharts={Highcharts}
+                                 options={optionsEntriesByUsers} />
+            </div>
+        )
+    } else {
+        chartFilterTimeForUsers = (
+            <div className="chart-filter">
+                <h4 className="title is-5 center-text chart-title">Expenses by users for { filterTimeForUsers }</h4>
+                <FilterTime currentTimeFilter={filterTimeForUsers}
+                            onChange={filter => setFilterTimeForUsers(filter)}
+                />
+            </div>
+        )
+        categoriesByUserChart = (
+            <div className="chart-item-left">
+                <HighchartsReact highcharts={Highcharts}
+                                 options={optionsEntriesByUsers} />
+            </div>
+        )
+    }
+
     return (
         <div className="chart-container">
                 {/*<div className="chart-item">*/}
@@ -377,10 +445,11 @@ const Overview = (props) => {
                 { chartFilterTime }
                 { categoriesCharts }
             </div>
-            <div className="chart-item-left">
-                <HighchartsReact highcharts={Highcharts}
-                                 options={optionsEntriesByUsers} />
+            <div>
+                { chartFilterTimeForUsers }
+                { categoriesByUserChart }
             </div>
+
         </div>
     );
 };
