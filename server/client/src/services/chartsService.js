@@ -2,6 +2,7 @@ import http from './httpService';
 
 const  apiEndpointExpByDate = '/charts-expenses-by-date';
 const  apiEndpointExpByCat = '/charts-expenses-by-category';
+const  apiEndpointExpByCatAndUser = '/charts-expenses-by-category-and-user';
 const  apiEndpointExpByWeek = '/charts-expenses-by-week';
 const  apiEndpointExpByMonth = '/charts-expenses-by-month';
 const  apiEndpointExpPieByCat = '/charts-pie-expenses-by-category';
@@ -29,6 +30,10 @@ export function getEntriesByMonth(filter) {
 
 export function getEntriesByCategory(filter) {
     return http.get(`${apiEndpointExpByCat}/${filter}`);
+}
+
+export function getEntriesByCategoryAndUser(filter) {
+    return http.get(`${apiEndpointExpByCatAndUser}/${filter}`);
 }
 
 export function getEntriesPieByCategory(filter) {

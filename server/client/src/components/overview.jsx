@@ -2,7 +2,13 @@ import React, { useState, useEffect } from "react";
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import {getFilledCategories} from "../services/categoryService";
-import {getEntriesByWeek, getEntriesByMonth, getEntriesByCategory, getEntriesPieByCategory} from "../services/chartsService";
+import {
+    getEntriesByWeek,
+    getEntriesByMonth,
+    getEntriesByCategory,
+    getEntriesPieByCategory,
+    getEntriesByCategoryAndUser
+} from "../services/chartsService";
 import FilterTime from "./common/filterTime";
 import FilterCategory from "./common/filterCategories";
 
@@ -13,6 +19,7 @@ const Overview = (props) => {
     const [entriesByMonth, setEntriesByMonth] = useState([]);
     const [categories, setCategories] = useState([]);
     const [entriesByCat, setEntriesByCat] = useState([]);
+    const [entriesByCatAndUser, setEntriesByCatAndUser] = useState([]);
     const [entriesPieByCat, setEntriesPieByCat] = useState([]);
     const [filterTime, setFilterTime] = useState("get all");
     const [filterCategory, setFilterCategory] = useState(0);
@@ -40,6 +47,8 @@ const Overview = (props) => {
             setCategories(categories);
             const { data: entriesCat } = await getEntriesByCategory(filterTime);
             setEntriesByCat(entriesCat);
+            const { data: entriesCatAndUser } = await getEntriesByCategoryAndUser(filterTime);
+            setEntriesByCatAndUser(entriesCatAndUser);
             const { data: entriesPieByCat } = await getEntriesPieByCategory(filterTime);
             setEntriesPieByCat(entriesPieByCat);
         }
@@ -250,20 +259,18 @@ const Overview = (props) => {
     //     return categoryNames
     // }
 
-    const users = [
-        {"series": {"id": 0, "name": "Orion", "data": [100, 12.95], "categories": ["groceries", "gift"]}},
-        {"series": {"id": 1, "name": "Atik", "data": [23.2, 21.9, 199, 1], "categories": ["gift", "services", "groceries", "leisure"]}}];
-
-    const users2 = entriesByCat;
-    console.log("Users", users);
-    console.log("Users2", users2);
+    let users = entriesByCatAndUser;
+    let user_categories = "";
+    if ( users[0] !== undefined) {
+        user_categories = users[0].series.categories
+    }
     const optionsEntriesByUsers = {
         chart: {
             type: 'column'
         },
         title: {text: 'Users'},
         xAxis: {
-            categories: users[0].series.categories
+            categories: user_categories
         },
         plotOptions: {
             line: {
