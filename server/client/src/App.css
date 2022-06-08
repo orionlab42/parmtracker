@@ -10919,16 +10919,40 @@ form {
   float: right;
   padding: 20px 40px 60px 20px;
 }
+@media (max-width: 376px) {
+  .chart-container .chart-item-right {
+    width: 100%;
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px 30px 40px 20px;
+  }
+}
 .chart-container .chart-item-left {
   width: 50%;
   float: left;
   padding: 20px 20px 60px 40px;
+}
+@media (max-width: 376px) {
+  .chart-container .chart-item-left {
+    width: 100%;
+    float: none;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px 30px 40px 20px;
+  }
 }
 .chart-container .chart-item-center {
   margin-left: auto;
   margin-right: auto;
   width: 50%;
   padding: 20px 20px 60px 20px;
+}
+@media (max-width: 376px) {
+  .chart-container .chart-item-center {
+    width: 100%;
+    padding: 20px 30px 40px 20px;
+  }
 }
 .chart-container .chart-filter {
   display: inline-block;
