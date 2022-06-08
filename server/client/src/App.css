@@ -10924,6 +10924,12 @@ form {
   float: left;
   padding: 20px 20px 60px 40px;
 }
+.chart-container .chart-item-center {
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+  padding: 20px 20px 60px 20px;
+}
 .chart-container .chart-filter {
   display: inline-block;
   width: 100%;
@@ -10939,7 +10945,7 @@ form {
 .chart-container .chart-filter .dropdown-menu {
   top: 87%;
 }
-.chart-container .chart-time {
+.chart-container .chart-time, .chart-container .chart-category, .chart-container .chart-category-and-users {
   overflow: hidden;
   background-color: white;
 }

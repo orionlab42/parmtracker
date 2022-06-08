@@ -346,7 +346,7 @@ const Overview = (props) => {
             </div>
         )
         categoriesCharts = (
-            <div>
+            <div className="chart-category">
                 <div className="chart-item-right">
                     <HighchartsReact highcharts={Highcharts}
                                      options={optionsEntriesPieByCat} />
@@ -367,7 +367,7 @@ const Overview = (props) => {
             </div>
         )
         categoriesCharts = (
-            <div>
+            <div className="chart-category">
                 <div className="chart-item-right">
                     <HighchartsReact highcharts={Highcharts}
                                      options={optionsEntriesPieByCat} />
@@ -401,9 +401,11 @@ const Overview = (props) => {
             </div>
         )
         categoriesByUserChart = (
-            <div className="chart-item-left">
-                <HighchartsReact highcharts={Highcharts}
-                                 options={optionsEntriesByUsers} />
+            <div className="chart-category-and-users">
+                <div className="chart-item-center">
+                    <HighchartsReact highcharts={Highcharts}
+                                     options={optionsEntriesByUsers} />
+                </div>
             </div>
         )
     } else {
@@ -416,9 +418,11 @@ const Overview = (props) => {
             </div>
         )
         categoriesByUserChart = (
-            <div className="chart-item-left">
-                <HighchartsReact highcharts={Highcharts}
-                                 options={optionsEntriesByUsers} />
+            <div className="chart-category-and-users">
+                <div className="chart-item-center">
+                    <HighchartsReact highcharts={Highcharts}
+                                     options={optionsEntriesByUsers} />
+                </div>
             </div>
         )
     }
