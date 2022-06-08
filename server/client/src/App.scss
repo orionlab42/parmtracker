@@ -420,6 +420,26 @@ form {
 
 }
 
+/* Settings */
+
+.user-color {
+    padding: 20px;
+}
+.add-new-color {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.add-new-color-button {
+    padding: 0 12px 0 0;
+}
+
+.circle-picker {
+    margin-left: auto;
+    margin-right: auto !important;
+    padding: 20px 0 0 0;
+}
+
 /**
  * Bulma customization dark mode
  */

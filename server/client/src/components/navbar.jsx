@@ -40,6 +40,10 @@ const NavBar =  (props) => {
                         <span className="mdi mdi-chart-bar"/>
                         Overview
                     </NavLink>
+                    <NavLink className="navbar-item" to="/settings">
+                        <span className="mdi mdi-account-settings-outline"/>
+                        Settings
+                    </NavLink>
                     <NavLink className="navbar-item" onClick={handleLogout} to="/login">
                         Logout
                     </NavLink>

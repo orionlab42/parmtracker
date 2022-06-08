@@ -583,3 +583,48 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// UpdateUser is a handler for: "/user/update-settings/{id}"
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	entryId := vars["id"]
+	var entry expenses.ExpenseEntry
+	id, err := strconv.Atoi(entryId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := entry.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The entry with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	if err := json.Unmarshal(body, &entry); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	err = entry.Save()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+}

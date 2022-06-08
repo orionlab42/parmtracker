@@ -6,6 +6,7 @@ import Categories from './components/categories';
 import Home from "./components/home";
 import Incomes from "./components/incomes";
 import Overview from "./components/overview";
+import Settings from "./components/settings";
 import NotFound from "./components/notFound";
 import LoginForm from "./components/loginForm";
 import RegisterForm from "./components/registerForm";
@@ -42,6 +43,7 @@ class App extends Component {
                                 <Redirect from="/expense" exact to="/expenses"/>
                                 <ProtectedRoute path="/categories" user={user} component={Categories}/>
                                 <ProtectedRoute path="/overview" user={user} component={Overview}/>
+                                <ProtectedRoute path="/settings" user={user} render={props => <Settings {...props} user={user}/>}/>
                                 <Route path="/login" component={LoginForm}/>
                                 <Route path="/register" component={RegisterForm}/>
                                 <Route path="/home" exact render={props => <Home {...props} user={user}/>}/>
