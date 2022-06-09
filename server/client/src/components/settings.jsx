@@ -1,21 +1,18 @@
 import React, {useEffect, useState} from "react";
-import SelectColor from "./common/selectColor";
-import {getEntriesByMonth, getEntriesByWeek} from "../services/chartsService";
-import {getCategoryColor} from "../services/categoryService";
 import UserColorForm from "./userColorForm";
-import { SliderPicker, CirclePicker } from 'react-color';
 import Link from "react-router-dom/Link";
 import {Route} from "react-router-dom";
-import CategoryForm from "./categoryForm";
+
 
 const Settings = (props) => {
     const [addButtonToggle, setAddButtonToggle] = useState(false);
 
     let currentColor;
-    if (props.user !== "") {
+    let user = props.user;
+    if (user !== "") {
         // console.log("User Color", props.user.user_color);
         currentColor = (
-            <div className="user-color" style={{backgroundColor: props.user.user_color}}>
+            <div className="user-color" style={{backgroundColor: user.user_color}}>
                 <h4 className="title is-5 center-text">Currently saved color:</h4>
             </div>
         )
@@ -46,7 +43,7 @@ const Settings = (props) => {
                 {addButtonToggle &&
                 <Route
                     path="/settings/new-color"
-                    render={(props) => (<UserColorForm {...props}
+                    render={(props) => (<UserColorForm {...props} user={user}
                                                       onUpdate={handleUpdate}/>)}
                 />}
             </div>

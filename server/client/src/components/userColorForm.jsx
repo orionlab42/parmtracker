@@ -1,9 +1,6 @@
 import React, {useEffect, useState} from "react";
-import SelectColor from "./common/selectColor";
-import {getCategoryColor} from "../services/categoryService";
 import { CirclePicker } from 'react-color';
-import {getEntriesByCategoryAndUser} from "../services/chartsService";
-import {saveUserColor} from "../services/userService";
+import {updateUserSettings} from "../services/userService";
 
 const UserColorForm = (props) => {
     const [newColor, setNewColor] = useState('#fff');
@@ -12,8 +9,8 @@ const UserColorForm = (props) => {
     useEffect( () => {
         async function setUserColor() {
             let user = props.user
-            user.user_color = newColor
-            await saveUserColor(user);
+            user.user_color = newColor;
+            await updateUserSettings(user);
         }
         setUserColor();
     }, [newColor]);

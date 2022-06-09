@@ -587,9 +587,9 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 // UpdateUser is a handler for: "/user/update-settings/{id}"
 func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	entryId := vars["id"]
-	var entry expenses.ExpenseEntry
-	id, err := strconv.Atoi(entryId)
+	userId := vars["id"]
+	var user users.User
+	id, err := strconv.Atoi(userId)
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
@@ -603,16 +603,16 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Error: %s\n", err)
 		return
 	}
-	if err := entry.Load(id); err != nil {
+	if err := user.Load(id); err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(404) // not found
-		message := "The entry with the given ID not found."
+		message := "The user with the given ID not found."
 		if err := json.NewEncoder(w).Encode(message); err != nil {
 			fmt.Printf("Error: %s\n", err)
 			return
 		}
 	}
-	if err := json.Unmarshal(body, &entry); err != nil {
+	if err := json.Unmarshal(body, &user); err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(422) // unprocessable entity
 		if err := json.NewEncoder(w).Encode(err); err != nil {
@@ -620,7 +620,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	err = entry.Save()
+	err = user.Save()
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return

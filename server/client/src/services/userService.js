@@ -5,7 +5,7 @@ const  apiEndpointLogin = '/login';
 const  apiEndpointGetUser = '/user';
 const  apiEndpointLogout = '/logout';
 const  apiEndpointAllUsers = '/all-users';
-const  apiEndpointUserUpdate = '/user/update-settings/';
+const  apiEndpointUserUpdate = '/user/update-settings';
 
 export function getUsers() {
     return http.get(apiEndpointAllUsers);
@@ -44,25 +44,12 @@ export function logout() {
 }
 
 function userUrl(id) {
-    return `${apiEndpointUserColor}/${id}`;
+    return `${apiEndpointUserUpdate}/${id}`;
 }
 
 export function updateUserSettings(user) {
-    return http.post(apiEndpointUserColor, user);
+    user.user_id = parseInt(user.user_id);
+    return http.put(userUrl(user.user_id), user);
 }
 
-export function saveEntry(entry) {
-    entry.category = parseInt(entry.category)
-    entry.user_id = parseInt(entry.user_id)
-    entry.amount = parseFloat(entry.amount)
-    if (entry.id) {
-        const body = { ...entry };
-        delete body.id;
-        body.category = parseInt(body.category)
-        body.user_id = parseInt(body.user_id)
-        body.amount = parseFloat(body.amount)
-        return http.put(entryUrl(entry.id), body);
-    }
-    return http.post(apiEndpoint, entry);
-}
 

@@ -32,6 +32,7 @@ var routes = Routes{
 	Route{"Categories", http.MethodGet, "/api/categories/{id}", true, api.Categories},
 	Route{"CategoryNew", http.MethodPost, "/api/categories", true, api.CategoryNew},
 	Route{"CategoryDelete", http.MethodDelete, "/api/categories/{id}", true, api.CategoryDelete},
+	Route{"UpdateUser", http.MethodPut, "/api/user/update-settings/{id}", true, api.UpdateUser},
 
 	Route{"UserRegister", http.MethodPost, "/api/register", false, api.UserRegister},
 	Route{"UserLogin", http.MethodPost, "/api/login", false, api.UserLogin},
@@ -39,5 +40,4 @@ var routes = Routes{
 	Route{"Logout", http.MethodPost, "/api/logout", false, api.Logout},
 
 	Route{"Users", http.MethodGet, "/api/all-users", true, api.Users},
-	Route{"UpdateUser", http.MethodPost, "/user/update-settings/{id}", true, api.UpdateUser},
 }
