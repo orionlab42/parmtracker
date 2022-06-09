@@ -33,6 +33,23 @@ const Settings = (props) => {
     return (
         <div>
             <h1 className="title is-3 center-text">Settings</h1>
+            <h4 className="title is-5 center-text">Dark mode:</h4>
+            <div className="dark-mode-toggle">
+                <input type="checkbox" id="switch"/>
+                <div className="app">
+                    <div className="body">
+                        <div className="content">
+                            <label htmlFor="switch">
+                                <div className="toggle"></div>
+                                <div className="names">
+                                    <p className="light">Light</p>
+                                    <p className="dark">Dark</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {currentColorDisplay}
             <div className="add-new-color">
                 <div className="add-new-color-button">
