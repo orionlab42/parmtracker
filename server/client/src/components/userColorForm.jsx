@@ -5,7 +5,6 @@ import {updateUserSettings} from "../services/userService";
 const UserColorForm = (props) => {
     const [newColor, setNewColor] = useState('#fff');
 
-    console.log("Color", newColor);
     useEffect( () => {
         async function setUserColor() {
             let user = props.user
@@ -17,6 +16,8 @@ const UserColorForm = (props) => {
 
     const handleChangeComplete = (color) => {
         setNewColor(color.hex);
+        props.passData(newColor);
+        console.log("Color1", newColor);
     };
 
     return (

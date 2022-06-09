@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useState } from "react";
 import UserColorForm from "./userColorForm";
 import Link from "react-router-dom/Link";
 import {Route} from "react-router-dom";
@@ -6,13 +6,13 @@ import {Route} from "react-router-dom";
 
 const Settings = (props) => {
     const [addButtonToggle, setAddButtonToggle] = useState(false);
+    const [currentColor, setCurrentColor] = useState("");
 
-    let currentColor;
+    let currentColorDisplay;
     let user = props.user;
     if (user !== "") {
-        // console.log("User Color", props.user.user_color);
-        currentColor = (
-            <div className="user-color" style={{backgroundColor: user.user_color}}>
+        currentColorDisplay = (
+            <div className="user-color" style={{backgroundColor:  user.user_color}}>
                 <h4 className="title is-5 center-text">Currently saved color:</h4>
             </div>
         )
@@ -23,16 +23,17 @@ const Settings = (props) => {
         addButtonToggleChanged = !addButtonToggle;
         setAddButtonToggle(addButtonToggleChanged);
     }
-    const handleUpdate = (e) => {
-        console.log("hello change");
-        console.log(e);
 
-    }
+    const passData = (data) => {
+        setCurrentColor(data);
+        console.log("Color2", data);
+        // window.location = '/client/settings';
+    };
 
     return (
         <div>
             <h1 className="title is-3 center-text">Settings</h1>
-            {currentColor}
+            {currentColorDisplay}
             <div className="add-new-color">
                 <div className="add-new-color-button">
                     <Link to="/settings/new-color"
@@ -43,19 +44,9 @@ const Settings = (props) => {
                 {addButtonToggle &&
                 <Route
                     path="/settings/new-color"
-                    render={(props) => (<UserColorForm {...props} user={user}
-                                                      onUpdate={handleUpdate}/>)}
+                    render={(props) => (<UserColorForm {...props} user={user} passData={passData}/>)}
                 />}
             </div>
-
-            {/*<SliderPicker*/}
-            {/*    color={background}*/}
-            {/*    onChangeComplete={handleChangeComplete}*/}
-            {/*/>*/}
-            {/*<CirclePicker*/}
-            {/*    color={background}*/}
-            {/*    onChangeComplete={handleChangeComplete}*/}
-            {/*/>*/}
         </div>
     );
 };
