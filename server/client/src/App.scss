@@ -445,119 +445,125 @@ form {
 @import url('https://fonts.googleapis.com/css?family=Rubik');
 
 .dark-mode-toggle {
-    body{
-      margin: 0;
-      padding: 0;
-      font-family: 'Rubik', -apple-system, BlinkMacSystemFont,
-        "Segoe UI", "Roboto", "Oxygen",
-        "Ubuntu", "Cantarell", "Fira Sans",
-        "Droid Sans", "Helvetica Neue", sans-serif;;
-    }
-    .body {
-      position: relative;
-      width: 100vw;
-      height: 90px;
-      background-color: #fff;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: background-color .1s;
-    }
+    margin: 0;
+    padding: 0;
+    font-family: 'Rubik', -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;;
+.toggle-body {
 
-    /* Middle */
-    .content {
-      display: flex;
-      flex-direction: column;
-      margin: auto;
-      text-align: center;
-      width: 70%;
-      transform: translateY(5%);
-    }
+}
+    position: relative;
+    width: 100vw;
+    height: 90px;
+    background-color: #fff;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color .1s;
 
+    .toggle-container {
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        text-align: center;
+        width: 300px;
+        transform: translateY(5%);
+        @media (max-width: 376px){
+            width: 200px;
+        }
+    }
     label, .toggle {
-      height: 2.8rem;
-      border-radius: 100px;
+        height: 2.8rem;
+        border-radius: 100px;
     }
     label {
-      width: 100%;
-      background-color: rgba(0,0,0,.1);
-      border-radius: 100px;
-      position: relative;
-      margin: 1.8rem 0 4rem 0;
-      cursor: pointer;
+        width: 100%;
+        background-color: rgba(0,0,0,.2);
+        border-radius: 100px;
+        position: relative;
+        margin: 1.8rem 0 4rem 0;
+        cursor: pointer;
     }
     .toggle {
-      position: absolute;
-      width: 50%;
-      background-color: #fff;
-      box-shadow: 0 2px 15px rgba(0,0,0,.15);
-      transition: transform .3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        position: absolute;
+        width: 50%;
+        background-color: #fff;
+        box-shadow: 0 2px 15px rgba(0,0,0,.15);
+        transition: transform .3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     .names {
-      font-size: 90%;
-      font-weight: bolder;
-      width: 65%;
-      margin-left: 17.5%;
-      margin-top: .5%;
-      position: absolute;
-      display: flex;
-      justify-content: space-between;
-      user-select: none;
+        font-size: 90%;
+        font-weight: bolder;
+        width: 65%;
+        margin-left: 17.5%;
+        margin-top: .5%;
+        position: absolute;
+        display: flex;
+        justify-content: space-between;
+        user-select: none;
+        padding-top: 8px;
     }
     .dark {
-      opacity: .5;
+        opacity: .5;
     }
     .mark {
-      border-radius: 100px;
-      background-color: black;
+        border-radius: 100px;
+        background-color: black;
     }
     .mark {
-      width: 7%;
-      margin: auto;
-      position: relative;
-      height: .25rem;
+        width: 7%;
+        margin: auto;
+        position: relative;
+        height: .25rem;
     }
     .mark::before {
-      content: '';
-      position: absolute;
-      width: .25rem;
-      height: 100%;
-      left: -70%;
-      opacity: .15;
-      background-color: inherit;
+        content: '';
+        position: absolute;
+        width: .25rem;
+        height: 100%;
+        left: -70%;
+        opacity: .15;
+        background-color: inherit;
     }
     .mark::after {
-      content: '';
-      position: absolute;
-      width: .25rem;
-      height: 100%;
-      right: -70%;
-      opacity: .15;
-      background-color: inherit;
+        content: '';
+        position: absolute;
+        width: .25rem;
+        height: 100%;
+        right: -70%;
+        opacity: .15;
+        background-color: inherit;
     }
     /* -------- switch Styles ------------*/
     [type="checkbox"] {
-      display: none;
+        display: none;
     }
     /* toggle */
-    [type="checkbox"]:checked + .app .toggle{
-      transform: translateX(100%);
-      background-color: #34323D;
+    [type="checkbox"]:checked + .toggle-container .toggle{
+        transform: translateX(100%);
+        background-color: #34323D;
     }
 
-    [type="checkbox"]:checked + .app .dark{
-      opacity: 1;
+    [type="checkbox"]:checked + .toggle-container .dark{
+        opacity: 1;
     }
-    [type="checkbox"]:checked + .app .light{
-      opacity: .5;
+    [type="checkbox"]:checked + .toggle-container .light{
+        opacity: .5;
     }
-    // /* app */
-    [type="checkbox"]:checked + .app .body{
-        background-color:  #26242E;
+    /* background */
+    [type="checkbox"]:checked + .toggle-container .dark-mode-toggle{
+        background-color:  #222;
         color: white;
     }
 }
+
+[type="checkbox"]:checked + .toggle-container .dark-mode-toggle{
+        background-color:  #222;
+        color: white;
+    }
 
 
 

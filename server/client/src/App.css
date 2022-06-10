@@ -10997,16 +10997,9 @@ form {
 
 /* Dark mode */
 .dark-mode-toggle {
-  /* Middle */
-  /* -------- switch Styles ------------*/
-  /* toggle */
-}
-.dark-mode-toggle body {
   margin: 0;
   padding: 0;
   font-family: "Rubik", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-}
-.dark-mode-toggle .body {
   position: relative;
   width: 100vw;
   height: 90px;
@@ -11016,14 +11009,22 @@ form {
   justify-content: center;
   align-items: center;
   transition: background-color 0.1s;
+  /* -------- switch Styles ------------*/
+  /* toggle */
+  /* background */
 }
-.dark-mode-toggle .content {
+.dark-mode-toggle .toggle-container {
   display: flex;
   flex-direction: column;
   margin: auto;
   text-align: center;
-  width: 70%;
+  width: 300px;
   transform: translateY(5%);
+}
+@media (max-width: 376px) {
+  .dark-mode-toggle .toggle-container {
+    width: 200px;
+  }
 }
 .dark-mode-toggle label, .dark-mode-toggle .toggle {
   height: 2.8rem;
@@ -11031,7 +11032,7 @@ form {
 }
 .dark-mode-toggle label {
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 100px;
   position: relative;
   margin: 1.8rem 0 4rem 0;
@@ -11054,6 +11055,7 @@ form {
   display: flex;
   justify-content: space-between;
   user-select: none;
+  padding-top: 8px;
 }
 .dark-mode-toggle .dark {
   opacity: 0.5;
@@ -11089,18 +11091,23 @@ form {
 .dark-mode-toggle [type=checkbox] {
   display: none;
 }
-.dark-mode-toggle [type=checkbox]:checked + .app .toggle {
+.dark-mode-toggle [type=checkbox]:checked + .toggle-container .toggle {
   transform: translateX(100%);
   background-color: #34323D;
 }
-.dark-mode-toggle [type=checkbox]:checked + .app .dark {
+.dark-mode-toggle [type=checkbox]:checked + .toggle-container .dark {
   opacity: 1;
 }
-.dark-mode-toggle [type=checkbox]:checked + .app .light {
+.dark-mode-toggle [type=checkbox]:checked + .toggle-container .light {
   opacity: 0.5;
 }
-.dark-mode-toggle [type=checkbox]:checked + .app .body {
-  background-color: #26242E;
+.dark-mode-toggle [type=checkbox]:checked + .toggle-container .dark-mode-toggle {
+  background-color: #222;
+  color: white;
+}
+
+[type=checkbox]:checked + .toggle-container .dark-mode-toggle {
+  background-color: #222;
   color: white;
 }
 
