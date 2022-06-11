@@ -27,7 +27,26 @@ class App extends Component {
         this.setState({user});
     }
 
+
+    // needs to be reviewed with pere !!!!
+    async componentDidUpdate(prevProps, prevState) {
+        if (prevState.user.dark_mode !== this.state.user.dark_mode) {
+            console.log('dark mode state has changed.');
+        }
+        // const user = await getCurrentUser();
+        // this.setState({user});
+    }
+
+
+    HandleChange = darkMode => {
+        let user = this.state.user;
+        user.dark_mode = darkMode;
+        this.setState({user});
+        console.log("Dark mode in App js", user.dark_mode);
+    };
+
     render() {
+        console.log("User", this.state.user);
         const user = this.state.user
         return (
             <React.Fragment>
@@ -43,7 +62,7 @@ class App extends Component {
                                 <Redirect from="/expense" exact to="/expenses"/>
                                 <ProtectedRoute path="/categories" user={user} component={Categories}/>
                                 <ProtectedRoute path="/overview" user={user} component={Overview}/>
-                                <ProtectedRoute path="/settings" user={user} render={props => <Settings {...props} user={user}/>}/>
+                                <ProtectedRoute path="/settings" user={user} render={props => <Settings {...props} user={user} onChange={this.state.HandleChange}/>}/>
                                 <Route path="/login" component={LoginForm}/>
                                 <Route path="/register" component={RegisterForm}/>
                                 <Route path="/home" exact render={props => <Home {...props} user={user}/>}/>

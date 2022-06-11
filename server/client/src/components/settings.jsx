@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import UserColorForm from "./userColorForm";
 import Link from "react-router-dom/Link";
 import {Route} from "react-router-dom";
+import {updateUserSettings} from "../services/userService";
 
 
 const Settings = (props) => {
     const [addButtonToggle, setAddButtonToggle] = useState(false);
+    const [darkModeToggle, setDarkModeToggle] = useState(false);
     const [currentColor, setCurrentColor] = useState("");
+
+    useEffect( () => {
+        async function setUserDarkMode() {
+            let user = props.user
+            user.dark_mode = darkModeToggle;
+            await updateUserSettings(user);
+        }
+        setUserDarkMode();
+    }, [darkModeToggle]);
 
     let currentColorDisplay;
     let user = props.user;
@@ -22,6 +33,7 @@ const Settings = (props) => {
         let addButtonToggleChanged;
         addButtonToggleChanged = !addButtonToggle;
         setAddButtonToggle(addButtonToggleChanged);
+        window.location = "/client/settings";
     }
 
     const passData = (data) => {
@@ -30,12 +42,21 @@ const Settings = (props) => {
         // window.location = '/client/settings';
     };
 
+    const handleDarkModeToggle = () => {
+        let darkModeToggleChanged;
+        darkModeToggleChanged = !darkModeToggle;
+        setDarkModeToggle(darkModeToggleChanged);
+    }
+
+    console.log("Dark Mode", darkModeToggle);
+    console.log("Props", props);
+
     return (
         <div>
             <h1 className="title is-3 center-text">Settings</h1>
             <h4 className="title is-5 center-text">Dark mode:</h4>
             <div className="dark-mode-toggle">
-                <input type="checkbox" id="switch"/>
+                <input type="checkbox" id="switch" onClick={handleDarkModeToggle}/>
                 <div className="toggle-body">
                     <div className="toggle-container">
                         <label htmlFor="switch">

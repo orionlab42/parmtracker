@@ -455,7 +455,7 @@ form {
         position: relative;
         width: 100vw;
         height: 90px;
-        background-color: #fff;
+//         background-color: #fff;
         overflow: hidden;
         display: flex;
         justify-content: center;
@@ -553,10 +553,10 @@ form {
         opacity: .5;
     }
     /* background */
-    [type="checkbox"]:checked + .toggle-body {
-        background-color:  #222;
-        color: white;
-    }
+//     [type="checkbox"]:checked + .toggle-body {
+//         background-color:  #222;
+//         color: white;
+//     }
 }
 
 

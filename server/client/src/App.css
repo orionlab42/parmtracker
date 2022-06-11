@@ -11008,7 +11008,6 @@ form {
   position: relative;
   width: 100vw;
   height: 90px;
-  background-color: #fff;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -11102,10 +11101,6 @@ form {
 }
 .dark-mode-toggle [type=checkbox]:checked + .toggle-body .light {
   opacity: 0.5;
-}
-.dark-mode-toggle [type=checkbox]:checked + .toggle-body {
-  background-color: #222;
-  color: white;
 }
 
 /**
