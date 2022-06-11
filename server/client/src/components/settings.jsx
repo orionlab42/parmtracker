@@ -36,7 +36,7 @@ const Settings = (props) => {
             <h4 className="title is-5 center-text">Dark mode:</h4>
             <div className="dark-mode-toggle">
                 <input type="checkbox" id="switch"/>
-                {/*<div className="toggle-body">*/}
+                <div className="toggle-body">
                     <div className="toggle-container">
                         <label htmlFor="switch">
                             <div className="toggle"/>
@@ -46,7 +46,7 @@ const Settings = (props) => {
                             </div>
                         </label>
                     </div>
-                {/*</div>*/}
+                </div>
             </div>
             {currentColorDisplay}
             <div className="add-new-color">

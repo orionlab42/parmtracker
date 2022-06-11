@@ -451,18 +451,17 @@ form {
     "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans",
     "Droid Sans", "Helvetica Neue", sans-serif;;
-.toggle-body {
-
-}
-    position: relative;
-    width: 100vw;
-    height: 90px;
-    background-color: #fff;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color .1s;
+    .toggle-body {
+        position: relative;
+        width: 100vw;
+        height: 90px;
+        background-color: #fff;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color .1s;
+    }
 
     .toggle-container {
         display: flex;
@@ -542,28 +541,24 @@ form {
         display: none;
     }
     /* toggle */
-    [type="checkbox"]:checked + .toggle-container .toggle{
+    [type="checkbox"]:checked + .toggle-body .toggle{
         transform: translateX(100%);
         background-color: #34323D;
     }
 
-    [type="checkbox"]:checked + .toggle-container .dark{
+    [type="checkbox"]:checked + .toggle-body .dark{
         opacity: 1;
     }
-    [type="checkbox"]:checked + .toggle-container .light{
+    [type="checkbox"]:checked + .toggle-body .light{
         opacity: .5;
     }
     /* background */
-    [type="checkbox"]:checked + .toggle-container .dark-mode-toggle{
+    [type="checkbox"]:checked + .toggle-body {
         background-color:  #222;
         color: white;
     }
 }
 
-[type="checkbox"]:checked + .toggle-container .dark-mode-toggle{
-        background-color:  #222;
-        color: white;
-    }
 
 
 
