@@ -10,14 +10,10 @@ const Settings = (props) => {
     const [darkModeToggle, setDarkModeToggle] = useState(false);
     const [currentColor, setCurrentColor] = useState("");
 
-    useEffect( () => {
-        async function setUserDarkMode() {
-            let user = props.user
-            user.dark_mode = darkModeToggle;
-            await updateUserSettings(user);
-        }
-        setUserDarkMode();
-    }, [darkModeToggle]);
+    useEffect(() => {
+        setDarkModeToggle(props.user.dark_mode);
+    }, []);
+
 
     let currentColorDisplay;
     let user = props.user;
@@ -33,12 +29,11 @@ const Settings = (props) => {
         let addButtonToggleChanged;
         addButtonToggleChanged = !addButtonToggle;
         setAddButtonToggle(addButtonToggleChanged);
-        window.location = "/client/settings";
+        // window.location = "/client/settings";
     }
 
     const passData = (data) => {
         setCurrentColor(data);
-        console.log("Color2", data);
         // window.location = '/client/settings';
     };
 
@@ -48,15 +43,12 @@ const Settings = (props) => {
         setDarkModeToggle(darkModeToggleChanged);
     }
 
-    console.log("Dark Mode", darkModeToggle);
-    console.log("Props", props);
-
     return (
         <div>
             <h1 className="title is-3 center-text">Settings</h1>
             <h4 className="title is-5 center-text">Dark mode:</h4>
             <div className="dark-mode-toggle">
-                <input type="checkbox" id="switch" onClick={handleDarkModeToggle}/>
+                <input type="checkbox" id="switch" onChange={props.onChange} onClick={handleDarkModeToggle} defaultChecked={darkModeToggle}/>
                 <div className="toggle-body">
                     <div className="toggle-container">
                         <label htmlFor="switch">

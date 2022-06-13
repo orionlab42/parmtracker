@@ -11089,9 +11089,6 @@ form {
   opacity: 0.15;
   background-color: inherit;
 }
-.dark-mode-toggle [type=checkbox] {
-  display: none;
-}
 .dark-mode-toggle [type=checkbox]:checked + .toggle-body .toggle {
   transform: translateX(100%);
   background-color: #34323D;
