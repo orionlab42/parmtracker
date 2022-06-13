@@ -12,8 +12,7 @@ const Settings = (props) => {
 
     useEffect(() => {
         setDarkModeToggle(props.user.dark_mode);
-    }, []);
-
+    }, [props.user.dark_mode]);
 
     let currentColorDisplay;
     let user = props.user;
@@ -48,7 +47,7 @@ const Settings = (props) => {
             <h1 className="title is-3 center-text">Settings</h1>
             <h4 className="title is-5 center-text">Dark mode:</h4>
             <div className="dark-mode-toggle">
-                <input type="checkbox" id="switch" onChange={props.onChange} onClick={handleDarkModeToggle} defaultChecked={darkModeToggle}/>
+                <input type="checkbox" id="switch" onChange={props.onChange} onClick={handleDarkModeToggle} checked={darkModeToggle}/>
                 <div className="toggle-body">
                     <div className="toggle-container">
                         <label htmlFor="switch">
