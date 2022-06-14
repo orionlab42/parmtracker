@@ -7,7 +7,6 @@ const UserDarkMode = (props) => {
         setDarkModeToggle(props.user.dark_mode);
     }, [props.user.dark_mode]);
 
-
     const handleDarkModeToggle = () => {
         let darkModeToggleChanged;
         darkModeToggleChanged = !darkModeToggle;
@@ -15,7 +14,7 @@ const UserDarkMode = (props) => {
     };
 
     return (
-        <div>
+        <div className="settings">
             <h4 className="title is-5 center-text settings-title">Dark mode:</h4>
             <div className="dark-mode-toggle settings-body">
                 <input type="checkbox" id="switch" onChange={props.onChange} onClick={handleDarkModeToggle} checked={darkModeToggle}/>

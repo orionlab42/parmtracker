@@ -9,7 +9,6 @@ const UserColor = (props) => {
     const [addButtonToggle, setAddButtonToggle] = useState(false);
     const [currentColor, setCurrentColor] = useState('');
 
-
     useEffect(() => {
         setCurrentColor(props.user.user_color);
     }, [props.user.user_color]);
@@ -30,14 +29,14 @@ const UserColor = (props) => {
     let currentColorDisplay;
     if (props.user !== "") {
         currentColorDisplay = (
-            <div className="user-color" style={{backgroundColor:  currentColor}}>
+            <div className="user-color">
                 <h4 className="title is-5 center-text settings-title">Currently saved color: {currentColor} </h4>
             </div>
         )
     }
 
     return (
-        <div>
+        <div className="settings" style={{backgroundColor:  currentColor}}>
             {currentColorDisplay}
             <div className="add-new-color settings-body">
                 <div className="add-new-color-button">

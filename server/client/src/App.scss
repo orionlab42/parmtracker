@@ -422,6 +422,8 @@ form {
 
 /* Settings */
 
+
+
 .user-color {
     padding: 20px;
 }
@@ -560,7 +562,70 @@ form {
 //     }
 }
 
+.settings-container {
+    padding-bottom: 100px;
+}
+.settings {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    .add-new-color {
+            padding: 15px 0 55px 0 !important;
+        }
+    @media (max-width: 376px){
+        padding-bottom: 40px;
+    }
+    .add-new-color-button {
+        @media (max-width: 376px){
+            padding-top: 85px;
+        }
+    }
+}
 
+.settings-title {
+    display: block;
+    float: left;
+    width: 50%;
+    padding: 50px 0 50px 0;
+    margin-left: 200px;
+     @media (max-width: 376px){
+        width: 100%;
+        margin-left: 0;
+        padding: 30px 0 0 0;
+    }
+}
+
+.settings-body {
+    display: block;
+    margin-right: 15%;
+    @media (max-width: 376px){
+        margin-right: 0;
+    }
+}
+
+.circle-picker {
+    padding: 15px 5px 5px 15px;
+    border-width: 3px;
+    border-style: solid;
+    border-color: rgba(255,255,255,0.5);
+    border-radius: 20px;
+    background-color: #fff;
+    opacity: 0.8;
+    margin-top: 20px;
+    justify-content: center;
+    width: 270px !important;
+}
+
+.color-picker-container {
+    background-color: black;
+}
+
+.toggle-body {
+    width: auto !important;
+    @media (max-width: 376px){
+        width: 100vw !important;
+    }
+}
 
 
 /**
@@ -712,6 +777,14 @@ $green-light: #2a9747;
         padding-bottom: 100px;
     }
     .add-new-category {
+        background-color: $dark;
+    }
+
+    .circle-picker {
+        padding: 15px 5px 5px 15px;
+        border-width: 3px;
+        border-style: solid;
+        border-color: rgba(34, 34, 34, 0.1);
         background-color: $dark;
     }
 }

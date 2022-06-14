@@ -11103,6 +11103,80 @@ form {
   opacity: 0.5;
 }
 
+.settings-container {
+  padding-bottom: 100px;
+}
+
+.settings {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+}
+.settings .add-new-color {
+  padding: 15px 0 55px 0 !important;
+}
+@media (max-width: 376px) {
+  .settings {
+    padding-bottom: 40px;
+  }
+}
+@media (max-width: 376px) {
+  .settings .add-new-color-button {
+    padding-top: 85px;
+  }
+}
+
+.settings-title {
+  display: block;
+  float: left;
+  width: 50%;
+  padding: 50px 0 50px 0;
+  margin-left: 200px;
+}
+@media (max-width: 376px) {
+  .settings-title {
+    width: 100%;
+    margin-left: 0;
+    padding: 30px 0 0 0;
+  }
+}
+
+.settings-body {
+  display: block;
+  margin-right: 15%;
+}
+@media (max-width: 376px) {
+  .settings-body {
+    margin-right: 0;
+  }
+}
+
+.circle-picker {
+  padding: 15px 5px 5px 15px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  background-color: #fff;
+  opacity: 0.8;
+  margin-top: 20px;
+  justify-content: center;
+  width: 270px !important;
+}
+
+.color-picker-container {
+  background-color: black;
+}
+
+.toggle-body {
+  width: auto !important;
+}
+@media (max-width: 376px) {
+  .toggle-body {
+    width: 100vw !important;
+  }
+}
+
 /**
  * Bulma customization dark mode
  */
@@ -11227,6 +11301,13 @@ form {
   padding-bottom: 100px;
 }
 .dark-mode .add-new-category {
+  background-color: #222;
+}
+.dark-mode .circle-picker {
+  padding: 15px 5px 5px 15px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: rgba(34, 34, 34, 0.1);
   background-color: #222;
 }
 

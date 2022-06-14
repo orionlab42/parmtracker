@@ -32,7 +32,6 @@ class App extends Component {
         user.dark_mode = !user.dark_mode;
         this.setState({user});
         await updateUserSettings(user);
-        console.log("Updated user");
     };
 
     render() {

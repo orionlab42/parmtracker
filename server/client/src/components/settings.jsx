@@ -5,7 +5,7 @@ import UserDarkMode from "./common/userDarkMode";
 
 const Settings = (props) => {
     return (
-        <div>
+        <div className="settings-container">
             <h1 className="title is-3 center-text">Settings</h1>
             <UserDarkMode user={props.user} onChange={props.onChange}/>
             <UserColor user={props.user}/>
