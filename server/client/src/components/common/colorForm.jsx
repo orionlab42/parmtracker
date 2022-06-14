@@ -1,7 +1,7 @@
 import React from "react";
 import { CirclePicker } from 'react-color';
 
-const UserColorForm = ({currentColor, onChangeComplete}) => {
+const ColorForm = ({currentColor, onChangeComplete}) => {
     return (
         <div>
             <CirclePicker
@@ -12,4 +12,4 @@ const UserColorForm = ({currentColor, onChangeComplete}) => {
     );
 };
 
-export default UserColorForm;
+export default ColorForm;
