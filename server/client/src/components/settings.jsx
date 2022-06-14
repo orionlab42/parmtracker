@@ -8,18 +8,50 @@ import {updateUserSettings} from "../services/userService";
 const Settings = (props) => {
     const [addButtonToggle, setAddButtonToggle] = useState(false);
     const [darkModeToggle, setDarkModeToggle] = useState(false);
-    const [currentColor, setCurrentColor] = useState("");
+    const [currentColor, setCurrentColor] = useState('#fff');
 
     useEffect(() => {
         setDarkModeToggle(props.user.dark_mode);
     }, [props.user.dark_mode]);
 
+    useEffect(() => {
+        console.log("color 1: ", props.user.user_color);
+        console.log("color 2: ", currentColor);
+        console.log("Props 1: ", props);
+        setCurrentColor(props.user.user_color);
+        console.log("color 3: ", props.user.user_color);
+        console.log("color 4: ", currentColor);
+    }, []);
+
+    useEffect( () => {
+        async function setUserColor() {
+            let user = props.user
+            user.user_color = currentColor;
+            await updateUserSettings(user);
+
+            console.log("color 5: ", props.user.user_color);
+            console.log("color 6: ", currentColor);
+        }
+        setUserColor();
+
+    }, [currentColor]);
+
+    const handleChangeComplete = (color) => {
+        const newColor = color.hex;
+        setCurrentColor(newColor);
+        console.log("color 7: ", props.user.user_color);
+        console.log("color 8: ", currentColor);
+    };
+
     let currentColorDisplay;
-    let user = props.user;
-    if (user !== "") {
+    console.log("Props 2: ", props);
+    if (props.user !== "") {
+        console.log("color 9: ", props.user.user_color);
+        console.log("color 10: ", currentColor);
+        console.log("Props 3: ", props);
         currentColorDisplay = (
-            <div className="user-color" style={{backgroundColor:  user.user_color}}>
-                <h4 className="title is-5 center-text">Currently saved color:</h4>
+            <div className="user-color" style={{backgroundColor:  currentColor}}>
+                <h4 className="title is-5 center-text">Currently saved color: {currentColor} </h4>
             </div>
         )
     }
@@ -30,11 +62,6 @@ const Settings = (props) => {
         setAddButtonToggle(addButtonToggleChanged);
         // window.location = "/client/settings";
     }
-
-    const passData = (data) => {
-        setCurrentColor(data);
-        // window.location = '/client/settings';
-    };
 
     const handleDarkModeToggle = () => {
         let darkModeToggleChanged;
@@ -69,10 +96,7 @@ const Settings = (props) => {
                     >{addButtonToggle ? "x" : "+"}</Link>
                 </div>
                 {addButtonToggle &&
-                <Route
-                    path="/settings/new-color"
-                    render={(props) => (<UserColorForm {...props} user={user} passData={passData}/>)}
-                />}
+                <Route path="/settings/new-color" render={ () => (<UserColorForm currentColor={currentColor} onChangeComplete={handleChangeComplete}/>)}/>}
             </div>
         </div>
     );

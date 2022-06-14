@@ -19,7 +19,7 @@ console.log("aaa" + process.env.REACT_APP_BASE_URL);
 
 class App extends Component {
     state = {
-        user: {user_name: "",dark_mode: 0,}
+        user: {user_name: "",dark_mode: 0, user_color: '#000'}
     };
 
     async componentDidMount() {
@@ -36,7 +36,6 @@ class App extends Component {
     };
 
     render() {
-
         const user = this.state.user;
         return (
             <React.Fragment>
