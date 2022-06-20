@@ -2,7 +2,6 @@ import React from "react";
 import UserColor from "./userColor";
 import UserDarkMode from "./common/userDarkMode";
 
-
 const Settings = (props) => {
     return (
         <div className="settings-container">
