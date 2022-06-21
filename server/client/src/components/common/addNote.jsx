@@ -27,8 +27,19 @@ const AddNote = ({ handleAddNote }) => {
                 onChange={handleChange}
             ></textarea>
             <div className="note-footer">
-                <small>{ characterLimit - noteText.length }</small>
-                <button className="save-button button is-link is-light" onClick={handleSaveClick}><span className="mdi mdi-content-save"/> &nbsp; Save</button>
+                <div>
+                    <small>{ characterLimit - noteText.length } remaining</small>
+                    <div className="note-options">
+                        <button className="add-title-button button is-small is-link is-light" data-title="Add title"><span className="mdi mdi-format-title"/></button>
+                        {/*<button className="simple-note-button button is-small is-link is-light" data-title="Change to simple note"><span className="mdi mdi-note-outline"/></button>*/}
+                        <button className="list-note-button button is-small is-link is-light" data-title="Change to list"><span className="mdi mdi-playlist-check"/></button>
+                        <button className="planner-note-button button is-small is-link is-light" data-title="Change to planner"><span className="mdi mdi-calendar-month-outline"/></button>
+                    </div>
+                </div>
+
+                <button className="save-button button is-link is-light" onClick={handleSaveClick}><span
+                    className="mdi mdi-content-save"/> &nbsp; Save
+                </button>
             </div>
         </div>
     );

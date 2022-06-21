@@ -643,7 +643,7 @@ form {
 .notes-list {
     display: grid;
     grid-gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
 }
 
 .note.add-new-note {
@@ -680,6 +680,42 @@ textarea:focus {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    align-items: flex-end;
+}
+
+.note-footer {
+    button {
+        margin: 3px;
+    }
+    small {
+        margin: 3px;
+    }
+}
+
+[data-title]:hover:after {
+    opacity: 1;
+    transition: all 0.1s ease 0.5s;
+    visibility: visible;
+}
+[data-title]:after {
+    content: attr(data-title);
+    background-color: #2160c4;
+    color: #e3ecfa;
+    font-size: 85%;
+    position: absolute;
+    padding: 1px 5px 2px 5px;
+    margin: 3px;
+    bottom: 120%;
+    white-space: nowrap;
+    box-shadow: 1px 1px 3px #333;
+    opacity: 0;
+    border: 1px solid #2160c4;
+    border-radius: 4px;
+    z-index: 99999;
+    visibility: hidden;
+}
+[data-title] {
+    position: relative;
 }
 
 
@@ -841,6 +877,10 @@ $green-light: #2a9747;
         border-style: solid;
         border-color: rgba(34, 34, 34, 0.1);
         background-color: $dark;
+    }
+    [data-title]:after {
+        background-color: $dark;
+        color: $grey-lighter;
     }
 }
 
