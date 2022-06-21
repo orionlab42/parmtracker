@@ -1,28 +1,23 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Link from "react-router-dom/Link";
 import NotesList from "./notesList";
 import SearchBox from "./searchBox";
 import {searchKeywordNotes} from "../utils/search";
 
 const Home = (props) => {
-    const [notes, setNotes] = useState([
-        {
-        id: 0,
-        text: "This is my first note!",
-        date: "15/04/2021"
-        },
-        {
-        id: 1,
-        text: "This is my second note!",
-        date: "16/04/2021"
-        },
-        {
-        id: 2,
-        text: "This is my third note!",
-        date: "17/04/2021"
-        },
-    ]);
+    const [notes, setNotes] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+
+    useEffect(() => {
+        const savedNotes = JSON.parse(localStorage.getItem('react-notes-app-data'));
+        if (savedNotes) {
+            setNotes(savedNotes);
+        }
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('react-notes-app-data', JSON.stringify(notes));
+    }, [notes]);
 
     let menu;
     if (props.user === "") {
@@ -63,7 +58,7 @@ const Home = (props) => {
     let notesToDisplay = notes;
     if (searchQuery) {
         notesToDisplay = searchKeywordNotes(notes, searchQuery);
-    }
+    };
 
     return (
         <div>
