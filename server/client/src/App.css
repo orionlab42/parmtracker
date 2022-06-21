@@ -11184,11 +11184,31 @@ form {
   margin-left: auto;
   padding: 15px;
 }
+.notes-list-container .search-box {
+  padding: 1rem;
+}
+.notes-list-container .search-box .control {
+  width: 100%;
+}
 
 .notes-list {
   display: grid;
   grid-gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.note.add-new-note {
+  background-color: #c8dafa;
+}
+
+textarea {
+  border: none;
+  resize: none;
+  background-color: #c8dafa;
+}
+
+textarea:focus {
+  outline: none;
 }
 
 .note {
@@ -11200,6 +11220,11 @@ form {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  white-space: pre-wrap;
+}
+.note button:hover {
+  color: grey;
+  cursor: pointer;
 }
 
 .note-footer {

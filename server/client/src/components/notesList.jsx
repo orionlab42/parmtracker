@@ -2,13 +2,15 @@ import React from "react";
 import Note from "./common/note";
 import AddNote from "./common/addNote";
 
-const NotesList = ({ notes }) => {
+const NotesList = ({ notes, handleAddNote, handleDeleteNote }) => {
     return (
         <div className="notes-list-container">
             <h1 className="title is-3 center-text">NotesList</h1>
             <div className="notes-list">
-                {notes.map(note => <Note note={ note }/>)}
-                <AddNote/>
+                {notes.map(note => <Note
+                                        note={ note }
+                                        handleDeleteNote={ handleDeleteNote }/>)}
+                <AddNote handleAddNote={ handleAddNote }/>
             </div>
         </div>
     );
