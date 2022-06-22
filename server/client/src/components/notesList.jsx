@@ -8,6 +8,7 @@ const NotesList = ({ notes, handleAddNote, handleDeleteNote }) => {
             <h1 className="title is-3 center-text">NotesList</h1>
             <div className="notes-list">
                 {notes.map(note => <Note
+                                        key={note.id}
                                         note={ note }
                                         handleDeleteNote={ handleDeleteNote }/>)}
                 <AddNote handleAddNote={ handleAddNote }/>

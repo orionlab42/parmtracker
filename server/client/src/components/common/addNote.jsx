@@ -1,4 +1,6 @@
 import React, {useState} from "react";
+import CheckListForm from "./checkListForm";
+import CheckList from "./checkList";
 
 const AddNote = ({ handleAddNote }) => {
     const [noteText, setNoteText] = useState("");
@@ -19,16 +21,11 @@ const AddNote = ({ handleAddNote }) => {
 
     return (
         <div className="note add-new-note">
-            <textarea
-                rows="8"
-                cols="10"
-                placeholder="Type to add a note..."
-                value={noteText}
-                onChange={handleChange}
-            ></textarea>
+            <CheckList/>
+            <textarea rows="8" cols="10" placeholder="Type to add a note..." value={noteText} onChange={ handleChange }/>
             <div className="note-footer">
                 <div>
-                    <small>{ characterLimit - noteText.length } remaining</small>
+                    <small>{ characterLimit - noteText.length }/200</small>
                     <div className="note-options">
                         <button className="add-title-button button is-small is-link is-light" data-title="Add title"><span className="mdi mdi-format-title"/></button>
                         {/*<button className="simple-note-button button is-small is-link is-light" data-title="Change to simple note"><span className="mdi mdi-note-outline"/></button>*/}
