@@ -718,6 +718,40 @@ textarea:focus {
     position: relative;
 }
 
+/* Checklist */
+
+.checklist-form {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.checklist-input {
+    border: 1px solid #c8dafa;
+    border-radius: 5px;
+    resize: none;
+    background-color: #eef3fc;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.checklist-input:focus {
+    border: none;
+    outline: none;
+    resize: none;
+}
+
+.checklist-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0 5px 10px;
+}
+
+.checklist-item.checked {
+    text-decoration: line-through;
+    color: #999796;
+}
+
 
 /**
  * Bulma customization dark mode

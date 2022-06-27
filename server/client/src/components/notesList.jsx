@@ -1,6 +1,7 @@
 import React from "react";
 import Note from "./common/note";
 import AddNote from "./common/addNote";
+import AddCheckList from "./common/addCheckList";
 
 const NotesList = ({ notes, handleAddNote, handleDeleteNote }) => {
     return (
@@ -12,6 +13,7 @@ const NotesList = ({ notes, handleAddNote, handleDeleteNote }) => {
                                         note={ note }
                                         handleDeleteNote={ handleDeleteNote }/>)}
                 <AddNote handleAddNote={ handleAddNote }/>
+                <AddCheckList handleAddNote={ handleAddNote }/>
             </div>
         </div>
     );

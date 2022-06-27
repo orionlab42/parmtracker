@@ -6,6 +6,7 @@ import {searchKeywordNotes} from "../utils/search";
 
 const Home = (props) => {
     const [notes, setNotes] = useState([]);
+    const [checklists, setCheckLists] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {

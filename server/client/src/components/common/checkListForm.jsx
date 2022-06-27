@@ -3,11 +3,11 @@ import React, {useEffect, useRef, useState} from "react";
 const CheckListForm = (props) => {
     const [input, setInput] = useState(props.edit ? props.edit.text : '');
     const [id, setId] = useState(0);
-    const inputRef = useRef(null);
+    // const inputRef = useRef(null);
 
-    useEffect(() => {
-        inputRef.current.focus()
-    });
+    // useEffect(() => {
+    //     inputRef.current.focus()
+    // });
 
     const giveId = () => {
         setId(id + 1);
@@ -39,22 +39,22 @@ const CheckListForm = (props) => {
                             value={input}
                             name="text"
                             onChange={handleChange}
-                            ref={inputRef}
+                            // ref={inputRef}
                         />
-                        <button className="button is-link is-light">Update</button>
+                        <button className="button is-link is-light  mdi mdi-circle-edit-outline"></button>
                     </React.Fragment>
             ) : (
                 <React.Fragment>
                     <input
                     className="checklist-input"
                     type="text"
-                    placeholder="Add a checklist"
+                    placeholder="Add an item... "
                     value={input}
                     name="text"
                     onChange={handleChange}
-                    ref={inputRef}
+                    // ref={inputRef}
                     />
-                    <button className="button is-link is-light">Add list item</button>
+                    <button className="button is-link is-light  mdi mdi-plus"></button>
                 </React.Fragment>
                 )
             }

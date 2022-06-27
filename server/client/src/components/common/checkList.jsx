@@ -39,8 +39,7 @@ const CheckList = () => {
     };
 
     return (
-       <div>
-           <h1>What's the plan for today.</h1>
+       <div className="checklist-container">
            <CheckListForm onSubmit={addItem}/>
            <CheckListItems
                items={items}

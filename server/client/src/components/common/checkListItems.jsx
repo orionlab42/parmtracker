@@ -25,7 +25,7 @@ const CheckListItems = ({ items, handleCompleteItem, handleDeleteItem, handleUpd
             {items.map(item => (
                 <div key={item.id} className={item.isComplete ? 'checked checklist-item' : 'checklist-item'}>
                     <div key={item.id} onClick={() => handleCompleteItem(item.id)}>
-                        {item.text}
+                        <span>+</span> {item.text}
                     </div>
                     <div>
                         <button onClick={() => handleDeleteItem(item.id)}><span className="mdi mdi-trash-can-outline"/></button>
