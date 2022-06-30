@@ -11270,6 +11270,10 @@ textarea:focus {
 }
 
 /* Checklist */
+.checklist-container button {
+  float: right;
+}
+
 .checklist-form {
   display: flex;
   justify-content: space-between;

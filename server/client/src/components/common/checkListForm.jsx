@@ -41,7 +41,7 @@ const CheckListForm = (props) => {
                             onChange={handleChange}
                             // ref={inputRef}
                         />
-                        <button className="button is-link is-light  mdi mdi-circle-edit-outline"></button>
+                        <button className="button is-link is-light  mdi mdi-circle-edit-outline"/>
                     </React.Fragment>
             ) : (
                 <React.Fragment>
@@ -54,7 +54,7 @@ const CheckListForm = (props) => {
                     onChange={handleChange}
                     // ref={inputRef}
                     />
-                    <button className="button is-link is-light  mdi mdi-plus"></button>
+                    <button className="button is-link is-light  mdi mdi-plus"/>
                 </React.Fragment>
                 )
             }

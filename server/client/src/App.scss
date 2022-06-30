@@ -720,6 +720,16 @@ textarea:focus {
 
 /* Checklist */
 
+.checklist-container {
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: space-between;
+//     align-items: flex-end;
+    button {
+        float: right;
+    }
+}
+
 .checklist-form {
     display: flex;
     justify-content: space-between;

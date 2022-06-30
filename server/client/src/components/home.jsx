@@ -3,11 +3,18 @@ import Link from "react-router-dom/Link";
 import NotesList from "./notesList";
 import SearchBox from "./searchBox";
 import {searchKeywordNotes} from "../utils/search";
+import CheckListsList from "./checkListsList";
 
 const Home = (props) => {
     const [notes, setNotes] = useState([]);
     const [checkLists, setCheckLists] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
+    const [idCheckLists, setIdCheckLists] = useState(1);
+
+    const giveId = () => {
+        setIdCheckLists(idCheckLists + 1);
+        return idCheckLists;
+    };
 
     useEffect(() => {
         const savedNotes = JSON.parse(localStorage.getItem('react-notes-app-data'));
@@ -53,15 +60,26 @@ const Home = (props) => {
     };
 
     const addCheckNote = (itemList) => {
-        console.log("Add checklist:", itemList);
+        console.log("Add new empty checklist in home");
         const date = new Date();
         let newList = {
-            id: 0,
-            list: itemList,
+            id: giveId(),
+            type: "checklist",
+            list: [],
             date: date.toLocaleDateString()
         }
         const newLists = [...checkLists, newList];
         setCheckLists(newLists);
+    };
+
+    const updateCheckNote = (itemList) => {
+        const newChecklists = checkLists.map(checkList => {
+            if (checkList.id === itemList.id) {
+                checkList.list = itemList.list
+            }
+            return checkList
+        });
+        setCheckLists(newChecklists);
     };
 
     const searchNote = (text) => {
@@ -80,11 +98,15 @@ const Home = (props) => {
                 <SearchBox value={searchQuery} onChange={searchNote}/>
                 <NotesList
                     notes={notesToDisplay}
-                    checkLists={checkLists}
                     handleAddNote={addNote}
                     handleDeleteNote={deleteNote}
-                    handleAddChecklist={addCheckNote}
                 />
+                <CheckListsList
+                    checkLists={checkLists}
+                    handleUpdateCheckList={updateCheckNote}
+                />
+                <button className="save-button button is-link is-light" onClick={addCheckNote}><span
+                    className="mdi mdi-content-save"/> &nbsp; Add Checklist</button>
             </div>
         </div>
     );

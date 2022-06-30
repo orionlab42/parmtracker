@@ -20,7 +20,7 @@ const CheckListItems = ({ items, handleCompleteItem, handleDeleteItem, handleUpd
     if (edit.id) {
         return <CheckListForm edit={edit} onSubmit={submitUpdate}/>;
     }
-
+    // console.log("Checklist in items", items);
     return (
         <div>
             {items.map(item => (
