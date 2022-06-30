@@ -1,26 +1,69 @@
 import React, {useState} from "react";
 import CheckList from "./checkList";
 
-const AddCheckList = ({ handleAddNote }) => {
+const AddCheckList = ({ handleAddChecklist }) => {
     const [noteText, setNoteText] = useState("");
-    const characterLimit = 200;
+    const [items, setItems] = useState([]);
+
+    const addItem = item => {
+        if (item.text.trim().length > 0) {
+            const newItems = [...items, item];
+            setItems(newItems);
+        }
+        // console.log("AddItem", item);
+    };
+
+    const completeItem = (id) => {
+        const updatedItems = items.map(item => {
+            if (item.id === id) {
+                item.isComplete = !item.isComplete;
+            }
+            return item
+        });
+        setItems([...updatedItems]);
+    };
+
+    const deleteItem = (id) => {
+        const updatedItems = items.filter(item => item.id !== id);
+        setItems([...updatedItems]);
+    };
+
+    const updateItem = (id, newValue, isComplete) => {
+        console.log("Update", id);
+        const updatedItems = items.map(item => {
+            if (item.id === id) {
+                item.text = newValue.text;
+                item.isComplete = isComplete;
+            }
+            return item
+        });
+        setItems([...updatedItems]);
+    };
 
     // const handleChange = (event) => {
-    //     if (characterLimit - event.target.value.length >= 0) {
-    //         setNoteText(event.target.value);
-    //     }
+    //     // setNoteText(event.target.value);
+    //     console.log("Event", event);
     // };
 
     const handleSaveClick = () => {
-        if (noteText.trim().length > 0) {
-            handleAddNote(noteText);
-            setNoteText("");
-        }
+        // if (noteText.trim().length > 0) {
+        //     handleAddChecklist(noteText);
+        //     setNoteText("");
+        // }
+        handleAddChecklist(items);
+        setItems([]);
+        console.log("To save", items);
     };
 
     return (
         <div className="note add-new-note">
-            <CheckList/>
+            <CheckList
+                items={items}
+                handleAddItem={addItem}
+                handleCompleteItem={completeItem}
+                handleDeleteItem={deleteItem}
+                handleUpdateItem={updateItem}
+            />
             {/*<textarea rows="8" cols="10" placeholder="Type to add a note..." value={noteText} onChange={ handleChange }/>*/}
             <div className="note-footer">
                 <div>

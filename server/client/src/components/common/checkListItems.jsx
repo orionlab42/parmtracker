@@ -10,6 +10,7 @@ const CheckListItems = ({ items, handleCompleteItem, handleDeleteItem, handleUpd
 
     const submitUpdate = newValue => {
         handleUpdateItem(edit.id, newValue, edit.isComplete);
+        // console.log("handleUpdate", edit);
         setEdit({
             id: null,
             text: '',

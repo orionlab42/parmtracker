@@ -6,7 +6,7 @@ import {searchKeywordNotes} from "../utils/search";
 
 const Home = (props) => {
     const [notes, setNotes] = useState([]);
-    const [checklists, setCheckLists] = useState([]);
+    const [checkLists, setCheckLists] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
@@ -42,7 +42,7 @@ const Home = (props) => {
             id: id,
             text: text,
             date: date.toLocaleDateString()
-        }
+        };
         const newNotes = [...notes, newNote];
         setNotes(newNotes);
     };
@@ -50,6 +50,18 @@ const Home = (props) => {
     const deleteNote = (deleteNote) => {
         const newNotes = notes.filter(note => note.id !== deleteNote.id);
         setNotes(newNotes);
+    };
+
+    const addCheckNote = (itemList) => {
+        console.log("Add checklist:", itemList);
+        const date = new Date();
+        let newList = {
+            id: 0,
+            list: itemList,
+            date: date.toLocaleDateString()
+        }
+        const newLists = [...checkLists, newList];
+        setCheckLists(newLists);
     };
 
     const searchNote = (text) => {
@@ -67,9 +79,12 @@ const Home = (props) => {
             <div className="notes-list-container">
                 <SearchBox value={searchQuery} onChange={searchNote}/>
                 <NotesList
-                    notes={ notesToDisplay }
+                    notes={notesToDisplay}
+                    checkLists={checkLists}
                     handleAddNote={addNote}
-                    handleDeleteNote={deleteNote}/>
+                    handleDeleteNote={deleteNote}
+                    handleAddChecklist={addCheckNote}
+                />
             </div>
         </div>
     );
