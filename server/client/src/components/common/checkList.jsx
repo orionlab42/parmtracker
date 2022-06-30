@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import CheckListForm from "./checkListForm";
 import CheckListItems from "./checkListItems";
 
-const CheckList = ({ items, handleUpdateCheckList }) => {
+const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
     const [checkList, setCheckList] = useState([]);
 
     useEffect(() => {
@@ -55,13 +55,16 @@ const CheckList = ({ items, handleUpdateCheckList }) => {
 
     return (
        <div className="checklist-container">
-           <CheckListForm onSubmit={addItem}/>
+           <div className="checklist-top">
+                <CheckListForm onSubmit={addItem}/>
+                <button className="button is-link is-light  mdi mdi-format-title" onClick={() => handleDeleteCheckList(items.id)}/>
+           </div>
            <CheckListItems
                items={items.list}
                handleCompleteItem={completeItem}
                handleDeleteItem={deleteItem}
                handleUpdateItem={updateItem}/>
-           <button className="button is-link is-light  mdi mdi-trash-can-outline"/>
+           <button className="button is-link is-light  mdi mdi-trash-can-outline" onClick={() => handleDeleteCheckList(items.id)}/>
        </div>
     );
 }

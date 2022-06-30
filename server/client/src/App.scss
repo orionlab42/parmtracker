@@ -248,12 +248,14 @@ body {
 }
 
 /** --- Forms: adding new entry --- */
-form {
-    margin-left: auto;
-    margin-right: auto;
-    width: 400px;
-    @media (max-width: 376px){
-        width: 280px;
+.entry-form {
+    form {
+        margin-left: auto;
+        margin-right: auto;
+        width: 400px;
+        @media (max-width: 376px){
+            width: 280px;
+        }
     }
 }
 
@@ -661,7 +663,7 @@ textarea:focus {
 }
 
 .note {
-    background-color: #fef68a;
+    background-color:  #c8dafa;
     margin-bottom: 10px;
     border-radius: 10px;
     padding: 1rem;
@@ -721,21 +723,21 @@ textarea:focus {
 /* Checklist */
 
 .checklist-container {
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: space-between;
-//     align-items: flex-end;
     button {
         float: right;
+        margin-left: 10px;
+    }
+    .checklist-top {
+        display: flex;
+        align-content: center;
     }
 }
 
 .checklist-form {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
+    flex-grow: 4;
     margin-bottom: 20px;
 }
+
 .checklist-input {
     border: 1px solid #c8dafa;
     border-radius: 5px;
@@ -743,6 +745,7 @@ textarea:focus {
     background-color: #eef3fc;
     padding: 10px;
     margin-right: 10px;
+    width: 60%;
 }
 
 .checklist-input:focus {

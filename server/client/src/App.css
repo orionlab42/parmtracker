@@ -10797,13 +10797,13 @@ html {
 }
 
 /** --- Forms: adding new entry --- */
-form {
+.entry-form form {
   margin-left: auto;
   margin-right: auto;
   width: 400px;
 }
 @media (max-width: 376px) {
-  form {
+  .entry-form form {
     width: 280px;
   }
 }
@@ -11212,7 +11212,7 @@ textarea:focus {
 }
 
 .note {
-  background-color: #fef68a;
+  background-color: #c8dafa;
   margin-bottom: 10px;
   border-radius: 10px;
   padding: 1rem;
@@ -11272,12 +11272,15 @@ textarea:focus {
 /* Checklist */
 .checklist-container button {
   float: right;
+  margin-left: 10px;
+}
+.checklist-container .checklist-top {
+  display: flex;
+  align-content: center;
 }
 
 .checklist-form {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+  flex-grow: 4;
   margin-bottom: 20px;
 }
 
@@ -11288,6 +11291,7 @@ textarea:focus {
   background-color: #eef3fc;
   padding: 10px;
   margin-right: 10px;
+  width: 60%;
 }
 
 .checklist-input:focus {

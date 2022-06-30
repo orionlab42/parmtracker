@@ -65,6 +65,7 @@ const Home = (props) => {
         let newList = {
             id: giveId(),
             type: "checklist",
+            title: "",
             list: [],
             date: date.toLocaleDateString()
         }
@@ -72,13 +73,18 @@ const Home = (props) => {
         setCheckLists(newLists);
     };
 
-    const updateCheckNote = (itemList) => {
+    const updateCheckList = (itemList) => {
         const newChecklists = checkLists.map(checkList => {
             if (checkList.id === itemList.id) {
                 checkList.list = itemList.list
             }
             return checkList
         });
+        setCheckLists(newChecklists);
+    };
+
+    const deleteCheckList = (id) => {
+        const newChecklists = checkLists.filter(checkList => checkList.id !== id);
         setCheckLists(newChecklists);
     };
 
@@ -103,7 +109,8 @@ const Home = (props) => {
                 />
                 <CheckListsList
                     checkLists={checkLists}
-                    handleUpdateCheckList={updateCheckNote}
+                    handleUpdateCheckList={updateCheckList}
+                    handleDeleteCheckList={deleteCheckList}
                 />
                 <button className="save-button button is-link is-light" onClick={addCheckNote}><span
                     className="mdi mdi-content-save"/> &nbsp; Add Checklist</button>
