@@ -10,10 +10,16 @@ const Home = (props) => {
     const [checkLists, setCheckLists] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [idCheckLists, setIdCheckLists] = useState(1);
+    const [idNotes, setIdNotes] = useState(1);
 
-    const giveId = () => {
+    const giveIdChecklist = () => {
         setIdCheckLists(idCheckLists + 1);
         return idCheckLists;
+    };
+
+    const giveIdNotes = () => {
+        setIdNotes(idNotes + 1);
+        return idNotes;
     };
 
     useEffect(() => {
@@ -40,37 +46,45 @@ const Home = (props) => {
     }
 
     const addNote = (text) => {
-        let id = 0;
-        if (notes.length > 0)  {
-            id = notes[notes.length - 1].id + 1;
-        }
+        console.log("Add new empty note in home");
         const date = new Date();
         const newNote = {
-            id: id,
-            text: text,
+            id: giveIdNotes(),
+            type: "simple-note",
+            title: "",
+            text: "",
             date: date.toLocaleDateString()
         };
-        const newNotes = [...notes, newNote];
-        setNotes(newNotes);
+        setNotes([...notes, newNote]);
     };
 
+    const updateNote = (newNote) => {
+        const newNotes = notes.map(note => {
+            if (note.id === newNote.id) {
+                note.text = newNote.text;
+                note.title = newNote.title;
+            }
+            return note
+        });
+        setNotes(newNotes);
+        console.log("Update notes", newNote);
+    };
+    console.log("Notes home", notes);
     const deleteNote = (deleteNote) => {
         const newNotes = notes.filter(note => note.id !== deleteNote.id);
         setNotes(newNotes);
     };
 
     const addCheckNote = (itemList) => {
-        console.log("Add new empty checklist in home");
         const date = new Date();
         let newList = {
-            id: giveId(),
+            id: giveIdChecklist(),
             type: "checklist",
             title: "",
             list: [],
             date: date.toLocaleDateString()
         }
-        const newLists = [...checkLists, newList];
-        setCheckLists(newLists);
+        setCheckLists([...checkLists, newList]);
     };
 
     const updateCheckList = (itemList) => {
@@ -105,6 +119,7 @@ const Home = (props) => {
                 <NotesList
                     notes={notesToDisplay}
                     handleAddNote={addNote}
+                    handleUpdateNote={updateNote}
                     handleDeleteNote={deleteNote}
                 />
                 <CheckListsList
@@ -112,8 +127,10 @@ const Home = (props) => {
                     handleUpdateCheckList={updateCheckList}
                     handleDeleteCheckList={deleteCheckList}
                 />
-                <button className="save-button button is-link is-light" onClick={addCheckNote}><span
-                    className="mdi mdi-content-save"/> &nbsp; Add Checklist</button>
+                <button className="button is-link is-light note-button" onClick={addNote}><span
+                    className="mdi mdi-note-outline"/> &nbsp; Add Simple Note</button>
+                <button className="button is-link is-light note-button" onClick={addCheckNote}><span
+                    className="mdi mdi-playlist-check"/> &nbsp; Add Checklist</button>
             </div>
         </div>
     );

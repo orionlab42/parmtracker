@@ -11,16 +11,13 @@ const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
     }, [items]);
 
     const addItem = item => {
-        // console.log("Adding item", item);
         if (item.text.trim().length > 0) {
             let newCheckList = checkList;
             newCheckList.list = [...checkList.list, item];
             setCheckList(newCheckList);
             handleUpdateCheckList(checkList);
         }
-        console.log("CheckList: Adding item ", checkList);
     };
-
 
     const completeItem = (id) => {
         let newCheckList = checkList;

@@ -24,7 +24,7 @@ const CheckListItems = ({ items, handleCompleteItem, handleDeleteItem, handleUpd
     return (
         <div>
             {items.map(item => (
-                <div key={item.id} className={item.isComplete ? 'checked checklist-item' : 'checklist-item'}>
+                <div key={item.id} className={item.isComplete ? 'checked checklist-item' : 'checklist-item note-content'}>
                     <div key={item.id} onClick={() => handleCompleteItem(item.id)}>
                         <span>+</span> {item.text}
                     </div>

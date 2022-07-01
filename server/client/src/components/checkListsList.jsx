@@ -4,9 +4,8 @@ import CheckList from "./common/checkList";
 const CheckListsList = ({checkLists, handleUpdateCheckList, handleDeleteCheckList}) => {
     return (
         <div className="notes-list-container">
-            <h1 className="title is-3 center-text">NotesList</h1>
             <div className="notes-list">
-                {checkLists.map(checkList => <div key={checkList.id} className="note"><CheckList
+                {checkLists.map(checkList => <div key={checkList.id} className="note checklist"><CheckList
                     key={checkList.id}
                     items={checkList}
                     handleUpdateCheckList={handleUpdateCheckList}
