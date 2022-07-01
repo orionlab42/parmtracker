@@ -1,49 +1,43 @@
 package expenses
 
-import (
-	"github.com/stretchr/testify/assert"
-	"testing"
-	"time"
-)
-
-func TestExpenseInsertAndFetch(t *testing.T) {
-	entry := ExpenseEntry{
-		Name:      "Dinner A",
-		Amount:    25,
-		Category:  1,
-		UserId:    1,
-		Shared:    true,
-		Date:      time.Now().UTC(),
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
-	}
-	e := entry.Insert()
-	assert.Nil(t, e)
-	entries := GetExpenseEntries()
-	assert.NotEqual(t, len(entries), 0)
-	e = entry.Delete()
-	assert.Nil(t, e)
-}
-
-func TestExpenseSave(t *testing.T) {
-	entry := ExpenseEntry{
-		Name:      "Dinner A",
-		Amount:    25,
-		Category:  1,
-		UserId:    1,
-		Shared:    true,
-		Date:      time.Now().UTC(),
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
-	}
-	e := entry.Insert()
-	assert.Nil(t, e)
-	entry.Name = "Mercadona"
-	entry.Save()
-	assert.Equal(t, entry.Name, "Mercadona")
-	e = entry.Delete()
-	assert.Nil(t, e)
-}
+//func TestExpenseInsertAndFetch(t *testing.T) {
+//	entry := ExpenseEntry{
+//		Name:      "Dinner A",
+//		Amount:    25,
+//		Category:  1,
+//		UserId:    1,
+//		Shared:    true,
+//		Date:      time.Now().UTC(),
+//		CreatedAt: time.Now().UTC(),
+//		UpdatedAt: time.Now().UTC(),
+//	}
+//	e := entry.Insert()
+//	assert.Nil(t, e)
+//	entries := GetExpenseEntries()
+//	assert.NotEqual(t, len(entries), 0)
+//	e = entry.Delete()
+//	assert.Nil(t, e)
+//}
+//
+//func TestExpenseSave(t *testing.T) {
+//	entry := ExpenseEntry{
+//		Name:      "Dinner A",
+//		Amount:    25,
+//		Category:  1,
+//		UserId:    1,
+//		Shared:    true,
+//		Date:      time.Now().UTC(),
+//		CreatedAt: time.Now().UTC(),
+//		UpdatedAt: time.Now().UTC(),
+//	}
+//	e := entry.Insert()
+//	assert.Nil(t, e)
+//	entry.Name = "Mercadona"
+//	entry.Save()
+//	assert.Equal(t, entry.Name, "Mercadona")
+//	e = entry.Delete()
+//	assert.Nil(t, e)
+//}
 
 //func TestExpenseSaveSeedData(t *testing.T) {
 //	layout := "2006-01-02T15:04:05.000Z"
