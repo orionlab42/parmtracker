@@ -10797,13 +10797,13 @@ html {
 }
 
 /** --- Forms: adding new entry --- */
-.entry-form form {
+.entry-form form, .login-form form {
   margin-left: auto;
   margin-right: auto;
   width: 400px;
 }
 @media (max-width: 376px) {
-  .entry-form form {
+  .entry-form form, .login-form form {
     width: 280px;
   }
 }
@@ -11273,6 +11273,7 @@ textarea:focus {
 .checklist-container button {
   float: right;
   margin-left: 10px;
+  margin-bottom: 0 !important;
 }
 .checklist-container .checklist-top {
   display: flex;
@@ -11284,7 +11285,7 @@ textarea:focus {
   margin-bottom: 20px;
 }
 
-.checklist-input {
+.checklist-input, .title-input {
   border: 1px solid #c8dafa;
   border-radius: 5px;
   resize: none;
@@ -11294,7 +11295,28 @@ textarea:focus {
   width: 60%;
 }
 
-.checklist-input:focus {
+.title-input {
+  background-color: #eef3fc !important;
+  border: 1px solid #eef3fc !important;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.note-title {
+  color: #222;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 120%;
+  font-weight: 600;
+}
+
+.title-input:focus {
+  background-color: #eef3fc;
+  border: none;
+  outline: none;
+}
+
+.checklist-input:focus, .title-input:focus {
   border: none;
   outline: none;
   resize: none;
@@ -11304,6 +11326,7 @@ textarea:focus {
   display: flex;
   justify-content: space-between;
   margin: 5px 0 5px 10px;
+  color: #333;
 }
 
 .checklist-item.checked {

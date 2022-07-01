@@ -6,7 +6,7 @@ const CheckListsList = ({checkLists, handleUpdateCheckList, handleDeleteCheckLis
         <div className="notes-list-container">
             <h1 className="title is-3 center-text">NotesList</h1>
             <div className="notes-list">
-                {checkLists.map(checkList => <div className="note"><CheckList
+                {checkLists.map(checkList => <div key={checkList.id} className="note"><CheckList
                     key={checkList.id}
                     items={checkList}
                     handleUpdateCheckList={handleUpdateCheckList}

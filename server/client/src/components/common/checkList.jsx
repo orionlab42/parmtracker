@@ -4,6 +4,7 @@ import CheckListItems from "./checkListItems";
 
 const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
     const [checkList, setCheckList] = useState([]);
+    const [titleOn, setTitleOn] = useState(false);
 
     useEffect(() => {
         setCheckList(items);
@@ -53,18 +54,44 @@ const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
         handleUpdateCheckList(checkList);
     };
 
+    const renderTitleInput = () => {
+        setTitleOn(!titleOn);
+    };
+
+    const titleChange = (e) => {
+        let newCheckList = checkList;
+        newCheckList.title = e.target.value
+        setCheckList(newCheckList);
+        handleUpdateCheckList(checkList);
+    }
+
+    const title = (
+        <input
+            className="title-input edit"
+            type="text"
+            placeholder="Title here..."
+            value={items.title}
+            name="text"
+            onChange={titleChange}
+        />
+    );
+
     return (
        <div className="checklist-container">
+           {!titleOn && <h4 className="note-title">{items.title}</h4>}
+           {titleOn && title}
            <div className="checklist-top">
                 <CheckListForm onSubmit={addItem}/>
-                <button className="button is-link is-light  mdi mdi-format-title" onClick={() => handleDeleteCheckList(items.id)}/>
+                <button className="button is-link is-light  mdi mdi-format-title"
+                        onClick={renderTitleInput}/>
            </div>
            <CheckListItems
                items={items.list}
                handleCompleteItem={completeItem}
                handleDeleteItem={deleteItem}
                handleUpdateItem={updateItem}/>
-           <button className="button is-link is-light  mdi mdi-trash-can-outline" onClick={() => handleDeleteCheckList(items.id)}/>
+           <button className="button is-link is-light  mdi mdi-trash-can-outline"
+                   onClick={() => handleDeleteCheckList(items.id)}/>
        </div>
     );
 }
