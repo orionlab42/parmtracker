@@ -24,13 +24,17 @@ const CheckListItems = ({ items, handleCompleteItem, handleDeleteItem, handleUpd
     return (
         <div>
             {items.map(item => (
-                <div key={item.id} className={item.isComplete ? 'checked checklist-item' : 'checklist-item note-content'}>
-                    <div key={item.id} onClick={() => handleCompleteItem(item.id)}>
+                <div key={item.id}
+                     className={item.isComplete ? 'checked checklist-item' : 'checklist-item note-content'}>
+                    <div key={item.id}
+                         onClick={() => handleCompleteItem(item.id)}>
                         <span>+</span> {item.text}
                     </div>
                     <div>
-                        <button onClick={() => handleDeleteItem(item.id)}><span className="mdi mdi-trash-can-outline"/></button>
-                        <button onClick={() => setEdit({id: item.id, text: item.text, isComplete: item.isComplete})}><span className="mdi mdi-circle-edit-outline"/></button>
+                        <button className="item-button"
+                                onClick={() => handleDeleteItem(item.id)}><span className="mdi mdi-trash-can-outline"/></button>
+                        <button className="item-button"
+                                onClick={() => setEdit({id: item.id, text: item.text, isComplete: item.isComplete})}><span className="mdi mdi-circle-edit-outline"/></button>
                     </div>
                 </div>
             ))}

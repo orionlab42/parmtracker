@@ -11185,10 +11185,19 @@ html {
   padding: 15px;
 }
 .notes-list-container .search-box {
-  padding: 1rem;
+  margin-bottom: 30px;
 }
 .notes-list-container .search-box .control {
   width: 100%;
+}
+.notes-list-container .title {
+  float: left;
+}
+
+.notes-list-add-buttons {
+  width: 100%;
+  margin-bottom: 30px;
+  float: right;
 }
 
 .notes-list {
@@ -11197,8 +11206,9 @@ html {
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
 }
 
-.note.add-new-note {
-  background-color: #c8dafa;
+.add-note-button {
+  margin-bottom: 30px;
+  margin-right: 10px;
 }
 
 textarea {
@@ -11307,6 +11317,7 @@ textarea:focus {
 
 .checklist {
   flex-direction: column;
+  min-height: 0 !important;
 }
 
 .checklist-container button {
@@ -11314,9 +11325,21 @@ textarea:focus {
   margin-left: 10px;
   margin-bottom: 0 !important;
 }
+.checklist-container .item-button {
+  margin-left: 0;
+}
 .checklist-container .checklist-top {
   display: flex;
   align-content: center;
+}
+.checklist-container .checklist-main {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.checklist-container .checklist-main .checklist-body {
+  flex-grow: 4;
 }
 
 .checklist-form {
@@ -11353,6 +11376,14 @@ textarea:focus {
   background-color: #eef3fc;
   border: none;
   outline: none;
+}
+
+.dark-mode .notes-list input {
+  background-color: #eef3fc !important;
+  border: 1px solid #eef3fc !important;
+}
+.dark-mode .note-footer {
+  color: #333;
 }
 
 .checklist-input:focus, .title-input:focus {
