@@ -1,24 +1,17 @@
 import React, {useEffect, useState} from "react";
-import NotesList from "./notesList";
-import SearchBox from "./searchBox";
+import Note from "./common/note";
+import CheckList from "./common/checkList";
 import {searchKeywordNotes} from "../utils/search";
-import CheckListsList from "./checkListsList";
+import SearchBox from "./searchBox";
 
 const ListBox = (props) => {
     const [notes, setNotes] = useState([]);
-    const [checkLists, setCheckLists] = useState([]);
-    const [searchQuery, setSearchQuery] = useState("");
-    const [idCheckLists, setIdCheckLists] = useState(1);
-    const [idNotes, setIdNotes] = useState(1);
+    // const [searchQuery, setSearchQuery] = useState("");
+    const [id, setId] = useState(1);
 
-    const giveIdChecklist = () => {
-        setIdCheckLists(idCheckLists + 1);
-        return idCheckLists;
-    };
-
-    const giveIdNotes = () => {
-        setIdNotes(idNotes + 1);
-        return idNotes;
+    const giveId = () => {
+        setId(id + 1);
+        return id;
     };
 
     useEffect(() => {
@@ -29,25 +22,13 @@ const ListBox = (props) => {
     }, []);
 
     useEffect(() => {
-        const savedCheckLists = JSON.parse(localStorage.getItem('react-lists-app-data'));
-        if (savedCheckLists) {
-            setCheckLists(savedCheckLists);
-        }
-    }, []);
-
-    useEffect(() => {
         localStorage.setItem('react-notes-app-data', JSON.stringify(notes));
     }, [notes]);
 
-    useEffect(() => {
-        localStorage.setItem('react-lists-app-data', JSON.stringify(checkLists));
-    }, [checkLists]);
-
     const addNote = (text) => {
-        console.log("Add new empty note in home");
         const date = new Date();
         const newNote = {
-            id: giveIdNotes(),
+            id: giveId(),
             type: "simple-note",
             title: "",
             text: "",
@@ -75,57 +56,63 @@ const ListBox = (props) => {
     const addCheckNote = (itemList) => {
         const date = new Date();
         let newList = {
-            id: giveIdChecklist(),
+            id: giveId(),
             type: "checklist",
             title: "",
             list: [],
             date: date.toLocaleDateString()
         }
-        setCheckLists([...checkLists, newList]);
+        setNotes([...notes, newList]);
     };
 
     const updateCheckList = (itemList) => {
-        const newChecklists = checkLists.map(checkList => {
+        const newChecklists = notes.map(checkList => {
             if (checkList.id === itemList.id) {
                 checkList.list = itemList.list
             }
             return checkList
         });
-        setCheckLists(newChecklists);
+        setNotes(newChecklists);
     };
 
     const deleteCheckList = (id) => {
-        const newChecklists = checkLists.filter(checkList => checkList.id !== id);
-        setCheckLists(newChecklists);
+        const newChecklists = notes.filter(checkList => checkList.id !== id);
+        setNotes(newChecklists);
     };
 
-    const searchNote = (text) => {
-        setSearchQuery(text);
-    };
+    // const searchNote = (text) => {
+    //     setSearchQuery(text);
+    // };
 
-    let notesToDisplay = notes;
-    if (searchQuery) {
-        notesToDisplay = searchKeywordNotes(notes, searchQuery);
-    }
+    // let notesToDisplay = notes;
+    // if (searchQuery) {
+    //     notesToDisplay = searchKeywordNotes(notes, searchQuery);
+    // }
 
+    console.log("All notes", notes);
     return (
         <div className="notes-list-container">
-            <SearchBox value={searchQuery} onChange={searchNote}/>
+            {/*<SearchBox value={searchQuery} onChange={searchNote}/>*/}
             <button className="button is-link is-light add-note-button" onClick={addNote}><span
                 className="mdi mdi-note-outline"/> &nbsp; Add Simple Note</button>
             <button className="button is-link is-light add-note-button" onClick={addCheckNote}><span
                 className="mdi mdi-playlist-check"/> &nbsp; Add Checklist</button>
-            <NotesList
-                notes={notesToDisplay}
-                handleAddNote={addNote}
-                handleUpdateNote={updateNote}
-                handleDeleteNote={deleteNote}
-            />
-            <CheckListsList
-                checkLists={checkLists}
-                handleUpdateCheckList={updateCheckList}
-                handleDeleteCheckList={deleteCheckList}
-            />
+            <div className="notes-list">
+                {notes.map(note => {
+                    if (note.type === "simple-note") {
+                         return <Note key={note.id}
+                                      note={ note }
+                                      handleUpdateNote={updateNote}
+                                      handleDeleteNote={deleteNote}/>
+                    }
+                    if (note.type === "checklist") {
+                        return <CheckList key={note.id}
+                                            items={note}
+                                            handleUpdateCheckList={updateCheckList}
+                                            handleDeleteCheckList={deleteCheckList}/>
+                    }
+                })}
+            </div>
         </div>
     );
 };

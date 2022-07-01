@@ -74,39 +74,41 @@ const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
     );
 
     return (
-       <div className="checklist-container">
-           {!titleOn && <h4 className="note-title">{items.title}</h4>}
-           {titleOn && title}
-           <div className="checklist-top">
-                <CheckListForm onSubmit={addItem}/>
-                <button className="button is-link is-light  mdi mdi-format-title"
-                        onClick={renderTitleInput}/>
-           </div>
-           {/*<CheckListItems*/}
-           {/*    items={items.list}*/}
-           {/*    handleCompleteItem={completeItem}*/}
-           {/*    handleDeleteItem={deleteItem}*/}
-           {/*    handleUpdateItem={updateItem}/>*/}
-           {/*<div className="note-footer">*/}
-           {/*    <small>{ items.date }</small>*/}
-           {/*</div>*/}
-           {/*<button className="button is-link is-light  mdi mdi-trash-can-outline"*/}
-           {/*        onClick={() => handleDeleteCheckList(items.id)}/>*/}
-           <div className="checklist-main">
-               <div className="checklist-body">
-                   <CheckListItems
-                       items={items.list}
-                       handleCompleteItem={completeItem}
-                       handleDeleteItem={deleteItem}
-                       handleUpdateItem={updateItem}/>
-                   <div className="note-footer">
-                       <small>{ items.date }</small>
-                   </div>
-               </div>
-               <button className="button is-link is-light  mdi mdi-trash-can-outline"
-                       onClick={() => handleDeleteCheckList(items.id)}/>
-           </div>
-       </div>
+        <div className="note checklist">
+            <div className="checklist-container">
+                {!titleOn && <h4 className="note-title">{items.title}</h4>}
+                {titleOn && title}
+                <div className="checklist-top">
+                    <CheckListForm onSubmit={addItem}/>
+                    <button className="button is-link is-light  mdi mdi-format-title"
+                            onClick={renderTitleInput}/>
+                </div>
+                {/*<CheckListItems*/}
+                {/*    items={items.list}*/}
+                {/*    handleCompleteItem={completeItem}*/}
+                {/*    handleDeleteItem={deleteItem}*/}
+                {/*    handleUpdateItem={updateItem}/>*/}
+                {/*<div className="note-footer">*/}
+                {/*    <small>{ items.date }</small>*/}
+                {/*</div>*/}
+                {/*<button className="button is-link is-light  mdi mdi-trash-can-outline"*/}
+                {/*        onClick={() => handleDeleteCheckList(items.id)}/>*/}
+                <div className="checklist-main">
+                    <div className="checklist-body">
+                        <CheckListItems
+                            items={items.list}
+                            handleCompleteItem={completeItem}
+                            handleDeleteItem={deleteItem}
+                            handleUpdateItem={updateItem}/>
+                        <div className="note-footer">
+                            <small>{ items.date }</small>
+                        </div>
+                    </div>
+                    <button className="button is-link is-light  mdi mdi-trash-can-outline"
+                            onClick={() => handleDeleteCheckList(items.id)}/>
+                </div>
+            </div>
+        </div>
     );
 }
 
