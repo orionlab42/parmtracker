@@ -16,6 +16,6 @@ run:
 nohup:
 	nohup parmtracker &
 kill:
-	killall -2 parmtracker
+	killall -9 parmtracker
 client:
 	cd server/client && npm start
