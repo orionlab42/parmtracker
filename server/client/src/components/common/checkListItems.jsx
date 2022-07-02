@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import CheckListForm from "./checkListForm";
 
-const CheckListItems = ({ items, handleCompleteItem, handleDeleteItem, handleUpdateItem }) => {
+const CheckListItems = ({ items, handleCompleteItem, handleDeleteItem, handleUpdateItem, newIdItem, increaseIdItem}) => {
     const [edit, setEdit] = useState({
         id: null,
         text: '',
@@ -17,7 +17,7 @@ const CheckListItems = ({ items, handleCompleteItem, handleDeleteItem, handleUpd
     };
 
     if (edit.id) {
-        return <CheckListForm edit={edit} onSubmit={submitUpdate}/>;
+        return <CheckListForm edit={edit} onSubmit={submitUpdate} newIdItem={newIdItem} increaseIdItem={increaseIdItem}/>;
     }
 
     return (

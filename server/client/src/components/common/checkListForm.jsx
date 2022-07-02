@@ -3,17 +3,11 @@ import React, {useState} from "react";
 
 const CheckListForm = (props) => {
     const [input, setInput] = useState(props.edit ? props.edit.text : '');
-    const [id, setId] = useState(1);
     // const inputRef = useRef(null);
 
     // useEffect(() => {
     //     inputRef.current.focus()
     // });
-
-    const giveId = () => {
-        setId(id + 1);
-        return id;
-    };
 
     const handleChange = e => {
         setInput(e.target.value);
@@ -21,12 +15,21 @@ const CheckListForm = (props) => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        props.onSubmit({
-            id: giveId(),
-            text: input,
-            isComplete: false
-        });
+        if (props.edit) {
+            props.onSubmit({
+                id: props.edit.id,
+                text: input,
+                isComplete: props.edit.isComplete
+            });
+        } else {
+            props.onSubmit({
+                id: props.newIdItem,
+                text: input,
+                isComplete: false
+            });
+        }
         setInput('');
+        props.increaseIdItem(props.newIdItem + 1);
     };
 
     return (

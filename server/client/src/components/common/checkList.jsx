@@ -3,6 +3,7 @@ import CheckListForm from "./checkListForm";
 import CheckListItems from "./checkListItems";
 
 const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
+    const [idItem, setIdItem] = useState(1);
     const [checkList, setCheckList] = useState([]);
     const [titleOn, setTitleOn] = useState(false);
 
@@ -79,7 +80,7 @@ const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
                 {!titleOn && <h4 className="note-title">{items.title}</h4>}
                 {titleOn && title}
                 <div className="checklist-top">
-                    <CheckListForm onSubmit={addItem}/>
+                    <CheckListForm onSubmit={addItem} newIdItem={idItem} increaseIdItem={setIdItem}/>
                     <button className="button is-link is-light  mdi mdi-format-title"
                             onClick={renderTitleInput}/>
                 </div>
@@ -89,7 +90,9 @@ const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
                             items={items.list}
                             handleCompleteItem={completeItem}
                             handleDeleteItem={deleteItem}
-                            handleUpdateItem={updateItem}/>
+                            handleUpdateItem={updateItem}
+                            newIdItem={idItem}
+                            increaseIdItem={setIdItem}/>
                         <div className="note-footer">
                             <small>Last modified: { new Date(items.date).toLocaleDateString("en-GB", {
                                 hour: "2-digit",

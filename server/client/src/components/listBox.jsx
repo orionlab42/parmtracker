@@ -96,7 +96,7 @@ const ListBox = (props) => {
     //     notesToDisplay = searchKeywordNotes(notes, searchQuery);
     // }
     //
-    // console.log("All notes", notes);
+    console.log("All notes", notes);
     return (
         <div className="notes-list-container">
             {/*<SearchBox value={searchQuery} onChange={searchNote}/>*/}
@@ -105,7 +105,7 @@ const ListBox = (props) => {
             <button className="button is-link is-light add-note-button" onClick={addCheckNote}><span
                 className="mdi mdi-playlist-check"/> &nbsp; Add Checklist</button>
             <div className="notes-list">
-                {sortedNotes.map(note => {
+                {notes.map(note => {
                     if (note.type === "simple-note") {
                          return <Note key={note.id}
                                       note={ note }
