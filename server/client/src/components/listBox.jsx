@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import Note from "./common/note";
 import CheckList from "./common/checkList";
-import {searchKeywordNotes} from "../utils/search";
-import SearchBox from "./searchBox";
+// import {searchKeywordNotes} from "../utils/search";
+// import SearchBox from "./searchBox";
 
 const ListBox = (props) => {
     const [notes, setNotes] = useState([]);
@@ -88,8 +88,8 @@ const ListBox = (props) => {
     // if (searchQuery) {
     //     notesToDisplay = searchKeywordNotes(notes, searchQuery);
     // }
-
-    console.log("All notes", notes);
+    //
+    // console.log("All notes", notes);
     return (
         <div className="notes-list-container">
             {/*<SearchBox value={searchQuery} onChange={searchNote}/>*/}

@@ -11392,6 +11392,11 @@ textarea:focus {
   resize: none;
 }
 
+.checklist-item-container {
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
 .checklist-item {
   color: #333;
   display: flex;

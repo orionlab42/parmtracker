@@ -10,7 +10,6 @@ const CheckListItems = ({ items, handleCompleteItem, handleDeleteItem, handleUpd
 
     const submitUpdate = newValue => {
         handleUpdateItem(edit.id, newValue, edit.isComplete);
-        // console.log("handleUpdate", edit);
         setEdit({
             id: null,
             text: '',
@@ -20,9 +19,9 @@ const CheckListItems = ({ items, handleCompleteItem, handleDeleteItem, handleUpd
     if (edit.id) {
         return <CheckListForm edit={edit} onSubmit={submitUpdate}/>;
     }
-    // console.log("Checklist in items", items);
+
     return (
-        <div>
+        <div className="checklist-item-container">
             {items.map(item => (
                 <div key={item.id}
                      className={item.isComplete ? 'checked checklist-item' : 'checklist-item note-content'}>

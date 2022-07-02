@@ -1,4 +1,5 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useState} from "react";
+// import React, {useEffect, useRef, useState} from "react";
 
 const CheckListForm = (props) => {
     const [input, setInput] = useState(props.edit ? props.edit.text : '');
