@@ -8,7 +8,6 @@ import (
 	"github.com/orionlab42/parmtracker/log"
 	"github.com/orionlab42/parmtracker/server"
 	"github.com/orionlab42/parmtracker/settings"
-	"net"
 	"net/http"
 )
 
@@ -37,20 +36,20 @@ func main() {
 	UpdateTablesVersion()
 
 	// old version without certificates
-	//r := server.NewRouter()
-	//e := http.ListenAndServe(":12345", r)
-	//if e != nil {
-	//	log.GetInstance().Errorf(LogPrefix, "Error in listen and serve %s", e.Error())
-	//}
+	r := server.NewRouter()
+	e := http.ListenAndServe(":12345", r)
+	if e != nil {
+		log.GetInstance().Errorf(LogPrefix, "Error in listen and serve %s", e.Error())
+	}
 
 	// new version with certificates
-	r := server.NewRouter()
-	listener, e := net.Listen("tcp", ":"+config.GetInstance().WebPort)
-	if e != nil {
-		log.GetInstance().Errorf(LogPrefix, "Error when listening to port %d: %s", config.GetInstance().WebPort, e.Error())
-	}
-	e = http.ServeTLS(listener, r, "fullchain.pem", "privkey.pem")
-	if e != nil {
-		log.GetInstance().Errorf(LogPrefix, "Error while starting server: %s", e.Error())
-	}
+	//r := server.NewRouter()
+	//listener, e := net.Listen("tcp", ":"+config.GetInstance().WebPort)
+	//if e != nil {
+	//	log.GetInstance().Errorf(LogPrefix, "Error when listening to port %d: %s", config.GetInstance().WebPort, e.Error())
+	//}
+	//e = http.ServeTLS(listener, r, "fullchain.pem", "privkey.pem")
+	//if e != nil {
+	//	log.GetInstance().Errorf(LogPrefix, "Error while starting server: %s", e.Error())
+	//}
 }

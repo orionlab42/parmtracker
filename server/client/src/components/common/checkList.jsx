@@ -91,7 +91,9 @@ const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
                             handleDeleteItem={deleteItem}
                             handleUpdateItem={updateItem}/>
                         <div className="note-footer">
-                            <small>{ items.date }</small>
+                            <small>Last modified: { new Date(items.date).toLocaleDateString("en-GB", {
+                                hour: "2-digit",
+                                minute:  "2-digit",}) }</small>
                         </div>
                     </div>
                     <button className="button is-link is-light  mdi mdi-trash-can-outline"

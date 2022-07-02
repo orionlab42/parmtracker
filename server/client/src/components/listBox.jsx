@@ -9,13 +9,16 @@ const ListBox = (props) => {
     // const [searchQuery, setSearchQuery] = useState("");
     const [id, setId] = useState(1);
 
+    // Sorts the notes by date even while a date is edited which is annoying
+    // const sortedNotes = notes.sort((a,b) => b.date - a.date);
+
     const giveId = () => {
         setId(id + 1);
         return id;
     };
 
     useEffect(() => {
-        const savedNotes = JSON.parse(localStorage.getItem('react-notes-app-data'));
+        let savedNotes = JSON.parse(localStorage.getItem('react-notes-app-data'));
         if (savedNotes) {
             setNotes(savedNotes);
         }
@@ -26,22 +29,22 @@ const ListBox = (props) => {
     }, [notes]);
 
     const addNote = (text) => {
-        const date = new Date();
-        const newNote = {
+        let newNote = {
             id: giveId(),
             type: "simple-note",
             title: "",
             text: "",
-            date: date.toLocaleDateString()
+            date: Date.now()
         };
-        setNotes([...notes, newNote]);
+        setNotes([newNote, ...notes]);
     };
 
     const updateNote = (newNote) => {
-        const newNotes = notes.map(note => {
+        let newNotes = notes.map(note => {
             if (note.id === newNote.id) {
                 note.text = newNote.text;
                 note.title = newNote.title;
+                note.date = Date.now();
             }
             return note
         });
@@ -49,26 +52,30 @@ const ListBox = (props) => {
     };
 
     const deleteNote = (deleteNote) => {
-        const newNotes = notes.filter(note => note.id !== deleteNote.id);
+        let newNotes = notes.filter(note => note.id !== deleteNote.id);
         setNotes(newNotes);
     };
 
     const addCheckNote = (itemList) => {
-        const date = new Date();
         let newList = {
             id: giveId(),
             type: "checklist",
             title: "",
             list: [],
-            date: date.toLocaleDateString()
+            date: Date.now()
+            // date: date.toLocaleDateString("en-GB", {
+            //     hour: "2-digit",
+            //     minute:  "2-digit",
+            // })
         }
-        setNotes([...notes, newList]);
+        setNotes([newList, ...notes]);
     };
 
     const updateCheckList = (itemList) => {
-        const newChecklists = notes.map(checkList => {
+        let newChecklists = notes.map(checkList => {
             if (checkList.id === itemList.id) {
-                checkList.list = itemList.list
+                checkList.list = itemList.list;
+                checkList.date = Date.now();
             }
             return checkList
         });
@@ -76,7 +83,7 @@ const ListBox = (props) => {
     };
 
     const deleteCheckList = (id) => {
-        const newChecklists = notes.filter(checkList => checkList.id !== id);
+        let newChecklists = notes.filter(checkList => checkList.id !== id);
         setNotes(newChecklists);
     };
 
@@ -98,7 +105,7 @@ const ListBox = (props) => {
             <button className="button is-link is-light add-note-button" onClick={addCheckNote}><span
                 className="mdi mdi-playlist-check"/> &nbsp; Add Checklist</button>
             <div className="notes-list">
-                {notes.map(note => {
+                {sortedNotes.map(note => {
                     if (note.type === "simple-note") {
                          return <Note key={note.id}
                                       note={ note }

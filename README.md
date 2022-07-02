@@ -1,3 +1,3 @@
 # Parmtracker
 
-A financial application to track parmesan riches.
+A financial application to track Parmesan riches.

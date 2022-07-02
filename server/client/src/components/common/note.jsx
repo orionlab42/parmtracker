@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import ReactMarkdown from "react-markdown";
 
 const Note = ({ note, handleUpdateNote, handleDeleteNote }) => {
     const [updateNote, setUpdateNote] = useState(note);
@@ -43,6 +44,7 @@ const Note = ({ note, handleUpdateNote, handleDeleteNote }) => {
             value={note.title}
             name="text"
             onChange={titleChange}
+            autoFocus
         />
     );
 
@@ -53,9 +55,12 @@ const Note = ({ note, handleUpdateNote, handleDeleteNote }) => {
                 <div className="note-body">
                     <div className="note-content">
                         { editOn && edit}
-                        { !editOn && <span >{ note.text }</span>}
+                        { !editOn && <ReactMarkdown >{ note.text }</ReactMarkdown>}
                         <div className="note-footer">
-                            <small>{ note.date }</small>
+                            <small>Last modified: { new Date(note.date).toLocaleDateString("en-GB", {
+                                    hour: "2-digit",
+                                    minute:  "2-digit",
+                                }) }</small>
                         </div>
                     </div>
                     <div className="simple-note-buttons">
