@@ -57,10 +57,10 @@ const Note = ({ note, handleUpdateNote, handleDeleteNote }) => {
                         { editOn && edit}
                         { !editOn && <ReactMarkdown >{ note.text }</ReactMarkdown>}
                         <div className="note-footer">
-                            <small>Last modified: { new Date(note.date).toLocaleDateString("en-GB", {
+                            <small>{!note.empty ? "Last modified:" +  new Date(note.date).toLocaleDateString("en-GB", {
                                     hour: "2-digit",
                                     minute:  "2-digit",
-                                }) }</small>
+                                }) : ""}</small>
                         </div>
                     </div>
                     <div className="simple-note-buttons">

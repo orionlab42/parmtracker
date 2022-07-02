@@ -21,6 +21,9 @@ const ListBox = (props) => {
         let savedNotes = JSON.parse(localStorage.getItem('react-notes-app-data'));
         if (savedNotes) {
             setNotes(savedNotes);
+            if (savedNotes[0]) {
+                setId(savedNotes[0].id + 1);
+            }
         }
     }, []);
 
@@ -32,6 +35,7 @@ const ListBox = (props) => {
         let newNote = {
             id: giveId(),
             type: "simple-note",
+            empty: true,
             title: "",
             text: "",
             date: Date.now()
@@ -42,6 +46,7 @@ const ListBox = (props) => {
     const updateNote = (newNote) => {
         let newNotes = notes.map(note => {
             if (note.id === newNote.id) {
+                note.empty = false;
                 note.text = newNote.text;
                 note.title = newNote.title;
                 note.date = Date.now();
@@ -60,13 +65,10 @@ const ListBox = (props) => {
         let newList = {
             id: giveId(),
             type: "checklist",
+            empty: true,
             title: "",
             list: [],
             date: Date.now()
-            // date: date.toLocaleDateString("en-GB", {
-            //     hour: "2-digit",
-            //     minute:  "2-digit",
-            // })
         }
         setNotes([newList, ...notes]);
     };
@@ -74,6 +76,7 @@ const ListBox = (props) => {
     const updateCheckList = (itemList) => {
         let newChecklists = notes.map(checkList => {
             if (checkList.id === itemList.id) {
+                checkList.empty = false;
                 checkList.list = itemList.list;
                 checkList.date = Date.now();
             }

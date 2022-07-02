@@ -94,9 +94,10 @@ const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
                             newIdItem={idItem}
                             increaseIdItem={setIdItem}/>
                         <div className="note-footer">
-                            <small>Last modified: { new Date(items.date).toLocaleDateString("en-GB", {
+                            <small>{!items.empty ? "Last modified:" +  new Date(items.date).toLocaleDateString("en-GB", {
                                 hour: "2-digit",
-                                minute:  "2-digit",}) }</small>
+                                minute:  "2-digit",
+                            }) : ""}</small>
                         </div>
                     </div>
                     <button className="button is-link is-light  mdi mdi-trash-can-outline"
