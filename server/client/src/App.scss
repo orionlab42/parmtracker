@@ -908,44 +908,21 @@ textarea:focus {
     color: #999796;
 }
 
-form {
-        .label {
-            color: $grey-light;
+/* Agenda note */
+.date-range-picker {
+    .react-datepicker__input-container {
+        width: 210px;
+        input {
+            color: #333;
+            padding-right: 25px;
+            border-radius: 4px;
         }
-        #category, #user_id, #category_color {
-            background-color: $dark-light;
-            color: $grey-light;
-            border: 1px solid $grey;
-        }
-        #date-picker {
-            input {
-                background-color: $dark-light;
-                color: $grey-light;
-                border: 1px solid $grey;
-            }
-        }
-        .react-datepicker {
-            border: 1px solid $grey;
-        }
-//this does not work:
-        .react-datepicker__triangle,  .react-datepicker-popper {
-            border-top-color: $grey;
-        }
-       .react-datepicker__month-container, .react-datepicker__header {
-            background-color: $dark-light;
-            color: $grey-light;
-            border: 1px solid $grey;
-       }
-       .react-datepicker__header {
-            background-color: $dark;
-       }
-       .react-datepicker__current-month,  .react-datepicker__day-name, .react-datepicker__day {
-            color: $grey-light;
-       }
-       button {
-            margin-bottom: 100px;
-       }
     }
+    .react-datepicker__close-icon::after {
+        line-height: 0.8;
+    }
+}
+
 
 
 /**

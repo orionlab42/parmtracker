@@ -11433,38 +11433,17 @@ textarea:focus {
   color: #999796;
 }
 
-form .label {
-  color: #bbb8b7;
+/* Agenda note */
+.date-range-picker .react-datepicker__input-container {
+  width: 210px;
 }
-form #category, form #user_id, form #category_color {
-  background-color: #333;
-  color: #bbb8b7;
-  border: 1px solid #3a3f41;
+.date-range-picker .react-datepicker__input-container input {
+  color: #333;
+  padding-right: 25px;
+  border-radius: 4px;
 }
-form #date-picker input {
-  background-color: #333;
-  color: #bbb8b7;
-  border: 1px solid #3a3f41;
-}
-form .react-datepicker {
-  border: 1px solid #3a3f41;
-}
-form .react-datepicker__triangle, form .react-datepicker-popper {
-  border-top-color: #3a3f41;
-}
-form .react-datepicker__month-container, form .react-datepicker__header {
-  background-color: #333;
-  color: #bbb8b7;
-  border: 1px solid #3a3f41;
-}
-form .react-datepicker__header {
-  background-color: #222;
-}
-form .react-datepicker__current-month, form .react-datepicker__day-name, form .react-datepicker__day {
-  color: #bbb8b7;
-}
-form button {
-  margin-bottom: 100px;
+.date-range-picker .react-datepicker__close-icon::after {
+  line-height: 0.8;
 }
 
 /**

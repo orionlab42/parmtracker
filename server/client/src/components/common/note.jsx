@@ -71,7 +71,7 @@ const Note = ({ note, handleUpdateNote, handleDeleteNote }) => {
                                     onClick={renderTitleInput}/>
                         </div>
                         <button className="button is-link is-light  mdi mdi-trash-can-outline"
-                                onClick={() => handleDeleteNote(note)}/>
+                                onClick={() => handleDeleteNote(note.id)}/>
                     </div>
                 </div>
             </div>

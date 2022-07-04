@@ -45,24 +45,6 @@ const ListBox = (props) => {
         setNotes([newNote, ...notes]);
     };
 
-    const updateNote = (newNote) => {
-        let newNotes = notes.map(note => {
-            if (note.id === newNote.id) {
-                note.empty = false;
-                note.text = newNote.text;
-                note.title = newNote.title;
-                note.date = Date.now();
-            }
-            return note
-        });
-        setNotes(newNotes);
-    };
-
-    const deleteNote = (deleteNote) => {
-        let newNotes = notes.filter(note => note.id !== deleteNote.id);
-        setNotes(newNotes);
-    };
-
     const addCheckNote = () => {
         let newList = {
             id: giveId(),
@@ -75,52 +57,34 @@ const ListBox = (props) => {
         setNotes([newList, ...notes]);
     };
 
-    const updateCheckList = (itemList) => {
-        let newChecklists = notes.map(checkList => {
-            if (checkList.id === itemList.id) {
-                checkList.empty = false;
-                checkList.title = itemList.title;
-                checkList.list = itemList.list;
-                checkList.date = Date.now();
-            }
-            return checkList
-        });
-        setNotes(newChecklists);
-    };
-
-    const deleteCheckList = (id) => {
-        let newChecklists = notes.filter(checkList => checkList.id !== id);
-        setNotes(newChecklists);
-    };
-
     const addAgendaNote = () => {
         let newAgenda = {
             id: giveId(),
             type: "agenda",
             empty: true,
+            // list: [],
             title: "",
-            list: [],
             date: Date.now()
         }
         setNotes([newAgenda, ...notes]);
     };
 
-    const updateAgendaNote = (agendaNew) => {
-        let newAgenda = notes.map(agenda => {
-            if (agenda.id === agendaNew.id) {
-                agenda.empty = false;
-                agenda.title = agendaNew.title;
-                // agenda.list = itemList.list;
-                agenda.date = Date.now();
+    const updateNote = (newNote) => {
+        let newNotes = notes.map(note => {
+            if (note.id === newNote.id) {
+                note.empty = false;
+                note.title = newNote.title;
+                note.text = newNote.text;
+                note.date = Date.now();
             }
-            return agenda
+            return note
         });
-        setNotes(newAgenda);
+        setNotes(newNotes);
     };
 
-    const deleteAgenda = (id) => {
-        let newChecklists = notes.filter(checkList => checkList.id !== id);
-        setNotes(newChecklists);
+    const deleteNote = (id) => {
+        let newNotes = notes.filter(note => note.id !== id);
+        setNotes(newNotes);
     };
 
     // const searchNote = (text) => {
@@ -132,7 +96,7 @@ const ListBox = (props) => {
     //     notesToDisplay = searchKeywordNotes(notes, searchQuery);
     // }
     //
-    console.log("All notes", notes);
+    // console.log("All notes", notes);
     return (
         <div className="notes-list-container">
             {/*<SearchBox value={searchQuery} onChange={searchNote}/>*/}
@@ -153,14 +117,14 @@ const ListBox = (props) => {
                     if (note.type === "checklist") {
                         return <CheckList key={note.id}
                                             items={note}
-                                            handleUpdateCheckList={updateCheckList}
-                                            handleDeleteCheckList={deleteCheckList}/>
+                                            handleUpdateCheckList={updateNote}
+                                            handleDeleteCheckList={deleteNote}/>
                     }
                     if (note.type === "agenda") {
                         return <AgendaNote key={note.id}
-                                            items={note}
-                                           handleUpdateAgendaNote={updateAgendaNote}
-                                            handleDeleteAgenda={deleteAgenda}
+                                           items={note}
+                                           handleUpdateAgendaNote={updateNote}
+                                           handleDeleteAgenda={deleteNote}
                         />
                     }
                 })}

@@ -9,20 +9,38 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
     const [titleOn, setTitleOn] = useState(false);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
-    const [start1Date, setStart1Date] = useState(new Date());
-    const [end1Date, setEnd1Date] = useState(new Date());
-
-    console.log("Date range", dateRange);
-    console.log("StartDate", startDate);
-    console.log("EndDate", endDate);
 
     useEffect(() => {
         setUpdateAgendaNote(items);
     }, [items]);
 
+    useEffect(() => {
+        let newAgenda = updateAgendaNote;
+        newAgenda.list = createItems();
+        setUpdateAgendaNote(newAgenda);
+        handleUpdateAgendaNote(newAgenda);
+    }, [dateRange]);
 
-    const renderCalendar = () => {
-       console.log("Pick a date");
+    const createItems = () => {
+        let emptyItems = [];
+
+        if (startDate === null || endDate === null) {
+            let lengthItemList = 0;
+            if (items.list) {
+                lengthItemList = items.list.length;
+            }
+            if (lengthItemList <= 1) {
+                return [];
+            }
+           return  items.list;
+        }
+        let idItem = 0;
+        for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
+            emptyItems.push({id: idItem, date: new Date(d), text: ""});
+            idItem = idItem + 1;
+        }
+
+        return emptyItems
     };
 
     const renderTitleInput = () => {
@@ -48,13 +66,49 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
         />
     );
 
+    const itemChange = (e, date) => {
+        console.log("text",e.target.value);
+        let newAgenda = updateAgendaNote;
+        newAgenda.list.map(item => {
+            if (item.date === date) {
+                item.text = e.target.value;
+            }
+            return item;
+        });
+        setUpdateAgendaNote(newAgenda);
+        handleUpdateAgendaNote(updateAgendaNote);
+    };
+
+    const itemList = (
+        <div>
+            {!items.empty && items.list.map(item =>  <div key={item.id}>
+                <span>{new Date(item.date).toLocaleDateString()}</span>
+                <input
+                    placeholder="Text here..."
+                    value={item.text}
+                    onChange={(e) => itemChange(e, item.date)}
+                />
+            </div>)}
+        </div>
+    );
+
     return (
         <div className="note">
             {!titleOn && <h4 className="note-title">{items.title}</h4>}
             {titleOn && title}
             <div className="note-body">
                 <div className="note-content">
-                    {/*<p>{note.list}</p>*/}
+                    <div className="date-range-picker">
+                        <DatePicker
+                            placeholderText="Select date range..."
+                            selectsRange={true}
+                            startDate={startDate}
+                            endDate={endDate}
+                            onChange={setDateRange}
+                            isClearable={true}
+                        />
+                    </div>
+                    { !items.empty && itemList}
                     <div className="note-footer">
                         <small>{!items.empty ? "Last modified:" +  new Date(items.date).toLocaleDateString("en-GB", {
                             hour: "2-digit",
@@ -64,44 +118,9 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
                 </div>
                 <div className="simple-note-buttons">
                     <div className="edit-note-buttons">
-                        {/*<button className="button is-link is-light  mdi mdi-plus"*/}
-                        {/*        onClick={renderEdit}/>*/}
-                        {/*<button className="button is-link is-light mdi mdi-calendar-plus"*/}
-                        {/*        onClick={renderCalendar}/>*/}
-                        {/*<div className="control picker" id="date-picker" >*/}
-                        {/*    <DatePicker*/}
-                        {/*        id="date"*/}
-                        {/*        selected={selectedStartingDate}*/}
-                        {/*        onChange={setSelectedStartingDate}*/}
-                        {/*        name="Date"*/}
-                        {/*        dateFormat={"dd/MM/yyyy"}*/}
-                        {/*    />*/}
-                        {/*</div>*/}
-                        <DatePicker
-                            // placeholderText="Select date range..."
-                            selectsRange={true}
-                            startDate={startDate}
-                            endDate={endDate}
-                            onChange={setDateRange}
-                            isClearable={true}
-                        />
-                        <DatePicker
-                            selected={start1Date}
-                            onChange={(date) => setStart1Date(date)}
-                            selectsStart
-                            startDate={start1Date}
-                            endDate={end1Date}
-                        />
-                        <DatePicker
-                            selected={end1Date}
-                            onChange={(date) => setEnd1Date(date)}
-                            selectsEnd
-                            startDate={start1Date}
-                            endDate={end1Date}
-                            minDate={startDate}
-                        />
                         <button className="button is-link is-light  mdi mdi-format-title"
                                 onClick={renderTitleInput}/>
+
                     </div>
                     <button className="button is-link is-light  mdi mdi-trash-can-outline"
                             onClick={() => handleDeleteAgenda(items.id)}/>
