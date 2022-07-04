@@ -80,11 +80,18 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
     };
 
     const itemList = (
-        <div>
-            {!items.empty && items.list.map(item =>  <div key={item.id}>
-                <span>{new Date(item.date).toLocaleDateString()}</span>
+        <div className="agenda-item-list">
+            {!items.empty && items.list.map(item =>  <div className="agenda-item" key={item.id}>
+                <div className="agenda-item-date">
+                    <span>{new Date(item.date).toLocaleDateString("en-US", {
+                        month:  "short",
+                        day:"numeric"
+                    })}</span> /&nbsp;
+                    <span>{new Date(item.date).toLocaleDateString("en-US", {
+                        weekday: "short"
+                    })}</span>
+                </div>
                 <input
-                    placeholder="Text here..."
                     value={item.text}
                     onChange={(e) => itemChange(e, item.date)}
                 />

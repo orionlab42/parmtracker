@@ -923,6 +923,30 @@ textarea:focus {
     }
 }
 
+.agenda-item-list {
+    margin: 25px 0;
+    .agenda-item {
+        margin: 5px 0;
+        display: flex;
+        justify-content: space-between;
+        .agenda-item-date {
+            font-weight: 600;
+        }
+        input {
+           width: 70%;
+           background-color: #c8dafa !important;
+           border: 1px solid #c8dafa !important;
+           border-bottom: 1px solid #333 !important;
+           color: #333;
+        }
+        input:focus {
+            border: none;
+            outline: none;
+            resize: none;
+        }
+    }
+}
+
 
 
 /**
