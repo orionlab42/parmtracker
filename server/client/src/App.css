@@ -10560,6 +10560,7 @@ html {
   margin: 0 auto;
   padding: 0 0 60px 0;
   max-width: 1152px;
+  z-index: 0;
 }
 @media (max-width: 376px) {
   .navbar {
@@ -11430,6 +11431,40 @@ textarea:focus {
 .checklist-item.checked {
   text-decoration: line-through;
   color: #999796;
+}
+
+form .label {
+  color: #bbb8b7;
+}
+form #category, form #user_id, form #category_color {
+  background-color: #333;
+  color: #bbb8b7;
+  border: 1px solid #3a3f41;
+}
+form #date-picker input {
+  background-color: #333;
+  color: #bbb8b7;
+  border: 1px solid #3a3f41;
+}
+form .react-datepicker {
+  border: 1px solid #3a3f41;
+}
+form .react-datepicker__triangle, form .react-datepicker-popper {
+  border-top-color: #3a3f41;
+}
+form .react-datepicker__month-container, form .react-datepicker__header {
+  background-color: #333;
+  color: #bbb8b7;
+  border: 1px solid #3a3f41;
+}
+form .react-datepicker__header {
+  background-color: #222;
+}
+form .react-datepicker__current-month, form .react-datepicker__day-name, form .react-datepicker__day {
+  color: #bbb8b7;
+}
+form button {
+  margin-bottom: 100px;
 }
 
 /**

@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from "react";
 import Note from "./common/note";
 import CheckList from "./common/checkList";
+import AgendaNote from "./common/agendaNote";
 // import {searchKeywordNotes} from "../utils/search";
 // import SearchBox from "./searchBox";
+
 
 const ListBox = (props) => {
     const [notes, setNotes] = useState([]);
@@ -31,7 +33,7 @@ const ListBox = (props) => {
         localStorage.setItem('react-notes-app-data', JSON.stringify(notes));
     }, [notes]);
 
-    const addNote = (text) => {
+    const addNote = () => {
         let newNote = {
             id: giveId(),
             type: "simple-note",
@@ -61,7 +63,7 @@ const ListBox = (props) => {
         setNotes(newNotes);
     };
 
-    const addCheckNote = (itemList) => {
+    const addCheckNote = () => {
         let newList = {
             id: giveId(),
             type: "checklist",
@@ -77,6 +79,7 @@ const ListBox = (props) => {
         let newChecklists = notes.map(checkList => {
             if (checkList.id === itemList.id) {
                 checkList.empty = false;
+                checkList.title = itemList.title;
                 checkList.list = itemList.list;
                 checkList.date = Date.now();
             }
@@ -86,6 +89,36 @@ const ListBox = (props) => {
     };
 
     const deleteCheckList = (id) => {
+        let newChecklists = notes.filter(checkList => checkList.id !== id);
+        setNotes(newChecklists);
+    };
+
+    const addAgendaNote = () => {
+        let newAgenda = {
+            id: giveId(),
+            type: "agenda",
+            empty: true,
+            title: "",
+            list: [],
+            date: Date.now()
+        }
+        setNotes([newAgenda, ...notes]);
+    };
+
+    const updateAgendaNote = (agendaNew) => {
+        let newAgenda = notes.map(agenda => {
+            if (agenda.id === agendaNew.id) {
+                agenda.empty = false;
+                agenda.title = agendaNew.title;
+                // agenda.list = itemList.list;
+                agenda.date = Date.now();
+            }
+            return agenda
+        });
+        setNotes(newAgenda);
+    };
+
+    const deleteAgenda = (id) => {
         let newChecklists = notes.filter(checkList => checkList.id !== id);
         setNotes(newChecklists);
     };
@@ -107,6 +140,8 @@ const ListBox = (props) => {
                 className="mdi mdi-note-outline"/> &nbsp; Add Simple Note</button>
             <button className="button is-link is-light add-note-button" onClick={addCheckNote}><span
                 className="mdi mdi-playlist-check"/> &nbsp; Add Checklist</button>
+            <button className="button is-link is-light add-note-button" onClick={addAgendaNote}><span
+                className="mdi mdi-calendar-text"/> &nbsp; Add Planner</button>
             <div className="notes-list">
                 {notes.map(note => {
                     if (note.type === "simple-note") {
@@ -121,8 +156,16 @@ const ListBox = (props) => {
                                             handleUpdateCheckList={updateCheckList}
                                             handleDeleteCheckList={deleteCheckList}/>
                     }
+                    if (note.type === "agenda") {
+                        return <AgendaNote key={note.id}
+                                            items={note}
+                                           handleUpdateAgendaNote={updateAgendaNote}
+                                            handleDeleteAgenda={deleteAgenda}
+                        />
+                    }
                 })}
             </div>
+
         </div>
     );
 };

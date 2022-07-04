@@ -8,6 +8,18 @@
 
 @import "assets/normalize";
 
+// brand colors for dark mode
+$dark: #222;
+$dark-darker: #1d1d1d;
+$dark-light: #333;
+$dark-lighter: #444;
+$grey: #3a3f41;
+$grey-light: #bbb8b7;
+$grey-lighter: #cbc8c7;
+$blue: #4493de;
+$blue-light: #5ba5ea;
+$green: #2c7b41;
+$green-light: #2a9747;
 
 /* taking out the default styling of any button */
 button {
@@ -31,6 +43,7 @@ body {
     margin: 0 auto;
     padding: 0 0 60px 0;
     max-width: 1152px;
+    z-index: 0;
     @media (max-width: 376px){
         padding: 5px 0 50px 0;
     }
@@ -895,23 +908,49 @@ textarea:focus {
     color: #999796;
 }
 
+form {
+        .label {
+            color: $grey-light;
+        }
+        #category, #user_id, #category_color {
+            background-color: $dark-light;
+            color: $grey-light;
+            border: 1px solid $grey;
+        }
+        #date-picker {
+            input {
+                background-color: $dark-light;
+                color: $grey-light;
+                border: 1px solid $grey;
+            }
+        }
+        .react-datepicker {
+            border: 1px solid $grey;
+        }
+//this does not work:
+        .react-datepicker__triangle,  .react-datepicker-popper {
+            border-top-color: $grey;
+        }
+       .react-datepicker__month-container, .react-datepicker__header {
+            background-color: $dark-light;
+            color: $grey-light;
+            border: 1px solid $grey;
+       }
+       .react-datepicker__header {
+            background-color: $dark;
+       }
+       .react-datepicker__current-month,  .react-datepicker__day-name, .react-datepicker__day {
+            color: $grey-light;
+       }
+       button {
+            margin-bottom: 100px;
+       }
+    }
+
 
 /**
  * Bulma customization dark mode
  */
-
-// brand colors
-$dark: #222;
-$dark-darker: #1d1d1d;
-$dark-light: #333;
-$dark-lighter: #444;
-$grey: #3a3f41;
-$grey-light: #bbb8b7;
-$grey-lighter: #cbc8c7;
-$blue: #4493de;
-$blue-light: #5ba5ea;
-$green: #2c7b41;
-$green-light: #2a9747;
 
 .dark-mode {
     background-color: $dark;
