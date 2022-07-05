@@ -4,6 +4,7 @@ import (
 	"github.com/orionlab42/parmtracker/config"
 	"github.com/orionlab42/parmtracker/data/categories"
 	"github.com/orionlab42/parmtracker/data/expenses"
+	"github.com/orionlab42/parmtracker/data/notes"
 	"github.com/orionlab42/parmtracker/data/users"
 	"github.com/orionlab42/parmtracker/log"
 	"github.com/orionlab42/parmtracker/server"
@@ -27,6 +28,7 @@ func UpdateTablesVersion() {
 	categories.UpdateCategoriesTable()
 	expenses.UpdateExpensesTable()
 	users.UpdateUsersTable()
+	notes.UpdateNotesTable()
 }
 
 func main() {

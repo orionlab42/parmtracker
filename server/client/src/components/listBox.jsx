@@ -11,8 +11,8 @@ const ListBox = (props) => {
     // const [searchQuery, setSearchQuery] = useState("");
     const [id, setId] = useState(1);
 
-    // Sorts the notes by date even while a date is edited which is annoying
-    // const sortedNotes = notes.sort((a,b) => b.date - a.date);
+    // Sorts the notelist by date even while a date is edited which is annoying
+    // const sortedNotes = notelist.sort((a,b) => b.date - a.date);
 
     const giveId = () => {
         setId(id + 1);
@@ -20,7 +20,7 @@ const ListBox = (props) => {
     };
 
     useEffect(() => {
-        let savedNotes = JSON.parse(localStorage.getItem('react-notes-app-data'));
+        let savedNotes = JSON.parse(localStorage.getItem('react-notelist-app-data'));
         if (savedNotes) {
             setNotes(savedNotes);
             if (savedNotes[0]) {
@@ -30,7 +30,7 @@ const ListBox = (props) => {
     }, []);
 
     useEffect(() => {
-        localStorage.setItem('react-notes-app-data', JSON.stringify(notes));
+        localStorage.setItem('react-notelist-app-data', JSON.stringify(notes));
     }, [notes]);
 
     const addNote = () => {
@@ -51,6 +51,7 @@ const ListBox = (props) => {
             type: "checklist",
             empty: true,
             title: "",
+            text: "",
             list: [],
             date: Date.now()
         }
@@ -62,8 +63,8 @@ const ListBox = (props) => {
             id: giveId(),
             type: "agenda",
             empty: true,
-            // list: [],
             title: "",
+            text: "",
             date: Date.now()
         }
         setNotes([newAgenda, ...notes]);
@@ -91,12 +92,12 @@ const ListBox = (props) => {
     //     setSearchQuery(text);
     // };
 
-    // let notesToDisplay = notes;
+    // let notesToDisplay = notelist;
     // if (searchQuery) {
-    //     notesToDisplay = searchKeywordNotes(notes, searchQuery);
+    //     notesToDisplay = searchKeywordNotes(notelist, searchQuery);
     // }
     //
-    // console.log("All notes", notes);
+    console.log("All notelist", notes);
     return (
         <div className="notes-list-container">
             {/*<SearchBox value={searchQuery} onChange={searchNote}/>*/}
