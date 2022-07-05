@@ -945,6 +945,12 @@ textarea:focus {
             resize: none;
         }
     }
+    .agenda-item.checked {
+        input {
+            text-decoration: line-through;
+            color: #999796;
+        }
+    }
 }
 
 

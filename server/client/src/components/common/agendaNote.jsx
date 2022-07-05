@@ -39,7 +39,7 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
         if (lengthItemList <= 1) {
             let idItem = 0;
             for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
-                newItems.push({id: idItem, date: new Date(d), text: ""});
+                newItems.push({id: idItem, date: new Date(d), text: "", isComplete: false});
                 idItem++;
             }
         }
@@ -58,7 +58,7 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
                 for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
                     let existingItem = items.list.filter(item => (item.date.getTime() === d.getTime()));
                     if (existingItem.length > 0) {
-                        newItems.push({id: idItem, date: new Date(d), text: existingItem[0].text});
+                        newItems.push({id: idItem, date: new Date(d), text: existingItem[0].text, isComplete: existingItem[0].isComplete});
                         idItem++;
                     } else {
                         newItems.push({id: idItem, date: new Date(d), text: ""});
@@ -121,10 +121,22 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
         }
     };
 
+    const isCompleteItem = (id) => {
+        let newAgenda = updateAgendaNote;
+        newAgenda.list.map(item => {
+            if (item.id === id) {
+                item.isComplete = !item.isComplete;
+            }
+            return item;
+        });
+        setUpdateAgendaNote(newAgenda);
+        handleUpdateAgendaNote(updateAgendaNote);
+    };
+
     const itemList = (
         <form className="agenda-item-list">
-            {!items.empty && items.list.map((item)=>  <div className="agenda-item" key={item.id}>
-                <div className="agenda-item-date">
+            {!items.empty && items.list.map((item)=>  <div  className={item.isComplete ? 'checked agenda-item' : 'agenda-item'} key={item.id}>
+                <div className="agenda-item-date" onClick={(e) => isCompleteItem(item.id)}>
                     <span>{new Date(item.date).toLocaleDateString("en-US", {
                         month:  "short",
                         day:"numeric"

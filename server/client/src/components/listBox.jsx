@@ -127,6 +127,7 @@ const ListBox = (props) => {
                                            handleDeleteAgenda={deleteNote}
                         />
                     }
+                    return null
                 })}
             </div>
 

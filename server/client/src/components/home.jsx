@@ -1,7 +1,6 @@
-import React, {useState} from "react";
+import React from "react";
 import Link from "react-router-dom/Link";
 import ListBox from "./listBox";
-import DatePicker from "react-datepicker";
 
 const Home = (props) => {
     let menu;

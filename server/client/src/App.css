@@ -11469,6 +11469,10 @@ textarea:focus {
   outline: none;
   resize: none;
 }
+.agenda-item-list .agenda-item.checked input {
+  text-decoration: line-through;
+  color: #999796;
+}
 
 /**
  * Bulma customization dark mode
