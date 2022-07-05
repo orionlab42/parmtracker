@@ -226,10 +226,15 @@ func GetExpenseEntriesToSeriesByUser(filter string) []SeriesByUserAll {
 		mergedEntriesOneUser = CompleteEntriesMergedByCategories(mergedEntriesOneUser, catIds)
 		var data []float64
 		var cat []string
+		var total float64
 		for _, entries := range mergedEntriesOneUser {
+			total += entries.Amount
 			data = append(data, entries.Amount)
 			cat = append(cat, categories.GetCategoryName(entries.Category))
 		}
+		data = append([]float64{total}, data...)
+		cat = append([]string{"all"}, cat...)
+
 		seriesByUser := SeriesByUser{Name: users.GetUserName(id), Data: data, Categories: cat}
 		seriesByUserAll = append(seriesByUserAll, SeriesByUserAll{UserId: id, Series: seriesByUser})
 	}
