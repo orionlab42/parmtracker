@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import ReactMarkdown from "react-markdown";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
@@ -22,25 +21,53 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
     }, [dateRange]);
 
     const createItems = () => {
-        let emptyItems = [];
+        let newItems = [];
+        let lengthItemList = 0;
+        if (items.list) {
+            lengthItemList = items.list.length;
+        }
 
+        // this is the whenever it loads
         if (startDate === null || endDate === null) {
-            let lengthItemList = 0;
-            if (items.list) {
-                lengthItemList = items.list.length;
-            }
             if (lengthItemList <= 1) {
                 return [];
             }
            return  items.list;
         }
-        let idItem = 0;
-        for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
-            emptyItems.push({id: idItem, date: new Date(d), text: ""});
-            idItem = idItem + 1;
+
+        // this is the first time we enter a date range
+        if (lengthItemList <= 1) {
+            let idItem = 0;
+            for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
+                newItems.push({id: idItem, date: new Date(d), text: ""});
+                idItem++;
+            }
         }
 
-        return emptyItems
+        if (lengthItemList > 1) {
+            let prevStartDate = items.list[0].date;
+            let prevEndDate = items.list[lengthItemList-1].date;
+
+            // in case the new interval is smaller than the previous, we loose items
+            if (prevStartDate <= startDate && endDate <= prevEndDate) {
+                newItems = items.list.filter(item => (startDate <= item.date && item.date <= endDate))
+            }
+            // in case on one end of the interval we need to add new items
+            if (startDate < prevStartDate || prevEndDate < endDate) {
+                let idItem = 0;
+                for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
+                    let existingItem = items.list.filter(item => (item.date.getTime() === d.getTime()));
+                    if (existingItem.length > 0) {
+                        newItems.push({id: idItem, date: new Date(d), text: existingItem[0].text});
+                        idItem++;
+                    } else {
+                        newItems.push({id: idItem, date: new Date(d), text: ""});
+                        idItem++;
+                    }
+                }
+            }
+        }
+        return newItems
     };
 
     const renderTitleInput = () => {
@@ -67,7 +94,6 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
     );
 
     const itemChange = (e, date) => {
-        console.log("text",e.target.value);
         let newAgenda = updateAgendaNote;
         newAgenda.list.map(item => {
             if (item.date === date) {
@@ -79,9 +105,25 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
         handleUpdateAgendaNote(updateAgendaNote);
     };
 
+    const handleEnter = (event) => {
+        if (event.key.toLowerCase() === "enter") {
+            let form = event.target.form;
+            let index = [...form].indexOf(event.target);
+            let formLength = form.elements.length;
+            if (index < formLength - 1) {
+                form.elements[index + 1].focus();
+                event.preventDefault();
+            }
+            if (index === formLength - 1) {
+                form.elements[0].focus();
+                event.preventDefault();
+            }
+        }
+    };
+
     const itemList = (
-        <div className="agenda-item-list">
-            {!items.empty && items.list.map(item =>  <div className="agenda-item" key={item.id}>
+        <form className="agenda-item-list">
+            {!items.empty && items.list.map((item)=>  <div className="agenda-item" key={item.id}>
                 <div className="agenda-item-date">
                     <span>{new Date(item.date).toLocaleDateString("en-US", {
                         month:  "short",
@@ -94,9 +136,10 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
                 <input
                     value={item.text}
                     onChange={(e) => itemChange(e, item.date)}
+                    onKeyDown={handleEnter}
                 />
             </div>)}
-        </div>
+        </form>
     );
 
     return (
