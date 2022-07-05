@@ -13,6 +13,7 @@ type Note struct {
 	NoteTitle string    `json:"note_title"`
 	NoteText  string    `json:"note_text"`
 	NoteEmpty bool      `json:"note_empty"`
+	NoteItems []Item    `json:"note_items"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -40,6 +41,7 @@ func (n *Note) Load(id int) error {
 		}
 		n.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
 		n.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
+		n.NoteItems = GetItemsByNoteId(n.NoteId)
 	}
 	return nil
 }
@@ -100,7 +102,7 @@ func GetNotes() Notes {
 	defer stmt.Close()
 	rows, e := stmt.Query()
 	if e != nil {
-		fmt.Printf("Error when preparing stmt in getting all users: %s", e.Error())
+		fmt.Printf("Error when preparing stmt in getting all notes: %s", e.Error())
 		return Notes{}
 	}
 	defer rows.Close()
@@ -111,11 +113,12 @@ func GetNotes() Notes {
 		var updatedAt string
 		e := rows.Scan(&note.NoteId, &note.UserId, &note.NoteType, &note.NoteTitle, &note.NoteText, &note.NoteEmpty, &createdAt, &updatedAt)
 		if e != nil {
-			fmt.Printf("Error when loading users: %s", e.Error())
+			fmt.Printf("Error when loading notes: %s", e.Error())
 			return Notes{}
 		}
 		note.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
 		note.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
+		note.NoteItems = GetItemsByNoteId(note.NoteId)
 		notes = append(notes, note)
 	}
 	return notes

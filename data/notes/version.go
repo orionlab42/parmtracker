@@ -38,8 +38,27 @@ func updateV1M0(version string) string {
 			return version
 		}
 		log.GetInstance().Infof(LogPrefix, "Table notes created.")
-
 		version = "v1.0-0"
+		settings.UpdateVersion(PackageName, version)
+	}
+	if version == "v1.0-0" {
+		query := `create table if not exists note_items (
+					item_id int(11) unsigned not null auto_increment,
+					note_id int(11) not null,
+					item_text varchar(255) not null,
+					item_is_complete boolean  not null default false,
+					item_date varchar(255)  not null,
+					created_at datetime not null default now(),
+					updated_at datetime not null default now(),
+					PRIMARY KEY (item_id)
+					);`
+		_, e := db.Exec(query)
+		if e != nil {
+			log.GetInstance().Errorf(LogPrefix, "Trouble at creating note_items table: ", e)
+			return version
+		}
+		log.GetInstance().Infof(LogPrefix, "Table note_items created.")
+		version = "v1.0-1"
 		settings.UpdateVersion(PackageName, version)
 	}
 	return version
