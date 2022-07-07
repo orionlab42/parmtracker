@@ -18,7 +18,7 @@ const Home = (props) => {
     return (
         <div>
             {menu}
-            <ListBox/>
+            <ListBox user={props.user}/>
         </div>
     );
 };

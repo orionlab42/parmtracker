@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 
-const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
+const AgendaNote = ({ items, onDeleteAgendaNote }) => {
     const [updateAgendaNote, setUpdateAgendaNote] = useState(items);
     const [titleOn, setTitleOn] = useState(false);
     const [dateRange, setDateRange] = useState([null, null]);
@@ -17,7 +17,7 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
         let newAgenda = updateAgendaNote;
         newAgenda.list = createItems();
         setUpdateAgendaNote(newAgenda);
-        handleUpdateAgendaNote(newAgenda);
+        // handleUpdateAgendaNote(newAgenda);
     }, [dateRange]);
 
     const createItems = () => {
@@ -78,7 +78,7 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
         let newNote = updateAgendaNote;
         newNote.title = e.target.value
         setUpdateAgendaNote(newNote);
-        handleUpdateAgendaNote(newNote);
+        // handleUpdateAgendaNote(newNote);
     }
 
     const title = (
@@ -102,7 +102,7 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
             return item;
         });
         setUpdateAgendaNote(newAgenda);
-        handleUpdateAgendaNote(updateAgendaNote);
+        // handleUpdateAgendaNote(updateAgendaNote);
     };
 
     const handleEnter = (event) => {
@@ -130,12 +130,12 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
             return item;
         });
         setUpdateAgendaNote(newAgenda);
-        handleUpdateAgendaNote(updateAgendaNote);
+        // handleUpdateAgendaNote(updateAgendaNote);
     };
 
     const itemList = (
         <form className="agenda-item-list">
-            {!items.empty && items.list.map((item)=>  <div  className={item.isComplete ? 'checked agenda-item' : 'agenda-item'} key={item.id}>
+            {!items.note_empty && items.list.map((item)=>  <div  className={item.isComplete ? 'checked agenda-item' : 'agenda-item'} key={item.id}>
                 <div className="agenda-item-date" onClick={(e) => isCompleteItem(item.id)}>
                     <span>{new Date(item.date).toLocaleDateString("en-US", {
                         month:  "short",
@@ -156,7 +156,7 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
 
     return (
         <div className="note">
-            {!titleOn && <h4 className="note-title">{items.title}</h4>}
+            {!titleOn && <h4 className="note-title">{items.note_title}</h4>}
             {titleOn && title}
             <div className="note-body">
                 <div className="note-content">
@@ -170,9 +170,9 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
                             isClearable={true}
                         />
                     </div>
-                    { !items.empty && itemList}
+                    { !items.note_empty && itemList}
                     <div className="note-footer">
-                        <small>{!items.empty ? "Last modified:" +  new Date(items.date).toLocaleDateString("en-GB", {
+                        <small>{!items.note_empty ? "Last modified:" +  new Date(items.updated_at).toLocaleDateString("en-GB", {
                             hour: "2-digit",
                             minute:  "2-digit",
                         }) : ""}</small>
@@ -185,7 +185,7 @@ const AgendaNote = ({ items, handleDeleteAgenda, handleUpdateAgendaNote }) => {
 
                     </div>
                     <button className="button is-link is-light  mdi mdi-trash-can-outline"
-                            onClick={() => handleDeleteAgenda(items.id)}/>
+                            onClick={() => onDeleteAgendaNote(items.note_id)}/>
                 </div>
             </div>
         </div>

@@ -9,6 +9,7 @@ import (
 	"github.com/orionlab42/parmtracker/data/categories"
 	"github.com/orionlab42/parmtracker/data/expenses"
 	"github.com/orionlab42/parmtracker/data/filters"
+	"github.com/orionlab42/parmtracker/data/notes"
 	"github.com/orionlab42/parmtracker/data/users"
 	"golang.org/x/crypto/bcrypt"
 	"io"
@@ -621,6 +622,134 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	err = user.Save()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+}
+
+// Notes is a handler for: /api/notes
+func Notes(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	n := notes.GetNotes()
+	if err := json.NewEncoder(w).Encode(n); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+type NoteFrontEnd struct {
+	NoteId    string `json:"note_id"`
+	UserId    int    `json:"user_id"`
+	NoteType  int    `json:"note_type"`
+	NoteTitle string `json:"note_title"`
+	NoteText  string `json:"note_text"`
+	NoteEmpty bool   `json:"note_empty"`
+}
+
+// NoteNew is a handler for: /api/notes
+func NoteNew(w http.ResponseWriter, r *http.Request) {
+	var noteFE NoteFrontEnd
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := json.Unmarshal(body, &noteFE); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	var note notes.Note
+	note.UserId = noteFE.UserId
+	note.NoteType = noteFE.NoteType
+	note.NoteTitle = noteFE.NoteTitle
+	note.NoteText = noteFE.NoteText
+	note.NoteEmpty = noteFE.NoteEmpty
+	err = note.Insert()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
+}
+
+// NoteUpdate is a handler for: /api/notes/{id}
+func NoteUpdate(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	noteId := vars["id"]
+	var note notes.Note
+	id, err := strconv.Atoi(noteId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := note.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The note with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	if err := json.Unmarshal(body, &note); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	err = note.Save()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+}
+
+// NoteDelete is a handler for: /api/notes/{id}
+func NoteDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	noteId := vars["id"]
+	var note notes.Note
+	id, err := strconv.Atoi(noteId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := note.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The note with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	err = note.Delete()
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return

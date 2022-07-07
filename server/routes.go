@@ -34,6 +34,11 @@ var routes = Routes{
 	Route{"CategoryDelete", http.MethodDelete, "/api/categories/{id}", true, api.CategoryDelete},
 	Route{"UpdateUser", http.MethodPut, "/api/user/update-settings/{id}", true, api.UpdateUser},
 
+	Route{"Notes", http.MethodGet, "/api/notes", true, api.Notes},
+	Route{"NoteNew", http.MethodPost, "/api/notes", true, api.NoteNew},
+	Route{"NoteUpdate", http.MethodPut, "/api/notes/{id}", true, api.NoteUpdate},
+	Route{"NoteDelete", http.MethodDelete, "/api/notes/{id}", true, api.NoteDelete},
+
 	Route{"UserRegister", http.MethodPost, "/api/register", false, api.UserRegister},
 	Route{"UserLogin", http.MethodPost, "/api/login", false, api.UserLogin},
 	Route{"User", http.MethodGet, "/api/user", false, api.User},

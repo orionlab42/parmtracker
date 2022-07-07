@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import CheckListForm from "./checkListForm";
 import CheckListItems from "./checkListItems";
 
-const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
+const CheckList = ({ items, handleUpdateCheckList, onDeleteCheckList }) => {
     const [idItem, setIdItem] = useState(1);
     const [checkList, setCheckList] = useState([]);
     const [titleOn, setTitleOn] = useState(false);
@@ -77,7 +77,7 @@ const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
     return (
         <div className="note checklist">
             <div className="checklist-container">
-                {!titleOn && <h4 className="note-title">{items.title}</h4>}
+                {!titleOn && <h4 className="note-title">{items.note_title}</h4>}
                 {titleOn && title}
                 <div className="checklist-top">
                     <CheckListForm onSubmit={addItem} newIdItem={idItem} increaseIdItem={setIdItem}/>
@@ -86,22 +86,22 @@ const CheckList = ({ items, handleUpdateCheckList, handleDeleteCheckList }) => {
                 </div>
                 <div className="checklist-main">
                     <div className="checklist-body">
-                        <CheckListItems
-                            items={items.list}
+                        {!items.note_empty && <CheckListItems
+                            items={items.note_list}
                             handleCompleteItem={completeItem}
                             handleDeleteItem={deleteItem}
                             handleUpdateItem={updateItem}
                             newIdItem={idItem}
-                            increaseIdItem={setIdItem}/>
+                            increaseIdItem={setIdItem}/>}
                         <div className="note-footer">
-                            <small>{!items.empty ? "Last modified:" +  new Date(items.date).toLocaleDateString("en-GB", {
+                            <small>{!items.note_empty ? "Last modified:" +  new Date(items.updated_at).toLocaleDateString("en-GB", {
                                 hour: "2-digit",
                                 minute:  "2-digit",
                             }) : ""}</small>
                         </div>
                     </div>
                     <button className="button is-link is-light  mdi mdi-trash-can-outline"
-                            onClick={() => handleDeleteCheckList(items.id)}/>
+                            onClick={() => onDeleteCheckList(items.note_id)}/>
                 </div>
             </div>
         </div>
