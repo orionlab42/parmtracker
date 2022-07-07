@@ -19,8 +19,8 @@ export function deleteNote(id) {
 // }
 
 export function saveNote(note) {
-    // if (typeof note.note_id !== "string") {
-    if (note.note_id) {
+    if (typeof note.note_id !== "string") {
+    // if (note.note_id) {
         const body = { ...note };
         delete body.id;
         console.log("Service update", body);
