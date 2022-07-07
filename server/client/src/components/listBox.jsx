@@ -109,7 +109,7 @@ const ListBox = ({user}) => {
                     }
                     if (note.note_type === typeAgenda) {
                         return <AgendaNote key={note.note_id}
-                                           items={note}
+                                           note={note}
                                            onDeleteAgendaNote={handleDeleteNote}
                         />
                     }

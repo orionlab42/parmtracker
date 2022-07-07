@@ -19,7 +19,7 @@ const CheckList = ({ note, onDeleteNote }) => {
     useEffect(() => {
         async function getAllItems() {
             const {data: newItems} = await getItems(note.note_id);
-            if (newItems != null) {
+            if (newItems !== null) {
                 setItems(newItems);
             }
         }

@@ -1,30 +1,49 @@
 import React, {useEffect, useState} from "react";
 import DatePicker from "react-datepicker";
+import { v4 as uuidv4 } from 'uuid';
 
 import "react-datepicker/dist/react-datepicker.css";
+import {getItems, saveNote} from "../../services/noteService";
 
-const AgendaNote = ({ items, onDeleteAgendaNote }) => {
-    const [updateAgendaNote, setUpdateAgendaNote] = useState(items);
-    const [titleOn, setTitleOn] = useState(false);
+const AgendaNote = ({ note, onDeleteAgendaNote }) => {
+    const [items, setItems] = useState({});
+
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
 
-    useEffect(() => {
-        setUpdateAgendaNote(items);
-    }, [items]);
+    const [titleOn, setTitleOn] = useState(false);
+    const [editText, setEditText] = useState({});
+
+    const [timeToGetItems, setTimeToGetItems] = useState(true);
 
     useEffect(() => {
-        let newAgenda = updateAgendaNote;
-        newAgenda.list = createItems();
-        setUpdateAgendaNote(newAgenda);
-        // handleUpdateAgendaNote(newAgenda);
+        setEditText({
+            note_empty: note.note_empty,
+            note_title: note.note_title,
+            updated_at: note.updated_at});
+    }, []);
+
+    useEffect(() => {
+        async function getAllItems() {
+            const {data: newItems} = await getItems(note.note_id);
+            if (newItems != null) {
+                setItems(newItems);
+            }
+        }
+        getAllItems();
+    }, [timeToGetItems]);
+
+
+    useEffect(() => {
+        let newItems = createItems();
+        setItems(newItems);
     }, [dateRange]);
 
     const createItems = () => {
         let newItems = [];
         let lengthItemList = 0;
-        if (items.list) {
-            lengthItemList = items.list.length;
+        if (note.note_items !== null) {
+            lengthItemList = note.note_items.length;
         }
 
         // this is the whenever it loads
@@ -32,31 +51,29 @@ const AgendaNote = ({ items, onDeleteAgendaNote }) => {
             if (lengthItemList <= 1) {
                 return [];
             }
-           return  items.list;
+           return  note.note_items;
         }
 
         // this is the first time we enter a date range
         if (lengthItemList <= 1) {
-            let idItem = 0;
             for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
-                newItems.push({id: idItem, date: new Date(d), text: "", isComplete: false});
-                idItem++;
+                newItems.push({item_id: uuidv4(), item_date: new Date(d), item_text: "", item_is_complete: false});
             }
         }
 
         if (lengthItemList > 1) {
-            let prevStartDate = items.list[0].date;
-            let prevEndDate = items.list[lengthItemList-1].date;
+            let prevStartDate = note.note_items[0].date;
+            let prevEndDate = note.note_items[lengthItemList-1].date;
 
             // in case the new interval is smaller than the previous, we loose items
             if (prevStartDate <= startDate && endDate <= prevEndDate) {
-                newItems = items.list.filter(item => (startDate <= item.date && item.date <= endDate))
+                newItems = note.note_items.filter(item => (startDate <= item.date && item.date <= endDate))
             }
             // in case on one end of the interval we need to add new items
             if (startDate < prevStartDate || prevEndDate < endDate) {
                 let idItem = 0;
                 for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
-                    let existingItem = items.list.filter(item => (item.date.getTime() === d.getTime()));
+                    let existingItem = note.note_items.filter(item => (item.date.getTime() === d.getTime()));
                     if (existingItem.length > 0) {
                         newItems.push({id: idItem, date: new Date(d), text: existingItem[0].text, isComplete: existingItem[0].isComplete});
                         idItem++;
@@ -70,38 +87,37 @@ const AgendaNote = ({ items, onDeleteAgendaNote }) => {
         return newItems
     };
 
-    const renderTitleInput = () => {
-        setTitleOn(!titleOn);
-    };
-
-    const titleChange = (e) => {
-        let newNote = updateAgendaNote;
-        newNote.title = e.target.value
-        setUpdateAgendaNote(newNote);
-        // handleUpdateAgendaNote(newNote);
+    const editTitle = (e) => {
+        setEditText({note_title: e.target.value, updated_at: new Date()});
     }
+
+    const renderTitleInput = async () => {
+        setTitleOn(!titleOn);
+        let noteUpdate = {note_id: note.note_id, note_empty: false, note_title: editText.note_title };
+        await saveNote(noteUpdate);
+    };
 
     const title = (
         <input
             className="title-input edit"
             type="text"
             placeholder="Title here..."
-            value={items.title}
+            value={ editText.note_title }
             name="text"
-            onChange={titleChange}
+            onChange={editTitle}
             autoFocus
         />
     );
 
     const itemChange = (e, date) => {
-        let newAgenda = updateAgendaNote;
+        let newAgenda = items;
         newAgenda.list.map(item => {
             if (item.date === date) {
                 item.text = e.target.value;
             }
             return item;
         });
-        setUpdateAgendaNote(newAgenda);
+        setItems(newAgenda);
         // handleUpdateAgendaNote(updateAgendaNote);
     };
 
@@ -122,20 +138,20 @@ const AgendaNote = ({ items, onDeleteAgendaNote }) => {
     };
 
     const isCompleteItem = (id) => {
-        let newAgenda = updateAgendaNote;
+        let newAgenda = items;
         newAgenda.list.map(item => {
             if (item.id === id) {
                 item.isComplete = !item.isComplete;
             }
             return item;
         });
-        setUpdateAgendaNote(newAgenda);
+        setItems(newAgenda);
         // handleUpdateAgendaNote(updateAgendaNote);
     };
 
     const itemList = (
         <form className="agenda-item-list">
-            {!items.note_empty && items.list.map((item)=>  <div  className={item.isComplete ? 'checked agenda-item' : 'agenda-item'} key={item.id}>
+            {!note.note_empty && items.map((item)=>  <div  className={item.isComplete ? 'checked agenda-item' : 'agenda-item'} key={item.id}>
                 <div className="agenda-item-date" onClick={(e) => isCompleteItem(item.id)}>
                     <span>{new Date(item.date).toLocaleDateString("en-US", {
                         month:  "short",
@@ -156,7 +172,7 @@ const AgendaNote = ({ items, onDeleteAgendaNote }) => {
 
     return (
         <div className="note">
-            {!titleOn && <h4 className="note-title">{items.note_title}</h4>}
+            {!titleOn && <h4 className="note-title">{editText.note_title}</h4>}
             {titleOn && title}
             <div className="note-body">
                 <div className="note-content">
@@ -170,9 +186,9 @@ const AgendaNote = ({ items, onDeleteAgendaNote }) => {
                             isClearable={true}
                         />
                     </div>
-                    { !items.note_empty && itemList}
+                    { !note.note_empty && itemList}
                     <div className="note-footer">
-                        <small>{!items.note_empty ? "Last modified:" +  new Date(items.updated_at).toLocaleDateString("en-GB", {
+                        <small>{!note.note_empty ? "Last modified:" +  new Date(note.updated_at).toLocaleDateString("en-GB", {
                             hour: "2-digit",
                             minute:  "2-digit",
                         }) : ""}</small>
@@ -185,7 +201,7 @@ const AgendaNote = ({ items, onDeleteAgendaNote }) => {
 
                     </div>
                     <button className="button is-link is-light  mdi mdi-trash-can-outline"
-                            onClick={() => onDeleteAgendaNote(items.note_id)}/>
+                            onClick={() => onDeleteAgendaNote(note.note_id)}/>
                 </div>
             </div>
         </div>

@@ -45,10 +45,10 @@ export function saveItem(item) {
     // if (note.note_id) {
         const body = { ...item };
         delete body.id;
-        // console.log("Service update title", body);
+        console.log("Service update title", body);
         return http.put(itemUrl(item.item_id), body);
     }
-    // console.log("Service save", item);
+    console.log("Service save", item);
     return http.post(apiEndpointItem, item);
 }
 
