@@ -776,6 +776,24 @@ func Items(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// ItemsDelete is a handler for: /api/notes/items/{id}  -here we are having the note id
+func ItemsDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	noteId := vars["id"]
+	id, err := strconv.Atoi(noteId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	notes.DeleteByNoteId(id)
+	if err := json.NewEncoder(w).Encode("Deleted all items from note: " + noteId); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
 type ItemFrontEnd struct {
 	ItemId         string `json:"item_id"`
 	NoteId         int    `json:"note_id"`

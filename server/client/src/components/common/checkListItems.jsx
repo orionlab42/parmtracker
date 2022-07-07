@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import CheckListForm from "./checkListForm";
 
-const CheckListItems = ({ items, handleCompleteItem, handleDeleteItem, handleUpdateItem }) => {
+const CheckListItems = ({ allItems, handleCompleteItem, handleDeleteItem, handleUpdateItem }) => {
     const [edit, setEdit] = useState({
         item_id: null,
         item_text: '',
@@ -22,7 +22,7 @@ const CheckListItems = ({ items, handleCompleteItem, handleDeleteItem, handleUpd
 
     return (
         <div className="checklist-item-container">
-            {items && items.map(item => (
+            {allItems && allItems.map(item => (
                 <div key={item.item_id}
                      className={item.item_is_complete ? 'checked checklist-item' : 'checklist-item note-content'}>
                     <div key={item.item_id}

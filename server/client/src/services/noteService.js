@@ -1,6 +1,7 @@
 import http from './httpService';
 
 const  apiEndpointNotes = '/notes';
+const  apiEndpointItem = '/notes/item';
 const  apiEndpointItems = '/notes/items';
 
 function noteUrl(id) {
@@ -8,6 +9,10 @@ function noteUrl(id) {
 }
 
 function itemUrl(id) {
+    return `${apiEndpointItem}/${id}`;
+}
+
+function itemsUrl(id) {
     return `${apiEndpointItems}/${id}`;
 }
 
@@ -40,17 +45,21 @@ export function saveItem(item) {
     // if (note.note_id) {
         const body = { ...item };
         delete body.id;
-        console.log("Service update", body);
+        // console.log("Service update title", body);
         return http.put(itemUrl(item.item_id), body);
     }
-    console.log("Service save", item);
-    return http.post(apiEndpointItems, item);
-}
-
-export function getItems(noteId) {
-    return http.get(itemUrl(noteId));
+    // console.log("Service save", item);
+    return http.post(apiEndpointItem, item);
 }
 
 export function deleteItem(id) {
     return http.delete(itemUrl(id));
+}
+
+export function getItems(noteId) {
+    return http.get(itemsUrl(noteId));
+}
+
+export function deleteItems(noteId) {
+    return http.delete(itemsUrl(noteId));
 }

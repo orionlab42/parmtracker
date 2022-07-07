@@ -10,9 +10,15 @@ const CheckList = ({ note, onDeleteNote }) => {
     const [timeToGetItems, setTimeToGetItems] = useState(true);
 
     useEffect(() => {
+        setEditText({
+            note_empty: note.note_empty,
+            note_title: note.note_title,
+            updated_at: note.updated_at});
+    }, []);
+
+    useEffect(() => {
         async function getAllItems() {
             const {data: newItems} = await getItems(note.note_id);
-            console.log("items from server", newItems)
             if (newItems != null) {
                 setItems(newItems);
             }
@@ -22,37 +28,40 @@ const CheckList = ({ note, onDeleteNote }) => {
 
     const addItem = async item => {
         if (item.item_text.trim().length > 0) {
-            let newCheckList = [...items, item];
-            setItems(newCheckList);
             item.note_id = note.note_id;
-            await saveItem(item).then();
+            note.note_empty = false;
+            setItems([...items, item]);
             setTimeToGetItems(!timeToGetItems);
+            setEditText({updated_at: new Date()});
+            await saveItem(item);
+            await saveNote(note);
         }
     };
 
     const completeItem = async (id) => {
         let updatedItem;
-        let newCheckList = items.map(item => {
+        let newItems = items.map(item => {
             if (item.item_id === id) {
                 item.item_is_complete = !item.item_is_complete;
                 updatedItem = item;
             }
             return item
         });
-        setItems(newCheckList);
+        setItems(newItems);
+        setEditText({updated_at: new Date()});
         await saveItem(updatedItem);
     };
 
     const removeItem = async (id) => {
-        let newCheckList = items.filter(item => item.item_id !== id);
-        setItems(newCheckList);
-        await deleteItem(id);
+        let newItems = items.filter(item => item.item_id !== id);
+        setItems(newItems);
         setTimeToGetItems(!timeToGetItems);
+        await deleteItem(id);
     };
 
     const updateItem = async (id, newValue, isComplete) => {
         let updatedItem;
-        let newCheckList = items.map(item => {
+        let newItems = items.map(item => {
             if (item.item_id === id) {
                 item.item_text = newValue.item_text;
                 item.item_is_complete = isComplete;
@@ -60,15 +69,13 @@ const CheckList = ({ note, onDeleteNote }) => {
             }
             return item
         });
-        setItems(newCheckList);
+        setItems(newItems);
+        setEditText({updated_at: new Date()})
         await saveItem(updatedItem);
     };
 
     const editTitle = (e) => {
-        setEditText({
-            note_title: e.target.value,
-            updated_at: new Date()
-        })
+        setEditText({note_title: e.target.value, updated_at: new Date()});
     }
 
     const renderTitleInput = async () => {
@@ -102,13 +109,13 @@ const CheckList = ({ note, onDeleteNote }) => {
                 <div className="checklist-main">
                     <div className="checklist-body">
                         {!note.note_empty && <CheckListItems
-                            items={items}
+                            allItems={items}
                             handleCompleteItem={completeItem}
                             handleDeleteItem={removeItem}
                             handleUpdateItem={updateItem}
                         />}
                         <div className="note-footer">
-                            <small>{!note.note_empty ? "Last modified:" +  new Date(note.updated_at).toLocaleDateString("en-GB", {
+                            <small>{!note.note_empty ? "Last modified:" +  new Date(editText.updated_at).toLocaleDateString("en-GB", {
                                 hour: "2-digit",
                                 minute:  "2-digit",
                             }) : ""}</small>

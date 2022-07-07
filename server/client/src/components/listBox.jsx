@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Note from "./common/note";
 import CheckList from "./common/checkList";
 import AgendaNote from "./common/agendaNote";
-import {deleteNote, getNotes, saveNote} from "../services/noteService";
+import {deleteItems, deleteNote, getNotes, saveNote} from "../services/noteService";
 import {toast} from "react-toastify";
 // import {searchKeywordNotes} from "../utils/search";
 // import SearchBox from "./searchBox";
@@ -62,6 +62,7 @@ const ListBox = ({user}) => {
         setNotes(updatedNotes);
         try {
             await deleteNote(id)
+            await deleteItems(id)
         } catch (ex) {
             if (ex.response && ex.response.status === 404)
                 toast('This note has already been deleted.');
@@ -80,7 +81,7 @@ const ListBox = ({user}) => {
 
 
     // console.log("All notes", notes);
-    console.log("All notes from server", notes);
+    // console.log("All notes from server", notes);
 
     return (
         <div className="notes-list-container">

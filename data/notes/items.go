@@ -130,3 +130,20 @@ func GetItemsByNoteId(noteId int) Items {
 	}
 	return items
 }
+
+func DeleteByNoteId(noteId int) {
+	allItems := GetItemsByNoteId(noteId)
+	for _, item := range allItems {
+		var i Item
+		e := i.Load(item.ItemId)
+		if e != nil {
+			fmt.Printf("Error when deleting items: %s", e.Error())
+			return
+		}
+		e = i.Delete()
+		if e != nil {
+			fmt.Printf("Error when deleting items: %s", e.Error())
+			return
+		}
+	}
+}
