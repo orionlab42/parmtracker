@@ -80,7 +80,7 @@ const ListBox = ({user}) => {
 
 
     // console.log("All notes", notes);
-    // console.log("All notes from server", notes);
+    console.log("All notes from server", notes);
 
     return (
         <div className="notes-list-container">
@@ -103,8 +103,8 @@ const ListBox = ({user}) => {
                     }
                     if (note.note_type === typeChecklist) {
                         return <CheckList key={note.note_id}
-                                          items={note}
-                                          onDeleteCheckList={handleDeleteNote}/>
+                                          note={note}
+                                          onDeleteNote={handleDeleteNote}/>
                     }
                     if (note.note_type === typeAgenda) {
                         return <AgendaNote key={note.note_id}

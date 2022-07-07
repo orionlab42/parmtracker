@@ -1,8 +1,9 @@
 import React, {useState} from "react";
+import {v4 as uuidv4} from "uuid";
 // import React, {useEffect, useRef, useState} from "react";
 
 const CheckListForm = (props) => {
-    const [input, setInput] = useState(props.edit ? props.edit.text : '');
+    const [input, setInput] = useState(props.edit ? props.edit.item_text : '');
     // const inputRef = useRef(null);
 
     // useEffect(() => {
@@ -17,19 +18,18 @@ const CheckListForm = (props) => {
         e.preventDefault();
         if (props.edit) {
             props.onSubmit({
-                id: props.edit.id,
-                text: input,
-                isComplete: props.edit.isComplete
+                item_id: props.edit.item_id,
+                item_text: input,
+                item_is_complete: props.edit.item_is_complete
             });
         } else {
             props.onSubmit({
-                id: props.newIdItem,
-                text: input,
-                isComplete: false
+                item_id: uuidv4(),
+                item_text: input,
+                item_is_complete: false
             });
         }
         setInput('');
-        props.increaseIdItem(props.newIdItem + 1);
     };
 
     return (

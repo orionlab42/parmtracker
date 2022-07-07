@@ -757,3 +757,136 @@ func NoteDelete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 }
+
+// Items is a handler for: /api/notes/items/{id}  -here we are having the note id
+func Items(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	noteId := vars["id"]
+	id, err := strconv.Atoi(noteId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	i := notes.GetItemsByNoteId(id)
+	if err := json.NewEncoder(w).Encode(i); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+type ItemFrontEnd struct {
+	ItemId         string `json:"item_id"`
+	NoteId         int    `json:"note_id"`
+	ItemText       string `json:"item_text"`
+	ItemIsComplete bool   `json:"item_is_complete"`
+	ItemDate       string `json:"item_date"`
+}
+
+// ItemNew is a handler for: /api/notes/items
+func ItemNew(w http.ResponseWriter, r *http.Request) {
+	var itemFE ItemFrontEnd
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := json.Unmarshal(body, &itemFE); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	var item notes.Item
+	item.NoteId = itemFE.NoteId
+	item.ItemText = itemFE.ItemText
+	item.ItemIsComplete = itemFE.ItemIsComplete
+	item.ItemDate = itemFE.ItemDate
+	err = item.Insert()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
+}
+
+// ItemUpdate is a handler for: /api/notes/items/{id}
+func ItemUpdate(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	itemId := vars["id"]
+	var item notes.Item
+	id, err := strconv.Atoi(itemId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := item.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The item with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	if err := json.Unmarshal(body, &item); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	err = item.Save()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+}
+
+// ItemDelete is a handler for: /api/notes/items/{id}
+func ItemDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	itemId := vars["id"]
+	var item notes.Item
+	id, err := strconv.Atoi(itemId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := item.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The note with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	err = item.Delete()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+}

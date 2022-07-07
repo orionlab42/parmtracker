@@ -1,107 +1,121 @@
 import React, {useState, useEffect} from "react";
 import CheckListForm from "./checkListForm";
 import CheckListItems from "./checkListItems";
+import {saveNote, saveItem, deleteItem, getNotes, getItems} from "../../services/noteService";
 
-const CheckList = ({ items, handleUpdateCheckList, onDeleteCheckList }) => {
-    const [idItem, setIdItem] = useState(1);
-    const [checkList, setCheckList] = useState([]);
+const CheckList = ({ note, onDeleteNote }) => {
+    const [items, setItems] = useState([]);
     const [titleOn, setTitleOn] = useState(false);
+    const [editText, setEditText] = useState({});
+    const [timeToGetItems, setTimeToGetItems] = useState(true);
 
     useEffect(() => {
-        setCheckList(items);
-    }, [items]);
+        async function getAllItems() {
+            const {data: newItems} = await getItems(note.note_id);
+            console.log("items from server", newItems)
+            if (newItems != null) {
+                setItems(newItems);
+            }
+        }
+        getAllItems();
+    }, [timeToGetItems]);
 
-    const addItem = item => {
-        if (item.text.trim().length > 0) {
-            let newCheckList = checkList;
-            newCheckList.list = [...checkList.list, item];
-            setCheckList(newCheckList);
-            handleUpdateCheckList(checkList);
+    const addItem = async item => {
+        if (item.item_text.trim().length > 0) {
+            let newCheckList = [...items, item];
+            setItems(newCheckList);
+            item.note_id = note.note_id;
+            await saveItem(item).then();
+            setTimeToGetItems(!timeToGetItems);
         }
     };
 
-    const completeItem = (id) => {
-        let newCheckList = checkList;
-        newCheckList.list = checkList.list.map(item => {
-            if (item.id === id) {
-                item.isComplete = !item.isComplete;
+    const completeItem = async (id) => {
+        let updatedItem;
+        let newCheckList = items.map(item => {
+            if (item.item_id === id) {
+                item.item_is_complete = !item.item_is_complete;
+                updatedItem = item;
             }
             return item
         });
-        setCheckList(newCheckList);
-        handleUpdateCheckList(checkList);
+        setItems(newCheckList);
+        await saveItem(updatedItem);
     };
 
-    const deleteItem = (id) => {
-        let newCheckList = checkList;
-        newCheckList.list = checkList.list.filter(item => item.id !== id);
-        setCheckList(newCheckList);
-        handleUpdateCheckList(checkList);
+    const removeItem = async (id) => {
+        let newCheckList = items.filter(item => item.item_id !== id);
+        setItems(newCheckList);
+        await deleteItem(id);
+        setTimeToGetItems(!timeToGetItems);
     };
 
-    const updateItem = (id, newValue, isComplete) => {
-        let newCheckList = checkList;
-        newCheckList.list = checkList.list.map(item => {
-            if (item.id === id) {
-                item.text = newValue.text;
-                item.isComplete = isComplete;
+    const updateItem = async (id, newValue, isComplete) => {
+        let updatedItem;
+        let newCheckList = items.map(item => {
+            if (item.item_id === id) {
+                item.item_text = newValue.item_text;
+                item.item_is_complete = isComplete;
+                updatedItem = item;
             }
             return item
         });
-        setCheckList(newCheckList);
-        handleUpdateCheckList(checkList);
+        setItems(newCheckList);
+        await saveItem(updatedItem);
     };
 
-    const renderTitleInput = () => {
-        setTitleOn(!titleOn);
-    };
-
-    const titleChange = (e) => {
-        let newCheckList = checkList;
-        newCheckList.title = e.target.value
-        setCheckList(newCheckList);
-        handleUpdateCheckList(checkList);
+    const editTitle = (e) => {
+        setEditText({
+            note_title: e.target.value,
+            updated_at: new Date()
+        })
     }
+
+    const renderTitleInput = async () => {
+        setTitleOn(!titleOn);
+        let noteUpdate = {note_id: note.note_id, note_empty: false, note_title: editText.note_title };
+        await saveNote(noteUpdate);
+    };
 
     const title = (
         <input
             className="title-input edit"
             type="text"
             placeholder="Title here..."
-            value={items.title}
+            value={ editText.note_title }
             name="text"
-            onChange={titleChange}
+            onChange={editTitle}
+            autoFocus
         />
     );
 
     return (
         <div className="note checklist">
             <div className="checklist-container">
-                {!titleOn && <h4 className="note-title">{items.note_title}</h4>}
+                {!titleOn && <h4 className="note-title">{editText.note_title}</h4>}
                 {titleOn && title}
                 <div className="checklist-top">
-                    <CheckListForm onSubmit={addItem} newIdItem={idItem} increaseIdItem={setIdItem}/>
+                    <CheckListForm onSubmit={addItem}/>
                     <button className="button is-link is-light  mdi mdi-format-title"
                             onClick={renderTitleInput}/>
                 </div>
                 <div className="checklist-main">
                     <div className="checklist-body">
-                        {!items.note_empty && <CheckListItems
-                            items={items.note_list}
+                        {!note.note_empty && <CheckListItems
+                            items={items}
                             handleCompleteItem={completeItem}
-                            handleDeleteItem={deleteItem}
+                            handleDeleteItem={removeItem}
                             handleUpdateItem={updateItem}
-                            newIdItem={idItem}
-                            increaseIdItem={setIdItem}/>}
+                        />}
                         <div className="note-footer">
-                            <small>{!items.note_empty ? "Last modified:" +  new Date(items.updated_at).toLocaleDateString("en-GB", {
+                            <small>{!note.note_empty ? "Last modified:" +  new Date(note.updated_at).toLocaleDateString("en-GB", {
                                 hour: "2-digit",
                                 minute:  "2-digit",
                             }) : ""}</small>
                         </div>
                     </div>
                     <button className="button is-link is-light  mdi mdi-trash-can-outline"
-                            onClick={() => onDeleteCheckList(items.note_id)}/>
+                            onClick={() => onDeleteNote(note.note_id)}/>
                 </div>
             </div>
         </div>
