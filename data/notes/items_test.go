@@ -13,7 +13,7 @@ func TestItemInsertAndFetch(t *testing.T) {
 		NoteId:         1,
 		ItemText:       "red",
 		ItemIsComplete: false,
-		ItemDate:       "yesterday",
+		ItemDate:       time.Now().UTC(),
 		CreatedAt:      time.Now().UTC(),
 		UpdatedAt:      time.Now().UTC(),
 	}
@@ -30,7 +30,7 @@ func TestItemSave(t *testing.T) {
 		NoteId:         3,
 		ItemText:       "black",
 		ItemIsComplete: false,
-		ItemDate:       "yesterday",
+		ItemDate:       time.Now().UTC(),
 		CreatedAt:      time.Now().UTC(),
 		UpdatedAt:      time.Now().UTC(),
 	}
@@ -51,7 +51,7 @@ func TestGetItemsByNoteId(t *testing.T) {
 		NoteId:         3,
 		ItemText:       "black",
 		ItemIsComplete: false,
-		ItemDate:       "yesterday",
+		ItemDate:       time.Now().UTC(),
 		CreatedAt:      time.Now().UTC(),
 		UpdatedAt:      time.Now().UTC(),
 	}
@@ -60,7 +60,7 @@ func TestGetItemsByNoteId(t *testing.T) {
 		NoteId:         3,
 		ItemText:       "red",
 		ItemIsComplete: true,
-		ItemDate:       "yesterday",
+		ItemDate:       time.Now().UTC(),
 		CreatedAt:      time.Now().UTC(),
 		UpdatedAt:      time.Now().UTC(),
 	}
@@ -69,7 +69,7 @@ func TestGetItemsByNoteId(t *testing.T) {
 		NoteId:         2,
 		ItemText:       "red",
 		ItemIsComplete: true,
-		ItemDate:       "yesterday",
+		ItemDate:       time.Now().UTC(),
 		CreatedAt:      time.Now().UTC(),
 		UpdatedAt:      time.Now().UTC(),
 	}
@@ -79,3 +79,11 @@ func TestGetItemsByNoteId(t *testing.T) {
 		fmt.Println(item)
 	}
 }
+
+//func TestGetItemsByNoteId2(t *testing.T) {
+//	items := notes.GetItemsByNoteId(10)
+//	for _, item := range items {
+//		fmt.Println("ITEMMMMs", item)
+//	}
+//
+//}

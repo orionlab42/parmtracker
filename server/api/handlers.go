@@ -795,11 +795,11 @@ func ItemsDelete(w http.ResponseWriter, r *http.Request) {
 }
 
 type ItemFrontEnd struct {
-	ItemId         string `json:"item_id"`
-	NoteId         int    `json:"note_id"`
-	ItemText       string `json:"item_text"`
-	ItemIsComplete bool   `json:"item_is_complete"`
-	ItemDate       string `json:"item_date"`
+	ItemId         string    `json:"item_id"`
+	NoteId         int       `json:"note_id"`
+	ItemText       string    `json:"item_text"`
+	ItemIsComplete bool      `json:"item_is_complete"`
+	ItemDate       time.Time `json:"item_date"`
 }
 
 // ItemNew is a handler for: /api/notes/items

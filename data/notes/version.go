@@ -47,7 +47,7 @@ func updateV1M0(version string) string {
 					note_id int(11) not null,
 					item_text varchar(255) not null,
 					item_is_complete boolean  not null default false,
-					item_date varchar(255)  not null,
+					item_date datetime  not null,
 					created_at datetime not null default now(),
 					updated_at datetime not null default now(),
 					PRIMARY KEY (item_id)

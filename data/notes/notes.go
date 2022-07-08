@@ -98,7 +98,7 @@ func (n *Note) Delete() error {
 
 func GetNotes() Notes {
 	db := mysql.GetInstance().GetConn()
-	stmt, _ := db.Prepare(`select * from notes order by note_id asc;`)
+	stmt, _ := db.Prepare(`select * from notes order by note_id desc;`)
 	defer stmt.Close()
 	rows, e := stmt.Query()
 	if e != nil {

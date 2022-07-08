@@ -3,6 +3,7 @@ package notes
 import (
 	"fmt"
 	"github.com/orionlab42/parmtracker/mysql"
+	"sort"
 	"time"
 )
 
@@ -11,7 +12,7 @@ type Item struct {
 	NoteId         int       `json:"note_id"`
 	ItemText       string    `json:"item_text"`
 	ItemIsComplete bool      `json:"item_is_complete"`
-	ItemDate       string    `json:"item_date"`
+	ItemDate       time.Time `json:"item_date"`
 	CreatedAt      time.Time `json:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at"`
 }
@@ -30,13 +31,15 @@ func (i *Item) Load(id int) error {
 	}
 	defer rows.Close()
 	if rows.Next() {
+		var itemDate string
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&i.ItemId, &i.NoteId, &i.ItemText, &i.ItemIsComplete, &i.ItemDate, &createdAt, &updatedAt)
+		e := rows.Scan(&i.ItemId, &i.NoteId, &i.ItemText, &i.ItemIsComplete, &itemDate, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading id %v: %s", id, e.Error())
 			return e
 		}
+		i.ItemDate, _ = time.Parse(mysql.MysqlDateFormat, itemDate)
 		i.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
 		i.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
 	}
@@ -106,13 +109,15 @@ func GetItems() Items {
 	items := Items{}
 	for rows.Next() {
 		item := Item{}
+		var itemDate string
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&item.ItemId, &item.NoteId, &item.ItemText, &item.ItemIsComplete, &item.ItemDate, &createdAt, &updatedAt)
+		e := rows.Scan(&item.ItemId, &item.NoteId, &item.ItemText, &item.ItemIsComplete, &itemDate, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading items: %s", e.Error())
 			return Items{}
 		}
+		item.ItemDate, _ = time.Parse(mysql.MysqlDateFormat, itemDate)
 		item.CreatedAt, _ = time.Parse(mysql.MysqlDateFormat, createdAt)
 		item.UpdatedAt, _ = time.Parse(mysql.MysqlDateFormat, updatedAt)
 		items = append(items, item)
@@ -120,12 +125,26 @@ func GetItems() Items {
 	return items
 }
 
+func (p Items) Len() int { return len(p) }
+
+func (p Items) Less(i, j int) bool { return p[i].ItemDate.Before(p[j].ItemDate) }
+
+func (p Items) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
+
 func GetItemsByNoteId(noteId int) Items {
 	allItems := GetItems()
 	var items Items
 	for _, item := range allItems {
 		if item.NoteId == noteId {
 			items = append(items, item)
+		}
+	}
+	if len(items) > 0 {
+		layout := "2006-01-02T15:04:05.000Z"
+		strStart := "0001-01-01 00:00:00 +0000 UTC 2022-07-08 10:32:51 +0000 UTC"
+		t, _ := time.Parse(layout, strStart)
+		if items[0].ItemDate != t {
+			sort.Sort(items)
 		}
 	}
 	return items

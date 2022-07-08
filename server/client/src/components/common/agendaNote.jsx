@@ -3,17 +3,14 @@ import DatePicker from "react-datepicker";
 import { v4 as uuidv4 } from 'uuid';
 
 import "react-datepicker/dist/react-datepicker.css";
-import {getItems, saveNote} from "../../services/noteService";
+import {getItems, saveNote, saveItem, deleteItem} from "../../services/noteService";
 
 const AgendaNote = ({ note, onDeleteAgendaNote }) => {
-    const [items, setItems] = useState({});
-
+    const [items, setItems] = useState([]);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
-
     const [titleOn, setTitleOn] = useState(false);
     const [editText, setEditText] = useState({});
-
     const [timeToGetItems, setTimeToGetItems] = useState(true);
 
     useEffect(() => {
@@ -33,17 +30,33 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
         getAllItems();
     }, [timeToGetItems]);
 
+    useEffect(() => {
+        createItems();
+    }, [dateRange]);
+
+    console.log("Items", items);
 
     useEffect(() => {
-        let newItems = createItems();
-        setItems(newItems);
-    }, [dateRange]);
+        async function sendNote() {
+            note.note_empty = false;
+            await saveNote(note);
+        }
+        sendNote().then();
+    }, [items]);
+
+    const sendItemToServer = async (item) => {
+        await saveItem(item)
+    }
+
+    const removeItemFromServer = async (id) => {
+        await deleteItem(id)
+    }
 
     const createItems = () => {
         let newItems = [];
         let lengthItemList = 0;
-        if (note.note_items !== null) {
-            lengthItemList = note.note_items.length;
+        if (items !== null) {
+            lengthItemList =items.length;
         }
 
         // this is the whenever it loads
@@ -57,31 +70,56 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
         // this is the first time we enter a date range
         if (lengthItemList <= 1) {
             for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
-                newItems.push({item_id: uuidv4(), item_date: new Date(d), item_text: "", item_is_complete: false});
+                newItems.push({
+                    note_id: note.note_id,
+                    item_id: uuidv4(),
+                    item_date: new Date(d),
+                    item_text: "",
+                    item_is_complete: false});
             }
+            newItems.map((item) => sendItemToServer(item).then());
+            setTimeToGetItems(!timeToGetItems);
         }
 
         if (lengthItemList > 1) {
-            let prevStartDate = note.note_items[0].date;
-            let prevEndDate = note.note_items[lengthItemList-1].date;
+            let prevStartDate = new Date(note.note_items[0].item_date);
+            let prevEndDate = new Date(note.note_items[lengthItemList-1].item_date);
 
-            // in case the new interval is smaller than the previous, we loose items
             if (prevStartDate <= startDate && endDate <= prevEndDate) {
-                newItems = note.note_items.filter(item => (startDate <= item.date && item.date <= endDate))
+                let itemsToDelete = note.note_items.filter(item => (new Date(item.item_date) < startDate || endDate < new Date(item.item_date)));
+                itemsToDelete.map(item => removeItemFromServer(item.item_id))
+                setTimeToGetItems(!timeToGetItems);
             }
             // in case on one end of the interval we need to add new items
             if (startDate < prevStartDate || prevEndDate < endDate) {
-                let idItem = 0;
                 for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
-                    let existingItem = note.note_items.filter(item => (item.date.getTime() === d.getTime()));
+                    console.log("Notes1", note.note_items)
+                    let existingItem = note.note_items.filter(item => (new Date(item.item_date).getTime() === d.getTime()));
                     if (existingItem.length > 0) {
-                        newItems.push({id: idItem, date: new Date(d), text: existingItem[0].text, isComplete: existingItem[0].isComplete});
-                        idItem++;
+                        let itemUpdate = {
+                            note_id: note.note_id,
+                            item_id: existingItem[0].item_id,
+                            item_date: new Date(d),
+                            item_text: existingItem[0].item_text,
+                            item_is_complete: existingItem[0].item_is_complete};
+                        newItems.push(itemUpdate);
+                        sendItemToServer(itemUpdate).then();
                     } else {
-                        newItems.push({id: idItem, date: new Date(d), text: ""});
-                        idItem++;
+                        let itemNew = {
+                            note_id: note.note_id,
+                            item_id: uuidv4(),
+                            item_date: new Date(d),
+                            item_text: "",
+                            item_is_complete: false};
+                        newItems.push(itemNew);
+                        sendItemToServer(itemNew).then();
                     }
                 }
+                console.log("Notes1", note.note_items);
+                let itemsToDelete = note.note_items.filter(item => (new Date(item.item_date) < startDate || endDate < new Date(item.item_date)));
+                console.log("Items to delete", itemsToDelete);
+                itemsToDelete.map(item => removeItemFromServer(item.item_id))
+                setTimeToGetItems(!timeToGetItems);
             }
         }
         return newItems
@@ -110,14 +148,14 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
     );
 
     const itemChange = (e, date) => {
-        let newAgenda = items;
-        newAgenda.list.map(item => {
-            if (item.date === date) {
-                item.text = e.target.value;
+        let newItems = items.map(item => {
+            if (item.item_date === date) {
+                item.item_text = e.target.value;
+                sendItemToServer(item).then();
             }
             return item;
         });
-        setItems(newAgenda);
+        setItems(newItems);
         // handleUpdateAgendaNote(updateAgendaNote);
     };
 
@@ -138,32 +176,32 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
     };
 
     const isCompleteItem = (id) => {
-        let newAgenda = items;
-        newAgenda.list.map(item => {
-            if (item.id === id) {
-                item.isComplete = !item.isComplete;
+        let newAgenda = items.map(item => {
+            if (item.item_id === id) {
+                item.item_is_complete = !item.item_is_complete;
+                sendItemToServer(item).then();
             }
             return item;
         });
         setItems(newAgenda);
-        // handleUpdateAgendaNote(updateAgendaNote);
     };
 
     const itemList = (
         <form className="agenda-item-list">
-            {!note.note_empty && items.map((item)=>  <div  className={item.isComplete ? 'checked agenda-item' : 'agenda-item'} key={item.id}>
-                <div className="agenda-item-date" onClick={(e) => isCompleteItem(item.id)}>
-                    <span>{new Date(item.date).toLocaleDateString("en-US", {
+            {/*{!note.note_empty && note.note_items.map((item)=>  <div  className={item.isComplete ? 'checked agenda-item' : 'agenda-item'} key={item.id}>*/}
+            {items.map((item) =>  <div  className={item.item_is_complete ? 'checked agenda-item' : 'agenda-item'} key={item.item_id}>
+                <div className="agenda-item-date" onClick={(e) => isCompleteItem(item.item_id)}>
+                    <span>{new Date(item.item_date).toLocaleDateString("en-US", {
                         month:  "short",
                         day:"numeric"
                     })}</span> /&nbsp;
-                    <span>{new Date(item.date).toLocaleDateString("en-US", {
+                    <span>{new Date(item.item_date).toLocaleDateString("en-US", {
                         weekday: "short"
                     })}</span>
                 </div>
                 <input
-                    value={item.text}
-                    onChange={(e) => itemChange(e, item.date)}
+                    value={item.item_text}
+                    onChange={(e) => itemChange(e, item.item_date)}
                     onKeyDown={handleEnter}
                 />
             </div>)}
