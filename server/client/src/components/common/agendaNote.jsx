@@ -56,9 +56,8 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
         let newItems = [];
         let lengthItemList = 0;
         if (items !== null) {
-            lengthItemList =items.length;
+            lengthItemList = items.length;
         }
-
         // this is the whenever it loads
         if (startDate === null || endDate === null) {
             if (lengthItemList <= 1) {
@@ -79,22 +78,27 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
             }
             newItems.map((item) => sendItemToServer(item).then());
             setTimeToGetItems(!timeToGetItems);
+            // console.log("Triggered from here the update 1");
         }
 
         if (lengthItemList > 1) {
-            let prevStartDate = new Date(note.note_items[0].item_date);
-            let prevEndDate = new Date(note.note_items[lengthItemList-1].item_date);
-
+            let prevStartDate = new Date(items[0].item_date);
+            let prevEndDate = new Date(items[lengthItemList-1].item_date);
             if (prevStartDate <= startDate && endDate <= prevEndDate) {
-                let itemsToDelete = note.note_items.filter(item => (new Date(item.item_date) < startDate || endDate < new Date(item.item_date)));
+                let itemsToDelete = items.filter(item => (new Date(item.item_date) < startDate || endDate < new Date(item.item_date)));
                 itemsToDelete.map(item => removeItemFromServer(item.item_id))
                 setTimeToGetItems(!timeToGetItems);
+                // console.log("Triggered from here the update 2");
             }
             // in case on one end of the interval we need to add new items
             if (startDate < prevStartDate || prevEndDate < endDate) {
                 for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
-                    console.log("Notes1", note.note_items)
-                    let existingItem = note.note_items.filter(item => (new Date(item.item_date).getTime() === d.getTime()));
+                    let itemsToDelete = items.filter(item => (new Date(item.item_date) < startDate || endDate < new Date(item.item_date)));
+                    itemsToDelete.map(item => removeItemFromServer(item.item_id));
+                    setTimeToGetItems(!timeToGetItems);
+                    // console.log("Triggered from here the update 3");
+
+                    let existingItem = items.filter(item => (new Date(item.item_date).getTime() === d.getTime()));
                     if (existingItem.length > 0) {
                         let itemUpdate = {
                             note_id: note.note_id,
@@ -104,6 +108,7 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
                             item_is_complete: existingItem[0].item_is_complete};
                         newItems.push(itemUpdate);
                         sendItemToServer(itemUpdate).then();
+                        setTimeToGetItems(!timeToGetItems);
                     } else {
                         let itemNew = {
                             note_id: note.note_id,
@@ -113,13 +118,12 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
                             item_is_complete: false};
                         newItems.push(itemNew);
                         sendItemToServer(itemNew).then();
+                        setTimeToGetItems(!timeToGetItems);
+                        // console.log("Triggered from here the update 4",itemNew.item_id);
                     }
                 }
-                console.log("Notes1", note.note_items);
-                let itemsToDelete = note.note_items.filter(item => (new Date(item.item_date) < startDate || endDate < new Date(item.item_date)));
-                console.log("Items to delete", itemsToDelete);
-                itemsToDelete.map(item => removeItemFromServer(item.item_id))
                 setTimeToGetItems(!timeToGetItems);
+                // console.log("Triggered from here the update 5");
             }
         }
         return newItems

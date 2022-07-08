@@ -53,7 +53,7 @@ export function saveItem(item) {
 }
 
 export function deleteItem(id) {
-    console.log("We are deleting")
+    // console.log("We are deleting")
     return http.delete(itemUrl(id));
 }
 
