@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import DatePicker from "react-datepicker";
 import { v4 as uuidv4 } from 'uuid';
-
-import "react-datepicker/dist/react-datepicker.css";
 import {getItems, saveNote, saveItem, deleteItem} from "../../services/noteService";
+import "react-datepicker/dist/react-datepicker.css";
+
 
 const AgendaNote = ({ note, onDeleteAgendaNote }) => {
     const [items, setItems] = useState([]);
@@ -34,8 +34,6 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
         createItems();
     }, [dateRange]);
 
-    console.log("Items", items);
-
     useEffect(() => {
         async function sendNote() {
             note.note_empty = false;
@@ -45,12 +43,12 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
     }, [items]);
 
     const sendItemToServer = async (item) => {
-        await saveItem(item)
-    }
+        await saveItem(item);
+    };
 
     const removeItemFromServer = async (id) => {
-        await deleteItem(id)
-    }
+        await deleteItem(id);
+    };
 
     const createItems = () => {
         let newItems = [];
@@ -160,7 +158,17 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
             return item;
         });
         setItems(newItems);
-        // handleUpdateAgendaNote(updateAgendaNote);
+    };
+
+    const isCompleteItem = (id) => {
+        let newAgenda = items.map(item => {
+            if (item.item_id === id) {
+                item.item_is_complete = !item.item_is_complete;
+                sendItemToServer(item).then();
+            }
+            return item;
+        });
+        setItems(newAgenda);
     };
 
     const handleEnter = (event) => {
@@ -179,20 +187,8 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
         }
     };
 
-    const isCompleteItem = (id) => {
-        let newAgenda = items.map(item => {
-            if (item.item_id === id) {
-                item.item_is_complete = !item.item_is_complete;
-                sendItemToServer(item).then();
-            }
-            return item;
-        });
-        setItems(newAgenda);
-    };
-
     const itemList = (
         <form className="agenda-item-list">
-            {/*{!note.note_empty && note.note_items.map((item)=>  <div  className={item.isComplete ? 'checked agenda-item' : 'agenda-item'} key={item.id}>*/}
             {items.map((item) =>  <div  className={item.item_is_complete ? 'checked agenda-item' : 'agenda-item'} key={item.item_id}>
                 <div className="agenda-item-date" onClick={(e) => isCompleteItem(item.item_id)}>
                     <span>{new Date(item.item_date).toLocaleDateString("en-US", {
