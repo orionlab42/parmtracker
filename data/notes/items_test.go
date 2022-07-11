@@ -81,9 +81,5 @@ func TestGetItemsByNoteId(t *testing.T) {
 }
 
 //func TestGetItemsByNoteId2(t *testing.T) {
-//	items := notes.GetItemsByNoteId(10)
-//	for _, item := range items {
-//		fmt.Println("ITEMMMMs", item)
-//	}
-//
+//	notes.GetItemsByNoteId2(10)
 //}

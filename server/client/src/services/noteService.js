@@ -61,6 +61,20 @@ export function getItems(noteId) {
     return http.get(itemsUrl(noteId));
 }
 
+export function saveItems2(noteId, startDate, endDate) {
+    if (startDate !== null && endDate !== null) {
+        const params = new URLSearchParams({
+            note_id: noteId,
+            start_date: startDate,
+            end_date: endDate,
+        });
+        console.log(params.toString());
+        let url = `${apiEndpointItems}/?${params}`;
+        console.log(url);
+        return http.get(url);
+    }
+}
+
 export function deleteItems(noteId) {
     return http.delete(itemsUrl(noteId));
 }

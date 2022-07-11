@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
 import DatePicker from "react-datepicker";
-import { v4 as uuidv4 } from 'uuid';
-import {getItems, saveNote, saveItem, deleteItem} from "../../services/noteService";
+import {v4 as uuidv4} from 'uuid';
+import {deleteItem, getItems, saveItem, saveItems2, saveNote} from "../../services/noteService";
 import "react-datepicker/dist/react-datepicker.css";
 
 
-const AgendaNote = ({ note, onDeleteAgendaNote }) => {
+const AgendaNote = ({note, onDeleteAgendaNote}) => {
     const [items, setItems] = useState([]);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
@@ -17,21 +17,20 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
         setEditText({
             note_empty: note.note_empty,
             note_title: note.note_title,
-            updated_at: note.updated_at});
+            updated_at: note.updated_at,
+        });
     }, []);
 
-    useEffect(() => {
-        async function getAllItems() {
-            const {data: newItems} = await getItems(note.note_id);
-            if (newItems != null) {
-                setItems(newItems);
-            }
+    const getAllItems = async () => {
+        const {data: newItems} = await getItems(note.note_id);
+        if (newItems != null) {
+            setItems(newItems);
         }
-        getAllItems();
-    }, [timeToGetItems]);
+    };
 
     useEffect(() => {
         createItems();
+        saveItems2(note.note_id, startDate, endDate);
     }, [dateRange]);
 
     useEffect(() => {
@@ -39,6 +38,7 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
             note.note_empty = false;
             await saveNote(note);
         }
+
         sendNote().then();
     }, [items]);
 
@@ -61,7 +61,7 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
             if (lengthItemList <= 1) {
                 return [];
             }
-           return  note.note_items;
+            return note.note_items;
         }
 
         // this is the first time we enter a date range
@@ -72,28 +72,25 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
                     item_id: uuidv4(),
                     item_date: new Date(d),
                     item_text: "",
-                    item_is_complete: false});
+                    item_is_complete: false
+                });
             }
             newItems.map((item) => sendItemToServer(item).then());
-            setTimeToGetItems(!timeToGetItems);
+            getAllItems().then();
             // console.log("Triggered from here the update 1");
         }
 
         if (lengthItemList > 1) {
             let prevStartDate = new Date(items[0].item_date);
-            let prevEndDate = new Date(items[lengthItemList-1].item_date);
-            if (prevStartDate <= startDate && endDate <= prevEndDate) {
+            let prevEndDate = new Date(items[lengthItemList - 1].item_date);
+            if (startDate >= prevStartDate && endDate <= prevEndDate) {
                 let itemsToDelete = items.filter(item => (new Date(item.item_date) < startDate || endDate < new Date(item.item_date)));
                 itemsToDelete.map(item => removeItemFromServer(item.item_id))
-                setTimeToGetItems(!timeToGetItems);
                 // console.log("Triggered from here the update 2");
-            }
-            // in case on one end of the interval we need to add new items
-            if (startDate < prevStartDate || prevEndDate < endDate) {
+            } else {
                 for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
                     let itemsToDelete = items.filter(item => (new Date(item.item_date) < startDate || endDate < new Date(item.item_date)));
                     itemsToDelete.map(item => removeItemFromServer(item.item_id));
-                    setTimeToGetItems(!timeToGetItems);
                     // console.log("Triggered from here the update 3");
 
                     let existingItem = items.filter(item => (new Date(item.item_date).getTime() === d.getTime()));
@@ -103,26 +100,34 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
                             item_id: existingItem[0].item_id,
                             item_date: new Date(d),
                             item_text: existingItem[0].item_text,
-                            item_is_complete: existingItem[0].item_is_complete};
+                            item_is_complete: existingItem[0].item_is_complete
+                        };
                         newItems.push(itemUpdate);
                         sendItemToServer(itemUpdate).then();
-                        setTimeToGetItems(!timeToGetItems);
                     } else {
                         let itemNew = {
                             note_id: note.note_id,
                             item_id: uuidv4(),
                             item_date: new Date(d),
                             item_text: "",
-                            item_is_complete: false};
+                            item_is_complete: false
+                        };
                         newItems.push(itemNew);
                         sendItemToServer(itemNew).then();
-                        setTimeToGetItems(!timeToGetItems);
                         // console.log("Triggered from here the update 4",itemNew.item_id);
                     }
                 }
-                setTimeToGetItems(!timeToGetItems);
                 // console.log("Triggered from here the update 5");
             }
+            getAllItems().then();
+            console.log(
+                20,
+                "Start Date", startDate,
+                "End Date", endDate,
+                "Prev Start Date", prevStartDate,
+                "Prev End Date", prevEndDate,
+                "Items", items,
+            );
         }
         return newItems
     };
@@ -133,7 +138,7 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
 
     const renderTitleInput = async () => {
         setTitleOn(!titleOn);
-        let noteUpdate = {note_id: note.note_id, note_empty: false, note_title: editText.note_title };
+        let noteUpdate = {note_id: note.note_id, note_empty: false, note_title: editText.note_title};
         await saveNote(noteUpdate);
     };
 
@@ -142,7 +147,7 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
             className="title-input edit"
             type="text"
             placeholder="Title here..."
-            value={ editText.note_title }
+            value={editText.note_title}
             name="text"
             onChange={editTitle}
             autoFocus
@@ -189,11 +194,12 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
 
     const itemList = (
         <form className="agenda-item-list">
-            {items.map((item) =>  <div  className={item.item_is_complete ? 'checked agenda-item' : 'agenda-item'} key={item.item_id}>
+            {items.map((item) => <div className={item.item_is_complete ? 'checked agenda-item' : 'agenda-item'}
+                                      key={item.item_id}>
                 <div className="agenda-item-date" onClick={(e) => isCompleteItem(item.item_id)}>
                     <span>{new Date(item.item_date).toLocaleDateString("en-US", {
-                        month:  "short",
-                        day:"numeric"
+                        month: "short",
+                        day: "numeric"
                     })}</span> /&nbsp;
                     <span>{new Date(item.item_date).toLocaleDateString("en-US", {
                         weekday: "short"
@@ -224,11 +230,11 @@ const AgendaNote = ({ note, onDeleteAgendaNote }) => {
                             isClearable={true}
                         />
                     </div>
-                    { !note.note_empty && itemList}
+                    {!note.note_empty && itemList}
                     <div className="note-footer">
-                        <small>{!note.note_empty ? "Last modified:" +  new Date(note.updated_at).toLocaleDateString("en-GB", {
+                        <small>{!note.note_empty ? "Last modified:" + new Date(note.updated_at).toLocaleDateString("en-GB", {
                             hour: "2-digit",
-                            minute:  "2-digit",
+                            minute: "2-digit",
                         }) : ""}</small>
                     </div>
                 </div>

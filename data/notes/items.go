@@ -166,3 +166,12 @@ func DeleteByNoteId(noteId int) {
 		}
 	}
 }
+
+//func GetItemsByNoteId2(noteId int, startDate string, endDate string) {
+//	fmt.Println(noteId)
+//	log.Println("noteId: " + string(noteId))
+//	fmt.Println(startDate)
+//	log.Println("noteId: " + startDate)
+//	fmt.Println(endDate)
+//	log.Println("noteId: " + endDate)
+//}

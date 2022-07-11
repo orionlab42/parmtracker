@@ -39,7 +39,7 @@ var routes = Routes{
 	Route{"NoteUpdate", http.MethodPut, "/api/notes/{id}", true, api.NoteUpdate},
 	Route{"NoteDelete", http.MethodDelete, "/api/notes/{id}", true, api.NoteDelete},
 
-	Route{"Items", http.MethodGet, "/api/notes/items/{id}", true, api.Items},
+	Route{"Items", http.MethodGet, "/api/notes/items", true, api.Items},
 	Route{"ItemsDelete", http.MethodDelete, "/api/notes/items/{id}", true, api.ItemsDelete},
 	Route{"ItemNew", http.MethodPost, "/api/notes/item", true, api.ItemNew},
 	Route{"ItemUpdate", http.MethodPut, "/api/notes/item/{id}", true, api.ItemUpdate},
