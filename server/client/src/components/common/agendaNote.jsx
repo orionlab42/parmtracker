@@ -29,20 +29,22 @@ const AgendaNote = ({note, onDeleteAgendaNote}) => {
         async function saveNewItems() {
             const {data: newItems} = await saveItems(note.note_id, startDate, endDate).then();
             if (newItems != null) {
+                note.note_empty = false;
+                await saveNote(note);
                 setItems(newItems);
             }
         }
         saveNewItems();
     }, [dateRange]);
 
-    useEffect(() => {
-        async function sendNote() {
-            note.note_empty = false;
-            await saveNote(note);
-        }
-
-        sendNote().then();
-    }, [items]);
+    // useEffect(() => {
+    //     async function sendNote() {
+    //         note.note_empty = false;
+    //         await saveNote(note);
+    //     }
+    //
+    //     sendNote().then();
+    // }, [items]);
 
     const editTitle = (e) => {
         setEditText({note_title: e.target.value, updated_at: new Date()});

@@ -801,6 +801,33 @@ textarea:focus {
     position: relative;
 }
 
+.note-share {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    .checkbox {
+        padding: 10px;
+        color: #333;
+    }
+}
+
+.users-checkbox {
+    display: flex;
+    input[type=checkbox] {
+        margin-top: 15px;
+    }
+    input[type=checkbox] + label {
+      color: blue;
+      font-style: italic;
+    }
+    input[type=checkbox]:checked + label {
+      color: red;
+      font-style: normal;
+    }
+}
+
 /* Checklist */
 
 .note-button {

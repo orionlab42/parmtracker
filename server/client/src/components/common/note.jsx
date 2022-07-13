@@ -1,11 +1,28 @@
 import React, {useEffect, useState} from "react";
 import ReactMarkdown from "react-markdown";
-import {saveNote} from "../../services/noteService";
+import {saveItems, saveNote} from "../../services/noteService";
+import FilterUser from "./filterUser";
+import {getUsers} from "../../services/userService";
+import UserRadioOptions from "./userRadioOptions";
 
-const Note = ({ note, onDeleteNote }) => {
+const Note = ({ note, user, onDeleteNote, onUserShare }) => {
     const [textOn, setTextOn] = useState(false);
     const [titleOn, setTitleOn] = useState(false);
+    const [shareWithUserOn, setShareWithUserOn] = useState(false);
     const [editText, setEditText] = useState({});
+    const [users, setUsers] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState([]);
+
+    useEffect(() => {
+        async function getALlUsers() {
+            const { data: users } = await getUsers();
+            if (users != null) {
+                let otherUsers = users.filter(u => u.user_id !== user.user_id);
+                setUsers(otherUsers);
+            }
+        }
+        getALlUsers();
+    }, []);
 
     useEffect(() => {
         setEditText({note_empty: note.note_empty, note_title: note.note_title, note_text: note.note_text, updated_at: note.updated_at});
@@ -56,6 +73,19 @@ const Note = ({ note, onDeleteNote }) => {
         <textarea rows="10" cols="32" placeholder="Type to add a note..." value={editText.note_text} onChange={(e) => editChange(e,"text") }/>
     );
 
+    const renderShareInput = () => {
+        setShareWithUserOn(!shareWithUserOn);
+        console.log("Share user")
+    }
+
+    const share = (
+        <UserRadioOptions
+            users={users}
+            onUserShare={(userToShare) => onUserShare(userToShare, note.note_id)}
+        />
+    );
+
+    console.log("Users", users);
     return (
             <div className="note">
                 {!titleOn && <h4 className="note-title">{ editText.note_title }</h4>}
@@ -81,6 +111,11 @@ const Note = ({ note, onDeleteNote }) => {
                         <button className="button is-link is-light  mdi mdi-trash-can-outline"
                                 onClick={() => onDeleteNote(note.note_id)}/>
                     </div>
+                </div>
+                <div className="note-share">
+                    {shareWithUserOn && share}
+                    <button className="button is-link is-light  mdi mdi-share-variant" data-title="Share"
+                            onClick={renderShareInput}/>
                 </div>
             </div>
     );

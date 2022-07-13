@@ -8,7 +8,6 @@ import {toast} from "react-toastify";
 // import SearchBox from "./searchBox";
 import { v4 as uuidv4 } from 'uuid';
 
-
 const typeSimpleNote = 1;
 const typeChecklist = 2;
 const typeAgenda = 3;
@@ -57,9 +56,8 @@ const ListBox = ({user}) => {
             note_title: "",
             note_text: ""
         };
-        // setTimeToGetNotes(!timeToGetNotes);
-        getAllNotes().then();
         await saveNote(newNote);
+        getAllNotes().then();
     };
 
     const handleDeleteNote = async (id) => {
@@ -75,6 +73,11 @@ const ListBox = ({user}) => {
             setNotes(originalNotes);
         }
     };
+
+    const handleUserShare = (userToShare, noteId) => {
+        console.log(userToShare);
+        console.log(noteId);
+    }
 
     // const searchNote = (text) => {
     //     setSearchQuery(text);
@@ -105,7 +108,9 @@ const ListBox = ({user}) => {
                 {notes.map(note => {
                     if (note.note_type === typeSimpleNote) {
                         return <Note key={note.note_id}
+                                     user={user}
                                      note={note}
+                                     onUserShare={handleUserShare}
                                      onDeleteNote={handleDeleteNote}/>
                     }
                     if (note.note_type === typeChecklist) {
