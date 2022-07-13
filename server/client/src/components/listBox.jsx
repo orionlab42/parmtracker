@@ -15,19 +15,17 @@ const typeAgenda = 3;
 
 const ListBox = ({user}) => {
     const [notes, setNotes] = useState([]);
-    const [timeToGetNotes, setTimeToGetNotes] = useState(true);
     // const [searchQuery, setSearchQuery] = useState("");
 
     useEffect(() => {
-        async function getAllNotes() {
+        async function getInitialNotes() {
             const {data: notes} = await getNotes();
-            // console.log("Notes from server", notes)
             if (notes != null) {
                 setNotes(notes);
             }
         }
-        getAllNotes();
-    }, [timeToGetNotes]);
+        getInitialNotes();
+    }, []);
 
     // useEffect(() => {
     //     let savedNotes = JSON.parse(localStorage.getItem('react-notelist-app-data'));
@@ -43,6 +41,13 @@ const ListBox = ({user}) => {
     //     localStorage.setItem('react-notelist-app-data', JSON.stringify(notes));
     // }, [notes]);
 
+    const getAllNotes = async () => {
+        const {data: newNotes} = await getNotes();
+        if (notes != null) {
+            setNotes(newNotes);
+        }
+    };
+
     const addNote = async (type) => {
         let newNote = {
             note_id: uuidv4(),
@@ -52,7 +57,8 @@ const ListBox = ({user}) => {
             note_title: "",
             note_text: ""
         };
-        setTimeToGetNotes(!timeToGetNotes);
+        // setTimeToGetNotes(!timeToGetNotes);
+        getAllNotes().then();
         await saveNote(newNote);
     };
 

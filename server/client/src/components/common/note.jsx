@@ -8,11 +8,7 @@ const Note = ({ note, onDeleteNote }) => {
     const [editText, setEditText] = useState({});
 
     useEffect(() => {
-        setEditText({
-            note_empty: note.note_empty,
-            note_title: note.note_title,
-            note_text: note.note_text,
-            updated_at: note.updated_at});
+        setEditText({note_empty: note.note_empty, note_title: note.note_title, note_text: note.note_text, updated_at: note.updated_at});
     }, []);
 
     const editChange = (e, type) => {
@@ -30,7 +26,6 @@ const Note = ({ note, onDeleteNote }) => {
                 updated_at: new Date()
             })
         }
-        console.log("edit", editText);
     }
 
     const renderTitleInput = async () => {

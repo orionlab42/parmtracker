@@ -150,6 +150,76 @@ func GetItemsByNoteId(noteId int) Items {
 	return items
 }
 
+func CreateItemsByNoteId(noteId int, startDate string, endDate string) Items {
+	items := GetItemsByNoteId(noteId)
+	if startDate == "null" || endDate == "null" {
+		return items
+	}
+
+	start, err := time.Parse("2006-01-02T15:04:05Z07:00", startDate)
+	if err != nil {
+		panic(err)
+	}
+
+	end, err := time.Parse("2006-01-02T15:04:05Z07:00", endDate)
+	if err != nil {
+		panic(err)
+	}
+
+	if len(items) == 0 {
+		for d := start; d.After(end) == false; d = d.AddDate(0, 0, 1) {
+			i := Item{
+				NoteId:         noteId,
+				ItemText:       "",
+				ItemIsComplete: false,
+				ItemDate:       d,
+				CreatedAt:      time.Now().UTC(),
+				UpdatedAt:      time.Now().UTC(),
+			}
+			e := i.Insert()
+			if e != nil {
+				fmt.Printf("Error when adding agenda item: %s", e.Error())
+			}
+		}
+	} else {
+		for d := start; d.After(end) == false; d = d.AddDate(0, 0, 1) {
+			notSaved := true
+			for _, item := range items {
+				if item.ItemDate.Before(start) || item.ItemDate.After(end) {
+					var i Item
+					e := i.Load(item.ItemId)
+					if e != nil {
+						fmt.Printf("Error when loading agenda item: %s", e.Error())
+					}
+					e = i.Delete()
+					if e != nil {
+						fmt.Printf("Error when deleting agenda item: %s", e.Error())
+					}
+				}
+				if item.ItemDate.Equal(d) {
+					notSaved = false
+				}
+			}
+			if notSaved {
+				i := Item{
+					NoteId:         noteId,
+					ItemText:       "",
+					ItemIsComplete: false,
+					ItemDate:       d,
+					CreatedAt:      time.Now().UTC(),
+					UpdatedAt:      time.Now().UTC(),
+				}
+				e := i.Insert()
+				if e != nil {
+					fmt.Printf("Error when adding agenda item: %s", e.Error())
+				}
+			}
+		}
+	}
+	items = GetItemsByNoteId(noteId)
+	return items
+}
+
 func DeleteByNoteId(noteId int) {
 	allItems := GetItemsByNoteId(noteId)
 	for _, item := range allItems {
@@ -166,12 +236,3 @@ func DeleteByNoteId(noteId int) {
 		}
 	}
 }
-
-//func GetItemsByNoteId2(noteId int, startDate string, endDate string) {
-//	fmt.Println(noteId)
-//	log.Println("noteId: " + string(noteId))
-//	fmt.Println(startDate)
-//	log.Println("noteId: " + startDate)
-//	fmt.Println(endDate)
-//	log.Println("noteId: " + endDate)
-//}

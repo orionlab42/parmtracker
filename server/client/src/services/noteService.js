@@ -30,30 +30,23 @@ export function deleteNote(id) {
 
 export function saveNote(note) {
     if (typeof note.note_id !== "string") {
-    // if (note.note_id) {
         const body = { ...note };
         delete body.id;
-        // console.log("Service update", body);
         return http.put(noteUrl(note.note_id), body);
     }
-    // console.log("Service save", note);
     return http.post(apiEndpointNotes, note);
 }
 
 export function saveItem(item) {
     if (typeof item.item_id !== "string") {
-    // if (note.note_id) {
         const body = { ...item };
         delete body.id;
-        // console.log("Service update", body);
         return http.put(itemUrl(item.item_id), body);
     }
-    // console.log("Service save", item);
     return http.post(apiEndpointItem, item);
 }
 
 export function deleteItem(id) {
-    // console.log("We are deleting")
     return http.delete(itemUrl(id));
 }
 
@@ -61,16 +54,22 @@ export function getItems(noteId) {
     return http.get(itemsUrl(noteId));
 }
 
-export function saveItems2(noteId, startDate, endDate) {
+export function saveItems(noteId, startDate, endDate) {
     if (startDate !== null && endDate !== null) {
+        const params = new URLSearchParams({
+            note_id: noteId,
+            start_date: startDate.toISOString(),
+            end_date: endDate.toISOString(),
+        });
+        let url = `${apiEndpointItems}/?${params}`;
+        return http.get(url);
+    } else {
         const params = new URLSearchParams({
             note_id: noteId,
             start_date: startDate,
             end_date: endDate,
         });
-        console.log(params.toString());
         let url = `${apiEndpointItems}/?${params}`;
-        console.log(url);
         return http.get(url);
     }
 }

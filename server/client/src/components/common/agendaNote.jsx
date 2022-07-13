@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import DatePicker from "react-datepicker";
-import {v4 as uuidv4} from 'uuid';
-import {deleteItem, getItems, saveItem, saveItems2, saveNote} from "../../services/noteService";
+import {getItems, saveItem, saveItems, saveNote} from "../../services/noteService";
 import "react-datepicker/dist/react-datepicker.css";
 
 
@@ -11,26 +10,29 @@ const AgendaNote = ({note, onDeleteAgendaNote}) => {
     const [startDate, endDate] = dateRange;
     const [titleOn, setTitleOn] = useState(false);
     const [editText, setEditText] = useState({});
-    const [timeToGetItems, setTimeToGetItems] = useState(true);
 
     useEffect(() => {
-        setEditText({
-            note_empty: note.note_empty,
-            note_title: note.note_title,
-            updated_at: note.updated_at,
-        });
+        setEditText({note_empty: note.note_empty, note_title: note.note_title, updated_at: note.updated_at,});
     }, []);
 
-    const getAllItems = async () => {
-        const {data: newItems} = await getItems(note.note_id);
-        if (newItems != null) {
-            setItems(newItems);
+    useEffect(() => {
+        async function getAllItems() {
+            const {data: newItems} = await getItems(note.note_id);
+            if (newItems != null) {
+                setItems(newItems);
+            }
         }
-    };
+        getAllItems();
+    }, []);
 
     useEffect(() => {
-        createItems();
-        saveItems2(note.note_id, startDate, endDate);
+        async function saveNewItems() {
+            const {data: newItems} = await saveItems(note.note_id, startDate, endDate).then();
+            if (newItems != null) {
+                setItems(newItems);
+            }
+        }
+        saveNewItems();
     }, [dateRange]);
 
     useEffect(() => {
@@ -41,96 +43,6 @@ const AgendaNote = ({note, onDeleteAgendaNote}) => {
 
         sendNote().then();
     }, [items]);
-
-    const sendItemToServer = async (item) => {
-        await saveItem(item);
-    };
-
-    const removeItemFromServer = async (id) => {
-        await deleteItem(id);
-    };
-
-    const createItems = () => {
-        let newItems = [];
-        let lengthItemList = 0;
-        if (items !== null) {
-            lengthItemList = items.length;
-        }
-        // this is the whenever it loads
-        if (startDate === null || endDate === null) {
-            if (lengthItemList <= 1) {
-                return [];
-            }
-            return note.note_items;
-        }
-
-        // this is the first time we enter a date range
-        if (lengthItemList <= 1) {
-            for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
-                newItems.push({
-                    note_id: note.note_id,
-                    item_id: uuidv4(),
-                    item_date: new Date(d),
-                    item_text: "",
-                    item_is_complete: false
-                });
-            }
-            newItems.map((item) => sendItemToServer(item).then());
-            getAllItems().then();
-            // console.log("Triggered from here the update 1");
-        }
-
-        if (lengthItemList > 1) {
-            let prevStartDate = new Date(items[0].item_date);
-            let prevEndDate = new Date(items[lengthItemList - 1].item_date);
-            if (startDate >= prevStartDate && endDate <= prevEndDate) {
-                let itemsToDelete = items.filter(item => (new Date(item.item_date) < startDate || endDate < new Date(item.item_date)));
-                itemsToDelete.map(item => removeItemFromServer(item.item_id))
-                // console.log("Triggered from here the update 2");
-            } else {
-                for (let d = new Date(startDate); d <= new Date(endDate); d.setDate(d.getDate() + 1)) {
-                    let itemsToDelete = items.filter(item => (new Date(item.item_date) < startDate || endDate < new Date(item.item_date)));
-                    itemsToDelete.map(item => removeItemFromServer(item.item_id));
-                    // console.log("Triggered from here the update 3");
-
-                    let existingItem = items.filter(item => (new Date(item.item_date).getTime() === d.getTime()));
-                    if (existingItem.length > 0) {
-                        let itemUpdate = {
-                            note_id: note.note_id,
-                            item_id: existingItem[0].item_id,
-                            item_date: new Date(d),
-                            item_text: existingItem[0].item_text,
-                            item_is_complete: existingItem[0].item_is_complete
-                        };
-                        newItems.push(itemUpdate);
-                        sendItemToServer(itemUpdate).then();
-                    } else {
-                        let itemNew = {
-                            note_id: note.note_id,
-                            item_id: uuidv4(),
-                            item_date: new Date(d),
-                            item_text: "",
-                            item_is_complete: false
-                        };
-                        newItems.push(itemNew);
-                        sendItemToServer(itemNew).then();
-                        // console.log("Triggered from here the update 4",itemNew.item_id);
-                    }
-                }
-                // console.log("Triggered from here the update 5");
-            }
-            getAllItems().then();
-            console.log(
-                20,
-                "Start Date", startDate,
-                "End Date", endDate,
-                "Prev Start Date", prevStartDate,
-                "Prev End Date", prevEndDate,
-                "Items", items,
-            );
-        }
-        return newItems
-    };
 
     const editTitle = (e) => {
         setEditText({note_title: e.target.value, updated_at: new Date()});
@@ -153,6 +65,10 @@ const AgendaNote = ({note, onDeleteAgendaNote}) => {
             autoFocus
         />
     );
+
+    const sendItemToServer = async (item) => {
+        await saveItem(item);
+    };
 
     const itemChange = (e, date) => {
         let newItems = items.map(item => {

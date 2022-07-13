@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import CheckListForm from "./checkListForm";
 import CheckListItems from "./checkListItems";
-import {saveNote, saveItem, deleteItem, getNotes, getItems} from "../../services/noteService";
+import {saveNote, saveItem, deleteItem, getItems} from "../../services/noteService";
 
 const CheckList = ({ note, onDeleteNote }) => {
     const [items, setItems] = useState([]);
@@ -10,10 +10,7 @@ const CheckList = ({ note, onDeleteNote }) => {
     const [timeToGetItems, setTimeToGetItems] = useState(true);
 
     useEffect(() => {
-        setEditText({
-            note_empty: note.note_empty,
-            note_title: note.note_title,
-            updated_at: note.updated_at});
+        setEditText({note_empty: note.note_empty, note_title: note.note_title, updated_at: note.updated_at});
     }, []);
 
     useEffect(() => {

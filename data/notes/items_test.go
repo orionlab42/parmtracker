@@ -80,6 +80,7 @@ func TestGetItemsByNoteId(t *testing.T) {
 	}
 }
 
-//func TestGetItemsByNoteId2(t *testing.T) {
-//	notes.GetItemsByNoteId2(10)
+//func TestCreateItemsByNoteId(t *testing.T) {
+//	items := notes.CreateItemsByNoteId(11, "2022-06-27T22:00:00.000Z", "2022-07-01T22:00:00.000Z")
+//	fmt.Println(items)
 //}

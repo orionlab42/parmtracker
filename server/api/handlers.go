@@ -14,7 +14,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strconv"
 	"time"
@@ -759,36 +758,10 @@ func NoteDelete(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-//// Items is a handler for: /api/notes/items/{id}  -here we are having the note id
-//func Items(w http.ResponseWriter, r *http.Request) {
-//	vars := mux.Vars(r)
-//	noteId := vars["id"]
-//	id, err := strconv.Atoi(noteId)
-//	if err != nil {
-//		fmt.Printf("Error: %s\n", err)
-//		return
-//	}
-//	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-//	w.WriteHeader(http.StatusOK)
-//	i := notes.GetItemsByNoteId(id)
-//	if err := json.NewEncoder(w).Encode(i); err != nil {
-//		fmt.Printf("Error: %s\n", err)
-//		return
-//	}
-//}
-
 // Items is a handler for: /api/notes/items/{id}  -here we are having the note id
 func Items(w http.ResponseWriter, r *http.Request) {
-	log.Println("Hello ")
-	log.Println(r.URL)
-
-	noteId := r.URL.Query().Get("note_id")
-	startDate := r.URL.Query().Get("start_date")
-	endDate := r.URL.Query().Get("end_date")
-	log.Println(noteId)
-	log.Println(startDate)
-	log.Println(endDate)
-	//vars := mux.Vars(r)
+	vars := mux.Vars(r)
+	noteId := vars["id"]
 	id, err := strconv.Atoi(noteId)
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
@@ -796,8 +769,26 @@ func Items(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	//notes.GetItemsByNoteId2(id, startDate, endDate)
 	i := notes.GetItemsByNoteId(id)
+	if err := json.NewEncoder(w).Encode(i); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+// ItemsAgenda is a handler for: /api/notes/items/parameters:note_id, start_date, end_date
+func ItemsAgenda(w http.ResponseWriter, r *http.Request) {
+	noteId := r.URL.Query().Get("note_id")
+	startDate := r.URL.Query().Get("start_date")
+	endDate := r.URL.Query().Get("end_date")
+	id, err := strconv.Atoi(noteId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	i := notes.CreateItemsByNoteId(id, startDate, endDate)
 	if err := json.NewEncoder(w).Encode(i); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
