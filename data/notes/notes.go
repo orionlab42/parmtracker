@@ -123,3 +123,16 @@ func GetNotes() Notes {
 	}
 	return notes
 }
+
+func GetNotesByIds(noteUsers NoteUsers) Notes {
+	var notes Notes
+	allNotes := GetNotes()
+	for _, noteUser := range noteUsers {
+		for _, note := range allNotes {
+			if noteUser.NoteId == note.NoteId {
+				notes = append(notes, note)
+			}
+		}
+	}
+	return notes
+}

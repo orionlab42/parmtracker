@@ -4,7 +4,7 @@ import {getItems, saveItem, saveItems, saveNote} from "../../services/noteServic
 import "react-datepicker/dist/react-datepicker.css";
 
 
-const AgendaNote = ({note, onDeleteAgendaNote}) => {
+const AgendaNote = ({note, user, onDeleteAgendaNote}) => {
     const [items, setItems] = useState([]);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
@@ -23,18 +23,21 @@ const AgendaNote = ({note, onDeleteAgendaNote}) => {
             }
         }
         getAllItems();
+        console.log("Went through1", note)
     }, []);
 
     useEffect(() => {
         async function saveNewItems() {
             const {data: newItems} = await saveItems(note.note_id, startDate, endDate).then();
             if (newItems != null) {
+                console.log("Went through3", newItems)
                 note.note_empty = false;
-                await saveNote(note);
+                await saveNote(note, user.user_id);
                 setItems(newItems);
             }
         }
         saveNewItems();
+        console.log("Went through2", note)
     }, [dateRange]);
 
     // useEffect(() => {
@@ -112,7 +115,7 @@ const AgendaNote = ({note, onDeleteAgendaNote}) => {
 
     const itemList = (
         <form className="agenda-item-list">
-            {items.map((item) => <div className={item.item_is_complete ? 'checked agenda-item' : 'agenda-item'}
+            {items && items.map((item) => <div className={item.item_is_complete ? 'checked agenda-item' : 'agenda-item'}
                                       key={item.item_id}>
                 <div className="agenda-item-date" onClick={(e) => isCompleteItem(item.item_id)}>
                     <span>{new Date(item.item_date).toLocaleDateString("en-US", {

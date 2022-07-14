@@ -630,11 +630,19 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-// Notes is a handler for: /api/notes
+// Notes is a handler for: /api/notes/{id}
 func Notes(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	userId, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Printf("Error1: %s\n", err)
+		return
+	}
+	noteUsers := notes.GetNotesByUserId(userId)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	n := notes.GetNotes()
+	n := notes.GetNotesByIds(noteUsers)
 	if err := json.NewEncoder(w).Encode(n); err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
@@ -652,6 +660,13 @@ type NoteFrontEnd struct {
 
 // NoteNew is a handler for: /api/notes
 func NoteNew(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	userId, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Printf("Error2: %s\n", err)
+		return
+	}
 	var noteFE NoteFrontEnd
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
@@ -677,6 +692,14 @@ func NoteNew(w http.ResponseWriter, r *http.Request) {
 	note.NoteText = noteFE.NoteText
 	note.NoteEmpty = noteFE.NoteEmpty
 	err = note.Insert()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	var noteUser notes.NoteUser
+	noteUser.NoteId = note.NoteId
+	noteUser.UserId = userId
+	err = noteUser.Insert()
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
@@ -730,17 +753,17 @@ func NoteUpdate(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-// NoteDelete is a handler for: /api/notes/{id}
+// NoteDelete is a handler for: /api/notes/{noteId}/{userId}
 func NoteDelete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	noteId := vars["id"]
+	idNote := vars["noteId"]
 	var note notes.Note
-	id, err := strconv.Atoi(noteId)
+	noteId, err := strconv.Atoi(idNote)
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
 	}
-	if err := note.Load(id); err != nil {
+	if err := note.Load(noteId); err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(404) // not found
 		message := "The note with the given ID not found."
@@ -754,6 +777,20 @@ func NoteDelete(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Error: %s\n", err)
 		return
 	}
+
+	idUser := vars["userId"]
+	userId, err := strconv.Atoi(idUser)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	noteUser := notes.GetNoteByUserId(noteId, userId)
+	err = noteUser.Delete()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 }

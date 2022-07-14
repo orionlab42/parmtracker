@@ -117,3 +117,24 @@ func GetNotesUsers() NoteUsers {
 	}
 	return noteUsers
 }
+
+func GetNotesByUserId(userId int) NoteUsers {
+	var noteUsers NoteUsers
+	noteUsersAll := GetNotesUsers()
+	for _, note := range noteUsersAll {
+		if note.UserId == userId {
+			noteUsers = append(noteUsers, note)
+		}
+	}
+	return noteUsers
+}
+
+func GetNoteByUserId(noteId int, userId int) NoteUser {
+	noteUsers := GetNotesByUserId(userId)
+	for _, note := range noteUsers {
+		if note.NoteId == noteId {
+			return note
+		}
+	}
+	return NoteUser{}
+}

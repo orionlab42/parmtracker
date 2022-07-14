@@ -1,8 +1,9 @@
 import http from './httpService';
 
 const  apiEndpointNotes = '/notes';
-const  apiEndpointItem = '/notes/item';
-const  apiEndpointItems = '/notes/items';
+const  apiEndpointItem = '/note_item';
+const  apiEndpointItems = '/note_items';
+const  apiEndpointNoteUser = '/notes_user';
 
 function noteUrl(id) {
     return `${apiEndpointNotes}/${id}`;
@@ -16,25 +17,30 @@ function itemsUrl(id) {
     return `${apiEndpointItems}/${id}`;
 }
 
-export function getNotes() {
-    return http.get(apiEndpointNotes);
+function noteUserUrl(noteId, userId) {
+    return `${apiEndpointNoteUser}/${noteId}/${userId}`;
 }
 
-export function deleteNote(id) {
-    return http.delete(noteUrl(id));
+export function getNotes(user_id) {
+    return http.get(noteUrl(user_id));
+}
+
+export function deleteNote(noteId, userId) {
+    let url = `${apiEndpointNotes}/${noteId}/${userId}`;
+    return http.delete(url);
 }
 
 // export function getNote(id) {
 //     return http.get(noteUrl(id));
 // }
 
-export function saveNote(note) {
+export function saveNote(note, userId) {
     if (typeof note.note_id !== "string") {
         const body = { ...note };
         delete body.id;
         return http.put(noteUrl(note.note_id), body);
     }
-    return http.post(apiEndpointNotes, note);
+    return http.post(noteUrl(userId), note);
 }
 
 export function saveItem(item) {
@@ -76,4 +82,8 @@ export function saveItems(noteId, startDate, endDate) {
 
 export function deleteItems(noteId) {
     return http.delete(itemsUrl(noteId));
+}
+
+export function saveNoteUser(noteId, userId) {
+    return http.post(noteUserUrl(noteId, userId));
 }

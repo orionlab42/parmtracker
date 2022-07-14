@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Note from "./common/note";
 import CheckList from "./common/checkList";
 import AgendaNote from "./common/agendaNote";
-import {deleteItems, deleteNote, getNotes, saveNote} from "../services/noteService";
+import {deleteItems, deleteNote, getNotes, saveNote, saveNoteUser} from "../services/noteService";
 import {toast} from "react-toastify";
 // import {searchKeywordNotes} from "../utils/search";
 // import SearchBox from "./searchBox";
@@ -15,16 +15,22 @@ const typeAgenda = 3;
 const ListBox = ({user}) => {
     const [notes, setNotes] = useState([]);
     // const [searchQuery, setSearchQuery] = useState("");
-
+    console.log("User", user)
     useEffect(() => {
         async function getInitialNotes() {
-            const {data: notes} = await getNotes();
-            if (notes != null) {
-                setNotes(notes);
+            if (user.user_id) {
+                const {data: notes} = await getNotes(user.user_id);
+                if (notes != null) {
+                    setNotes(notes);
+                }
             }
+            // const {data: notes} = await getNotes(user.user_id);
+            // if (notes != null) {
+            //     setNotes(notes);
+            // }
         }
         getInitialNotes();
-    }, []);
+    }, [user]);
 
     // useEffect(() => {
     //     let savedNotes = JSON.parse(localStorage.getItem('react-notelist-app-data'));
@@ -41,7 +47,7 @@ const ListBox = ({user}) => {
     // }, [notes]);
 
     const getAllNotes = async () => {
-        const {data: newNotes} = await getNotes();
+        const {data: newNotes} = await getNotes(user.user_id);
         if (notes != null) {
             setNotes(newNotes);
         }
@@ -56,17 +62,17 @@ const ListBox = ({user}) => {
             note_title: "",
             note_text: ""
         };
-        await saveNote(newNote);
+        await saveNote(newNote, user.user_id);
         getAllNotes().then();
     };
 
-    const handleDeleteNote = async (id) => {
+    const handleDeleteNote = async (noteId) => {
         let originalNotes = notes;
-        let updatedNotes = notes.filter(n => n.note_id !== id);
+        let updatedNotes = notes.filter(n => n.note_id !== noteId);
         setNotes(updatedNotes);
         try {
-            await deleteNote(id)
-            await deleteItems(id)
+            await deleteNote(noteId, user.user_id)
+            await deleteItems(noteId)
         } catch (ex) {
             if (ex.response && ex.response.status === 404)
                 toast('This note has already been deleted.');
@@ -121,6 +127,7 @@ const ListBox = ({user}) => {
                     if (note.note_type === typeAgenda) {
                         return <AgendaNote key={note.note_id}
                                            note={note}
+                                           user={user}
                                            onDeleteAgendaNote={handleDeleteNote}
                         />
                     }

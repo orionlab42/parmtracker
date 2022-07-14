@@ -75,7 +75,7 @@ const Note = ({ note, user, onDeleteNote, onUserShare }) => {
 
     const renderShareInput = () => {
         setShareWithUserOn(!shareWithUserOn);
-        console.log("Share user")
+        // console.log("Share user")
     }
 
     const share = (
@@ -85,7 +85,7 @@ const Note = ({ note, user, onDeleteNote, onUserShare }) => {
         />
     );
 
-    console.log("Users", users);
+    // console.log("Users", users);
     return (
             <div className="note">
                 {!titleOn && <h4 className="note-title">{ editText.note_title }</h4>}
