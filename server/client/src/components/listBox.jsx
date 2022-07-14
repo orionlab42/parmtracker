@@ -56,7 +56,6 @@ const ListBox = ({user}) => {
     const addNote = async (type) => {
         let newNote = {
             note_id: uuidv4(),
-            user_id: user.user_id,
             note_type: type,
             note_empty: true,
             note_title: "",

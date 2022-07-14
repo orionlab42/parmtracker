@@ -23,7 +23,6 @@ func updateV1M0(version string) string {
 	if version == "" {
 		query := `create table if not exists notes (
 					note_id int(11) unsigned not null auto_increment,
-					user_id int(11) not null,
 					note_type int(11) unsigned not null,
 					note_title varchar(255)  not null,
 					note_text varchar(255)  not null,

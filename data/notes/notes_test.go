@@ -9,7 +9,6 @@ import (
 
 func TestNoteInsertAndFetch(t *testing.T) {
 	n := notes.Note{
-		UserId:    1,
 		NoteType:  2,
 		NoteTitle: "Shark",
 		NoteText:  "red",
@@ -27,7 +26,6 @@ func TestNoteInsertAndFetch(t *testing.T) {
 
 func TestNoteSave(t *testing.T) {
 	n := notes.Note{
-		UserId:    1,
 		NoteType:  2,
 		NoteTitle: "Shark",
 		NoteText:  "red",
