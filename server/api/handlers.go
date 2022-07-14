@@ -636,7 +636,7 @@ func Notes(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 	userId, err := strconv.Atoi(id)
 	if err != nil {
-		fmt.Printf("Error1: %s\n", err)
+		fmt.Printf("Error: %s\n", err)
 		return
 	}
 	noteUsers := notes.GetNotesByUserId(userId)
@@ -663,7 +663,7 @@ func NoteNew(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 	userId, err := strconv.Atoi(id)
 	if err != nil {
-		fmt.Printf("Error2: %s\n", err)
+		fmt.Printf("Error: %s\n", err)
 		return
 	}
 	var noteFE NoteFrontEnd
@@ -754,23 +754,10 @@ func NoteUpdate(w http.ResponseWriter, r *http.Request) {
 // NoteDelete is a handler for: /api/notes/{noteId}/{userId}
 func NoteDelete(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+
 	idNote := vars["noteId"]
 	var note notes.Note
 	noteId, err := strconv.Atoi(idNote)
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
-	}
-	if err := note.Load(noteId); err != nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(404) // not found
-		message := "The note with the given ID not found."
-		if err := json.NewEncoder(w).Encode(message); err != nil {
-			fmt.Printf("Error: %s\n", err)
-			return
-		}
-	}
-	err = note.Delete()
 	if err != nil {
 		fmt.Printf("Error: %s\n", err)
 		return
@@ -782,11 +769,32 @@ func NoteDelete(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Error: %s\n", err)
 		return
 	}
-	noteUser := notes.GetNoteByUserId(noteId, userId)
-	err = noteUser.Delete()
-	if err != nil {
-		fmt.Printf("Error: %s\n", err)
-		return
+	noteUsers := notes.GetNoteByNoteAndUserId(noteId, userId)
+	if len(noteUsers) > 0 {
+		noteUser := noteUsers[0]
+		err = noteUser.Delete()
+		if err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	noteUsers = notes.GetNotesByNoteId(noteId)
+
+	if len(noteUsers) == 0 {
+		if err := note.Load(noteId); err != nil {
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			w.WriteHeader(404) // not found
+			message := "The note with the given ID not found."
+			if err := json.NewEncoder(w).Encode(message); err != nil {
+				fmt.Printf("Error: %s\n", err)
+				return
+			}
+		}
+		err = note.Delete()
+		if err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -961,4 +969,60 @@ func ItemDelete(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
+}
+
+// NoteUsers is a handler for: /api/notes_user/{noteId}
+func NoteUsers(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["noteId"]
+	noteId, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	usersOfNote := notes.GetUsersOfNote(noteId)
+	if err := json.NewEncoder(w).Encode(usersOfNote); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+// NoteUserNew is a handler for: /api/notes_user/{noteId}/{userId}
+func NoteUserNew(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	idNote := vars["noteId"]
+	noteId, err := strconv.Atoi(idNote)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	idUser := vars["userId"]
+	userId, err := strconv.Atoi(idUser)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	noteUsers := notes.GetNoteByNoteAndUserId(noteId, userId)
+	if len(noteUsers) > 0 {
+		noteUser := noteUsers[0]
+		err = noteUser.Delete()
+		if err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+
+	}
+	if len(noteUsers) == 0 {
+		userNote := notes.NoteUser{
+			NoteId: noteId,
+			UserId: userId,
+		}
+		err = userNote.Insert()
+		if err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
 }

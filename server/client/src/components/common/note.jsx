@@ -1,28 +1,14 @@
 import React, {useEffect, useState} from "react";
 import ReactMarkdown from "react-markdown";
-import {saveItems, saveNote} from "../../services/noteService";
-import FilterUser from "./filterUser";
-import {getUsers} from "../../services/userService";
+import {getUsersOfNote, saveNote, saveNoteUser} from "../../services/noteService";
 import UserRadioOptions from "./userRadioOptions";
 
-const Note = ({ note, user, onDeleteNote, onUserShare }) => {
+const Note = ({ note, user, onDeleteNote }) => {
     const [textOn, setTextOn] = useState(false);
     const [titleOn, setTitleOn] = useState(false);
     const [shareWithUserOn, setShareWithUserOn] = useState(false);
     const [editText, setEditText] = useState({});
-    const [users, setUsers] = useState([]);
-    const [selectedUsers, setSelectedUsers] = useState([]);
-
-    useEffect(() => {
-        async function getALlUsers() {
-            const { data: users } = await getUsers();
-            if (users != null) {
-                let otherUsers = users.filter(u => u.user_id !== user.user_id);
-                setUsers(otherUsers);
-            }
-        }
-        getALlUsers();
-    }, []);
+    const [usersToShare, setUsersToShare] = useState([]);
 
     useEffect(() => {
         setEditText({note_empty: note.note_empty, note_title: note.note_title, note_text: note.note_text, updated_at: note.updated_at});
@@ -75,17 +61,20 @@ const Note = ({ note, user, onDeleteNote, onUserShare }) => {
 
     const renderShareInput = () => {
         setShareWithUserOn(!shareWithUserOn);
-        // console.log("Share user")
+    }
+
+    const handleUserShare = async (userId) => {
+        await saveNoteUser(note.note_id, userId);
     }
 
     const share = (
         <UserRadioOptions
-            users={users}
-            onUserShare={(userToShare) => onUserShare(userToShare, note.note_id)}
+            note={note}
+            user={user}
+            onUserShare={handleUserShare}
         />
     );
 
-    // console.log("Users", users);
     return (
             <div className="note">
                 {!titleOn && <h4 className="note-title">{ editText.note_title }</h4>}

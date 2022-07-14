@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import DatePicker from "react-datepicker";
-import {getItems, saveItem, saveItems, saveNote} from "../../services/noteService";
+import {getItems, saveItem, saveItems, saveNote, saveNoteUser} from "../../services/noteService";
 import "react-datepicker/dist/react-datepicker.css";
+import UserRadioOptions from "./userRadioOptions";
 
 
 const AgendaNote = ({note, user, onDeleteAgendaNote}) => {
@@ -9,6 +10,7 @@ const AgendaNote = ({note, user, onDeleteAgendaNote}) => {
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
     const [titleOn, setTitleOn] = useState(false);
+    const [shareWithUserOn, setShareWithUserOn] = useState(false);
     const [editText, setEditText] = useState({});
 
     useEffect(() => {
@@ -135,6 +137,22 @@ const AgendaNote = ({note, user, onDeleteAgendaNote}) => {
         </form>
     );
 
+    const renderShareInput = () => {
+        setShareWithUserOn(!shareWithUserOn);
+    }
+
+    const handleUserShare = async (userId) => {
+        await saveNoteUser(note.note_id, userId);
+    }
+
+    const share = (
+        <UserRadioOptions
+            note={note}
+            user={user}
+            onUserShare={handleUserShare}
+        />
+    );
+
     return (
         <div className="note">
             {!titleOn && <h4 className="note-title">{editText.note_title}</h4>}
@@ -168,6 +186,11 @@ const AgendaNote = ({note, user, onDeleteAgendaNote}) => {
                     <button className="button is-link is-light  mdi mdi-trash-can-outline"
                             onClick={() => onDeleteAgendaNote(note.note_id)}/>
                 </div>
+            </div>
+            <div className="note-share">
+                {shareWithUserOn && share}
+                <button className="button is-link is-light  mdi mdi-share-variant" data-title="Share"
+                        onClick={renderShareInput}/>
             </div>
         </div>
     );

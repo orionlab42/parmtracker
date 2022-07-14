@@ -7,6 +7,7 @@ import {toast} from "react-toastify";
 // import {searchKeywordNotes} from "../utils/search";
 // import SearchBox from "./searchBox";
 import { v4 as uuidv4 } from 'uuid';
+import {getUsers} from "../services/userService";
 
 const typeSimpleNote = 1;
 const typeChecklist = 2;
@@ -15,7 +16,7 @@ const typeAgenda = 3;
 const ListBox = ({user}) => {
     const [notes, setNotes] = useState([]);
     // const [searchQuery, setSearchQuery] = useState("");
-    console.log("User", user)
+
     useEffect(() => {
         async function getInitialNotes() {
             if (user.user_id) {
@@ -24,13 +25,10 @@ const ListBox = ({user}) => {
                     setNotes(notes);
                 }
             }
-            // const {data: notes} = await getNotes(user.user_id);
-            // if (notes != null) {
-            //     setNotes(notes);
-            // }
         }
         getInitialNotes();
     }, [user]);
+
 
     // useEffect(() => {
     //     let savedNotes = JSON.parse(localStorage.getItem('react-notelist-app-data'));
@@ -79,11 +77,6 @@ const ListBox = ({user}) => {
         }
     };
 
-    const handleUserShare = (userToShare, noteId) => {
-        console.log(userToShare);
-        console.log(noteId);
-    }
-
     // const searchNote = (text) => {
     //     setSearchQuery(text);
     // };
@@ -113,14 +106,14 @@ const ListBox = ({user}) => {
                 {notes.map(note => {
                     if (note.note_type === typeSimpleNote) {
                         return <Note key={note.note_id}
-                                     user={user}
                                      note={note}
-                                     onUserShare={handleUserShare}
+                                     user={user}
                                      onDeleteNote={handleDeleteNote}/>
                     }
                     if (note.note_type === typeChecklist) {
                         return <CheckList key={note.note_id}
                                           note={note}
+                                          user={user}
                                           onDeleteNote={handleDeleteNote}/>
                     }
                     if (note.note_type === typeAgenda) {

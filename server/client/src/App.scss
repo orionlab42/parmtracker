@@ -825,8 +825,12 @@ textarea:focus {
     input[type=checkbox] + label {
 
     }
-    input[type=checkbox]:checked + label {
-        text-decoration: line-through;
+//     input[type=checkbox]:checked + label {
+//         text-decoration: line-through;
+//     }
+    p {
+        margin-right: 10px;
+        color: #333;
     }
 }
 

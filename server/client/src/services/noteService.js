@@ -84,6 +84,11 @@ export function deleteItems(noteId) {
     return http.delete(itemsUrl(noteId));
 }
 
+export function getUsersOfNote(noteId) {
+    let url = `${apiEndpointNoteUser}/${noteId}`;
+    return http.get(url);
+}
+
 export function saveNoteUser(noteId, userId) {
     return http.post(noteUserUrl(noteId, userId));
 }

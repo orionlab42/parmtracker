@@ -129,12 +129,34 @@ func GetNotesByUserId(userId int) NoteUsers {
 	return noteUsers
 }
 
-func GetNoteByUserId(noteId int, userId int) NoteUser {
-	noteUsers := GetNotesByUserId(userId)
-	for _, note := range noteUsers {
+func GetNotesByNoteId(noteId int) NoteUsers {
+	var noteUsers NoteUsers
+	noteUsersAll := GetNotesUsers()
+	for _, note := range noteUsersAll {
 		if note.NoteId == noteId {
-			return note
+			noteUsers = append(noteUsers, note)
 		}
 	}
-	return NoteUser{}
+	return noteUsers
+}
+
+func GetNoteByNoteAndUserId(noteId int, userId int) NoteUsers {
+	var noteUsers NoteUsers
+	noteUsersByUserId := GetNotesByUserId(userId)
+	for _, note := range noteUsersByUserId {
+		if note.NoteId == noteId {
+			noteUsers = append(noteUsers, note)
+			break
+		}
+	}
+	return noteUsers
+}
+
+func GetUsersOfNote(noteId int) []int {
+	var userIds []int
+	noteUsers := GetNotesByNoteId(noteId)
+	for _, note := range noteUsers {
+		userIds = append(userIds, note.UserId)
+	}
+	return userIds
 }

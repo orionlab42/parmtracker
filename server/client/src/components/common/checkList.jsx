@@ -1,34 +1,32 @@
 import React, {useState, useEffect} from "react";
 import CheckListForm from "./checkListForm";
 import CheckListItems from "./checkListItems";
-import {saveNote, saveItem, deleteItem, getItems} from "../../services/noteService";
+import {saveNote, saveItem, deleteItem, getItems, getUsersOfNote, saveNoteUser} from "../../services/noteService";
+import UserRadioOptions from "./userRadioOptions";
 
-const CheckList = ({ note, onDeleteNote }) => {
+const CheckList = ({ note, user, onDeleteNote }) => {
     const [items, setItems] = useState([]);
     const [titleOn, setTitleOn] = useState(false);
+    const [shareWithUserOn, setShareWithUserOn] = useState(false);
     const [editText, setEditText] = useState({});
-    const [timeToGetItems, setTimeToGetItems] = useState(true);
 
     useEffect(() => {
         setEditText({note_empty: note.note_empty, note_title: note.note_title, updated_at: note.updated_at});
     }, []);
 
-    useEffect(() => {
-        async function getAllItems() {
-            const {data: newItems} = await getItems(note.note_id);
-            if (newItems !== null) {
-                setItems(newItems);
-            }
+    const getAllItems = async () => {
+        const {data: newItems} = await getItems(note.note_id);
+        if (newItems !== null) {
+            setItems(newItems);
         }
-        getAllItems();
-    }, [timeToGetItems]);
+    }
 
     const addItem = async item => {
         if (item.item_text.trim().length > 0) {
             item.note_id = note.note_id;
             note.note_empty = false;
             setItems([...items, item]);
-            setTimeToGetItems(!timeToGetItems);
+            getAllItems().then();
             setEditText({updated_at: new Date()});
             await saveItem(item);
             await saveNote(note);
@@ -52,7 +50,7 @@ const CheckList = ({ note, onDeleteNote }) => {
     const removeItem = async (id) => {
         let newItems = items.filter(item => item.item_id !== id);
         setItems(newItems);
-        setTimeToGetItems(!timeToGetItems);
+        getAllItems().then();
         await deleteItem(id);
     };
 
@@ -93,6 +91,22 @@ const CheckList = ({ note, onDeleteNote }) => {
         />
     );
 
+    const renderShareInput = () => {
+        setShareWithUserOn(!shareWithUserOn);
+    }
+
+    const handleUserShare = async (userId) => {
+        await saveNoteUser(note.note_id, userId);
+    }
+
+    const share = (
+        <UserRadioOptions
+            note={note}
+            user={user}
+            onUserShare={handleUserShare}
+        />
+    );
+
     return (
         <div className="note checklist">
             <div className="checklist-container">
@@ -120,6 +134,11 @@ const CheckList = ({ note, onDeleteNote }) => {
                     </div>
                     <button className="button is-link is-light  mdi mdi-trash-can-outline"
                             onClick={() => onDeleteNote(note.note_id)}/>
+                </div>
+                <div className="note-share">
+                    {shareWithUserOn && share}
+                    <button className="button is-link is-light  mdi mdi-share-variant" data-title="Share"
+                            onClick={renderShareInput}/>
                 </div>
             </div>
         </div>

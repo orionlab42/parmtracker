@@ -11352,8 +11352,9 @@ textarea:focus {
   margin-top: 15px;
   transform: scale(1.2);
 }
-.users-checkbox input[type=checkbox]:checked + label {
-  text-decoration: line-through;
+.users-checkbox p {
+  margin-right: 10px;
+  color: #333;
 }
 
 /* Checklist */
