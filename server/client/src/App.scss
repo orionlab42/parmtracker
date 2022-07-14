@@ -808,23 +808,25 @@ textarea:focus {
     justify-content: flex-end;
     align-items: center;
     .checkbox {
-        padding: 10px;
+        padding: 10px 25px 10px 7px;
         color: #333;
     }
 }
 
 .users-checkbox {
     display: flex;
+//     [type="checkbox"] {
+//         display: none;
+//     }
     input[type=checkbox] {
         margin-top: 15px;
+        transform: scale(1.2);
     }
     input[type=checkbox] + label {
-      color: blue;
-      font-style: italic;
+
     }
     input[type=checkbox]:checked + label {
-      color: red;
-      font-style: normal;
+        text-decoration: line-through;
     }
 }
 

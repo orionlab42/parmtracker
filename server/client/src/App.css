@@ -11341,7 +11341,7 @@ textarea:focus {
   align-items: center;
 }
 .note-share .checkbox {
-  padding: 10px;
+  padding: 10px 25px 10px 7px;
   color: #333;
 }
 
@@ -11350,14 +11350,10 @@ textarea:focus {
 }
 .users-checkbox input[type=checkbox] {
   margin-top: 15px;
-}
-.users-checkbox input[type=checkbox] + label {
-  color: blue;
-  font-style: italic;
+  transform: scale(1.2);
 }
 .users-checkbox input[type=checkbox]:checked + label {
-  color: red;
-  font-style: normal;
+  text-decoration: line-through;
 }
 
 /* Checklist */

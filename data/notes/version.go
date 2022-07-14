@@ -61,5 +61,24 @@ func updateV1M0(version string) string {
 		version = "v1.0-1"
 		settings.UpdateVersion(PackageName, version)
 	}
+
+	if version == "v1.0-1" {
+		query := `create table if not exists notes_users (
+					note_user_id int(11) unsigned not null auto_increment,
+					note_id int(11) not null,
+					user_id int(11) not null,
+					created_at datetime not null default now(),
+					updated_at datetime not null default now(),
+					PRIMARY KEY (note_user_id)
+					);`
+		_, e := db.Exec(query)
+		if e != nil {
+			log.GetInstance().Errorf(LogPrefix, "Trouble at creating notes_users table: ", e)
+			return version
+		}
+		log.GetInstance().Infof(LogPrefix, "Table notes_users created.")
+		version = "v1.0-2"
+		settings.UpdateVersion(PackageName, version)
+	}
 	return version
 }
