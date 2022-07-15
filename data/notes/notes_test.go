@@ -9,6 +9,7 @@ import (
 
 func TestNoteInsertAndFetch(t *testing.T) {
 	n := notes.Note{
+		OwnerId:   1,
 		NoteType:  2,
 		NoteTitle: "Shark",
 		NoteText:  "red",
@@ -18,14 +19,15 @@ func TestNoteInsertAndFetch(t *testing.T) {
 	}
 	e := n.Insert()
 	assert.Nil(t, e)
-	notes := notes.GetNotes()
-	assert.NotEqual(t, len(notes), 0)
+	notes1 := notes.GetNotes()
+	assert.NotEqual(t, len(notes1), 0)
 	e = n.Delete()
 	assert.Nil(t, e)
 }
 
 func TestNoteSave(t *testing.T) {
 	n := notes.Note{
+		OwnerId:   3,
 		NoteType:  2,
 		NoteTitle: "Shark",
 		NoteText:  "red",

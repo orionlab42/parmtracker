@@ -1,7 +1,6 @@
 package notes_test
 
 import (
-	"fmt"
 	"github.com/orionlab42/parmtracker/data/notes"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -46,39 +45,39 @@ func TestItemSave(t *testing.T) {
 	assert.Nil(t, e)
 }
 
-func TestGetItemsByNoteId(t *testing.T) {
-	i := notes.Item{
-		NoteId:         3,
-		ItemText:       "black",
-		ItemIsComplete: false,
-		ItemDate:       time.Now().UTC(),
-		CreatedAt:      time.Now().UTC(),
-		UpdatedAt:      time.Now().UTC(),
-	}
-	i.Insert()
-	i = notes.Item{
-		NoteId:         3,
-		ItemText:       "red",
-		ItemIsComplete: true,
-		ItemDate:       time.Now().UTC(),
-		CreatedAt:      time.Now().UTC(),
-		UpdatedAt:      time.Now().UTC(),
-	}
-	i.Insert()
-	i = notes.Item{
-		NoteId:         2,
-		ItemText:       "red",
-		ItemIsComplete: true,
-		ItemDate:       time.Now().UTC(),
-		CreatedAt:      time.Now().UTC(),
-		UpdatedAt:      time.Now().UTC(),
-	}
-	i.Insert()
-	items := notes.GetItemsByNoteId(3)
-	for _, item := range items {
-		fmt.Println(item)
-	}
-}
+//func TestGetItemsByNoteId(t *testing.T) {
+//	i := notes.Item{
+//		NoteId:         3,
+//		ItemText:       "black",
+//		ItemIsComplete: false,
+//		ItemDate:       time.Now().UTC(),
+//		CreatedAt:      time.Now().UTC(),
+//		UpdatedAt:      time.Now().UTC(),
+//	}
+//	i.Insert()
+//	i = notes.Item{
+//		NoteId:         3,
+//		ItemText:       "red",
+//		ItemIsComplete: true,
+//		ItemDate:       time.Now().UTC(),
+//		CreatedAt:      time.Now().UTC(),
+//		UpdatedAt:      time.Now().UTC(),
+//	}
+//	i.Insert()
+//	i = notes.Item{
+//		NoteId:         2,
+//		ItemText:       "red",
+//		ItemIsComplete: true,
+//		ItemDate:       time.Now().UTC(),
+//		CreatedAt:      time.Now().UTC(),
+//		UpdatedAt:      time.Now().UTC(),
+//	}
+//	i.Insert()
+//	items := notes.GetItemsByNoteId(3)
+//	for _, item := range items {
+//		fmt.Println(item)
+//	}
+//}
 
 //func TestCreateItemsByNoteId(t *testing.T) {
 //	items := notes.CreateItemsByNoteId(11, "2022-06-27T22:00:00.000Z", "2022-07-01T22:00:00.000Z")

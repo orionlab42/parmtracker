@@ -651,6 +651,7 @@ func Notes(w http.ResponseWriter, r *http.Request) {
 
 type NoteFrontEnd struct {
 	NoteId    string `json:"note_id"`
+	OwnerId   int    `json:"owner_id"`
 	NoteType  int    `json:"note_type"`
 	NoteTitle string `json:"note_title"`
 	NoteText  string `json:"note_text"`
@@ -685,6 +686,7 @@ func NoteNew(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	var note notes.Note
+	note.OwnerId = noteFE.OwnerId
 	note.NoteType = noteFE.NoteType
 	note.NoteTitle = noteFE.NoteTitle
 	note.NoteText = noteFE.NoteText

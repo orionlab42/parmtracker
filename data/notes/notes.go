@@ -8,6 +8,7 @@ import (
 
 type Note struct {
 	NoteId    int       `json:"note_id"`
+	OwnerId   int       `json:"owner_id"`
 	NoteType  int       `json:"note_type"`
 	NoteTitle string    `json:"note_title"`
 	NoteText  string    `json:"note_text"`
@@ -33,7 +34,7 @@ func (n *Note) Load(id int) error {
 	if rows.Next() {
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&n.NoteId, &n.NoteType, &n.NoteTitle, &n.NoteText, &n.NoteEmpty, &createdAt, &updatedAt)
+		e := rows.Scan(&n.NoteId, &n.OwnerId, &n.NoteType, &n.NoteTitle, &n.NoteText, &n.NoteEmpty, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading id %v: %s", id, e.Error())
 			return e
@@ -54,10 +55,10 @@ func (n *Note) Insert() error {
 		n.UpdatedAt = time.Now().UTC()
 	}
 	db := mysql.GetInstance().GetConn()
-	stmt, _ := db.Prepare(`insert notes set note_id=?, note_type=?, note_title=?, note_text=?, note_empty=?, created_at=?, updated_at=?`)
+	stmt, _ := db.Prepare(`insert notes set note_id=?, owner_id=?, note_type=?, note_title=?, note_text=?, note_empty=?, created_at=?, updated_at=?`)
 	defer stmt.Close()
 
-	res, e := stmt.Exec(n.NoteId, n.NoteType, n.NoteTitle, n.NoteText, n.NoteEmpty, n.CreatedAt, n.UpdatedAt)
+	res, e := stmt.Exec(n.NoteId, n.OwnerId, n.NoteType, n.NoteTitle, n.NoteText, n.NoteEmpty, n.CreatedAt, n.UpdatedAt)
 	if e != nil {
 		fmt.Printf("Error when inserting new note: %s", e.Error())
 		return e
@@ -72,10 +73,10 @@ func (n *Note) Save() error {
 		n.UpdatedAt = time.Now().UTC()
 	}
 	db := mysql.GetInstance().GetConn()
-	stmt, _ := db.Prepare(`update notes set note_type=?, note_title=?, note_text=?, note_empty=?, created_at=?, updated_at=? where note_id=?`)
+	stmt, _ := db.Prepare(`update notes set owner_id=?, note_type=?, note_title=?, note_text=?, note_empty=?, created_at=?, updated_at=? where note_id=?`)
 	defer stmt.Close()
 
-	_, e := stmt.Exec(n.NoteType, n.NoteTitle, n.NoteText, n.NoteEmpty, n.CreatedAt, n.UpdatedAt, n.NoteId)
+	_, e := stmt.Exec(n.OwnerId, n.NoteType, n.NoteTitle, n.NoteText, n.NoteEmpty, n.CreatedAt, n.UpdatedAt, n.NoteId)
 	if e != nil {
 		fmt.Printf("Error when saving note: %s", e.Error())
 		return e
@@ -110,7 +111,7 @@ func GetNotes() Notes {
 		note := Note{}
 		var createdAt string
 		var updatedAt string
-		e := rows.Scan(&note.NoteId, &note.NoteType, &note.NoteTitle, &note.NoteText, &note.NoteEmpty, &createdAt, &updatedAt)
+		e := rows.Scan(&note.NoteId, &note.OwnerId, &note.NoteType, &note.NoteTitle, &note.NoteText, &note.NoteEmpty, &createdAt, &updatedAt)
 		if e != nil {
 			fmt.Printf("Error when loading notes: %s", e.Error())
 			return Notes{}
