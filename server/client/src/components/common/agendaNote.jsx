@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import DatePicker from "react-datepicker";
-import {getItems, saveItem, saveItems, saveNote, saveNoteUser} from "../../services/noteService";
 import "react-datepicker/dist/react-datepicker.css";
 import UserRadioOptions from "./userRadioOptions";
+import {getItems, saveItem, saveItems, saveNote, saveNoteUser} from "../../services/noteService";
 
 
 const AgendaNote = ({note, user, users, onDeleteAgendaNote}) => {
@@ -24,32 +24,20 @@ const AgendaNote = ({note, user, users, onDeleteAgendaNote}) => {
                 setItems(newItems);
             }
         }
-        getAllItems();
-        console.log("Went through1", note)
+        getAllItems().then();
     }, []);
 
     useEffect(() => {
         async function saveNewItems() {
             const {data: newItems} = await saveItems(note.note_id, startDate, endDate).then();
             if (newItems != null) {
-                console.log("Went through3", newItems)
                 note.note_empty = false;
                 await saveNote(note, user.user_id);
                 setItems(newItems);
             }
         }
-        saveNewItems();
-        console.log("Went through2", note)
+        saveNewItems().then();
     }, [dateRange]);
-
-    // useEffect(() => {
-    //     async function sendNote() {
-    //         note.note_empty = false;
-    //         await saveNote(note);
-    //     }
-    //
-    //     sendNote().then();
-    // }, [items]);
 
     const editTitle = (e) => {
         setEditText({note_title: e.target.value, updated_at: new Date()});

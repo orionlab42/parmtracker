@@ -1,8 +1,9 @@
 import React, {useState, useEffect} from "react";
 import CheckListForm from "./checkListForm";
 import CheckListItems from "./checkListItems";
-import {saveNote, saveItem, deleteItem, getItems, saveNoteUser} from "../../services/noteService";
 import UserRadioOptions from "./userRadioOptions";
+import {saveNote, saveItem, deleteItem, getItems, saveNoteUser} from "../../services/noteService";
+
 
 const CheckList = ({ note, users, onDeleteNote }) => {
     const [items, setItems] = useState([]);

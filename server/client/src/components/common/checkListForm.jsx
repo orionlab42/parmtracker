@@ -1,14 +1,9 @@
 import React, {useState} from "react";
 import {v4 as uuidv4} from "uuid";
-// import React, {useEffect, useRef, useState} from "react";
+
 
 const CheckListForm = (props) => {
     const [input, setInput] = useState(props.edit ? props.edit.item_text : '');
-    // const inputRef = useRef(null);
-
-    // useEffect(() => {
-    //     inputRef.current.focus()
-    // });
 
     const handleChange = e => {
         setInput(e.target.value);
@@ -57,7 +52,6 @@ const CheckListForm = (props) => {
                     value={input}
                     name="text"
                     onChange={handleChange}
-                    // ref={inputRef}
                     autoFocus
                     />
                     <button className="button is-link is-light  mdi mdi-plus"/>

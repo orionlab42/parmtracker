@@ -2,12 +2,12 @@ import React, {useEffect, useState} from "react";
 import Note from "./common/note";
 import CheckList from "./common/checkList";
 import AgendaNote from "./common/agendaNote";
-import {deleteItems, deleteNote, getNotes, saveNote, saveNoteUser} from "../services/noteService";
-import {toast} from "react-toastify";
-// import {searchKeywordNotes} from "../utils/search";
 // import SearchBox from "./searchBox";
+// import {searchKeywordNotes} from "../utils/search";
 import { v4 as uuidv4 } from 'uuid';
+import {toast} from "react-toastify";
 import {getUsers} from "../services/userService";
+import {deleteItems, deleteNote, getNotes, saveNote} from "../services/noteService";
 
 const typeSimpleNote = 1;
 const typeChecklist = 2;
@@ -39,7 +39,6 @@ const ListBox = ({user}) => {
         }
         getInitialNotes();
     }, [user]);
-
 
     // useEffect(() => {
     //     let savedNotes = JSON.parse(localStorage.getItem('react-notelist-app-data'));
@@ -97,10 +96,6 @@ const ListBox = ({user}) => {
     // if (searchQuery) {
     //     notesToDisplay = searchKeywordNotes(notelist, searchQuery);
     // }
-
-
-    // console.log("All notes", notes);
-    // console.log("All notes from server", notes);
 
     return (
         <div className="notes-list-container">

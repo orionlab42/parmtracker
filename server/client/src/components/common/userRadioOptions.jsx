@@ -10,8 +10,6 @@ const UserRadioOptions = ({users, note, onUserShare}) => {
         getNoteUsersToShare().then();
     }, [users]);
 
-    console.log("users", users)
-    console.log("usersToShare", usersToShareStatus)
     const getNoteUsersToShare = async () => {
         const { data: usersOfNote } = await getUsersOfNote(note.note_id);
         if (usersOfNote != null) {
