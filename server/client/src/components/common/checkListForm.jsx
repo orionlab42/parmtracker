@@ -1,19 +1,9 @@
 import React, {useState} from "react";
-// import React, {useEffect, useRef, useState} from "react";
+import {v4 as uuidv4} from "uuid";
+
 
 const CheckListForm = (props) => {
-    const [input, setInput] = useState(props.edit ? props.edit.text : '');
-    const [id, setId] = useState(1);
-    // const inputRef = useRef(null);
-
-    // useEffect(() => {
-    //     inputRef.current.focus()
-    // });
-
-    const giveId = () => {
-        setId(id + 1);
-        return id;
-    };
+    const [input, setInput] = useState(props.edit ? props.edit.item_text : '');
 
     const handleChange = e => {
         setInput(e.target.value);
@@ -21,11 +11,19 @@ const CheckListForm = (props) => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        props.onSubmit({
-            id: giveId(),
-            text: input,
-            isComplete: false
-        });
+        if (props.edit) {
+            props.onSubmit({
+                item_id: props.edit.item_id,
+                item_text: input,
+                item_is_complete: props.edit.item_is_complete
+            });
+        } else {
+            props.onSubmit({
+                item_id: uuidv4(),
+                item_text: input,
+                item_is_complete: false
+            });
+        }
         setInput('');
     };
 
@@ -41,6 +39,7 @@ const CheckListForm = (props) => {
                             name="text"
                             onChange={handleChange}
                             // ref={inputRef}
+                            autoFocus
                         />
                         <button className="button is-link is-light  mdi mdi-circle-edit-outline"/>
                     </React.Fragment>
@@ -53,7 +52,7 @@ const CheckListForm = (props) => {
                     value={input}
                     name="text"
                     onChange={handleChange}
-                    // ref={inputRef}
+                    autoFocus
                     />
                     <button className="button is-link is-light  mdi mdi-plus"/>
                 </React.Fragment>

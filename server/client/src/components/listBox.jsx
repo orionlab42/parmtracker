@@ -1,116 +1,137 @@
 import React, {useEffect, useState} from "react";
 import Note from "./common/note";
 import CheckList from "./common/checkList";
-// import {searchKeywordNotes} from "../utils/search";
+import AgendaNote from "./common/agendaNote";
 // import SearchBox from "./searchBox";
+// import {searchKeywordNotes} from "../utils/search";
+import { v4 as uuidv4 } from 'uuid';
+import {toast} from "react-toastify";
+import {getUsers} from "../services/userService";
+import {deleteItems, deleteNote, getNotes, saveNote} from "../services/noteService";
 
-const ListBox = (props) => {
+const typeSimpleNote = 1;
+const typeChecklist = 2;
+const typeAgenda = 3;
+
+const ListBox = ({user}) => {
     const [notes, setNotes] = useState([]);
+    const [users, setUsers] = useState([]);
     // const [searchQuery, setSearchQuery] = useState("");
-    const [id, setId] = useState(1);
 
-    const giveId = () => {
-        setId(id + 1);
-        return id;
+    useEffect(() => {
+        async function getALlUsers() {
+            const { data: users } = await getUsers();
+            if (users != null) {
+                setUsers(users);
+            }
+        }
+        getALlUsers();
+    }, [user]);
+
+    useEffect(() => {
+        async function getInitialNotes() {
+            if (user.user_id) {
+                const {data: notes} = await getNotes(user.user_id);
+                if (notes != null) {
+                    setNotes(notes);
+                }
+            }
+        }
+        getInitialNotes();
+    }, [user]);
+
+    // useEffect(() => {
+    //     let savedNotes = JSON.parse(localStorage.getItem('react-notelist-app-data'));
+    //     if (savedNotes) {
+    //         setNotes(savedNotes);
+    //         if (savedNotes[0]) {
+    //             setId(savedNotes[0].id + 1);
+    //         }
+    //     }
+    // }, []);
+    //
+    // useEffect(() => {
+    //     localStorage.setItem('react-notelist-app-data', JSON.stringify(notes));
+    // }, [notes]);
+
+    const getAllNotes = async () => {
+        const {data: newNotes} = await getNotes(user.user_id);
+        if (notes != null) {
+            setNotes(newNotes);
+        }
     };
 
-    useEffect(() => {
-        const savedNotes = JSON.parse(localStorage.getItem('react-notes-app-data'));
-        if (savedNotes) {
-            setNotes(savedNotes);
-        }
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem('react-notes-app-data', JSON.stringify(notes));
-    }, [notes]);
-
-    const addNote = (text) => {
-        const date = new Date();
-        const newNote = {
-            id: giveId(),
-            type: "simple-note",
-            title: "",
-            text: "",
-            date: date.toLocaleDateString()
+    const addNote = async (type) => {
+        let newNote = {
+            note_id: uuidv4(),
+            owner_id: user.user_id,
+            note_type: type,
+            note_empty: true,
+            note_title: "",
+            note_text: ""
         };
-        setNotes([...notes, newNote]);
+        await saveNote(newNote, user.user_id);
+        getAllNotes().then();
     };
 
-    const updateNote = (newNote) => {
-        const newNotes = notes.map(note => {
-            if (note.id === newNote.id) {
-                note.text = newNote.text;
-                note.title = newNote.title;
-            }
-            return note
-        });
-        setNotes(newNotes);
-    };
-
-    const deleteNote = (deleteNote) => {
-        const newNotes = notes.filter(note => note.id !== deleteNote.id);
-        setNotes(newNotes);
-    };
-
-    const addCheckNote = (itemList) => {
-        const date = new Date();
-        let newList = {
-            id: giveId(),
-            type: "checklist",
-            title: "",
-            list: [],
-            date: date.toLocaleDateString()
+    const handleDeleteNote = async (noteId) => {
+        let originalNotes = notes;
+        let updatedNotes = notes.filter(n => n.note_id !== noteId);
+        setNotes(updatedNotes);
+        try {
+            await deleteNote(noteId, user.user_id)
+            await deleteItems(noteId)
+        } catch (ex) {
+            if (ex.response && ex.response.status === 404)
+                toast('This note has already been deleted.');
+            setNotes(originalNotes);
         }
-        setNotes([...notes, newList]);
-    };
-
-    const updateCheckList = (itemList) => {
-        const newChecklists = notes.map(checkList => {
-            if (checkList.id === itemList.id) {
-                checkList.list = itemList.list
-            }
-            return checkList
-        });
-        setNotes(newChecklists);
-    };
-
-    const deleteCheckList = (id) => {
-        const newChecklists = notes.filter(checkList => checkList.id !== id);
-        setNotes(newChecklists);
     };
 
     // const searchNote = (text) => {
     //     setSearchQuery(text);
     // };
 
-    // let notesToDisplay = notes;
+    // let notesToDisplay = notelist;
     // if (searchQuery) {
-    //     notesToDisplay = searchKeywordNotes(notes, searchQuery);
+    //     notesToDisplay = searchKeywordNotes(notelist, searchQuery);
     // }
-    //
-    // console.log("All notes", notes);
+
     return (
         <div className="notes-list-container">
             {/*<SearchBox value={searchQuery} onChange={searchNote}/>*/}
-            <button className="button is-link is-light add-note-button" onClick={addNote}><span
-                className="mdi mdi-note-outline"/> &nbsp; Add Simple Note</button>
-            <button className="button is-link is-light add-note-button" onClick={addCheckNote}><span
-                className="mdi mdi-playlist-check"/> &nbsp; Add Checklist</button>
+            <button className="button is-link is-light add-note-button" onClick={() => addNote(typeSimpleNote)}><span
+                className="mdi mdi-note-outline"/> &nbsp; Add Simple Note
+            </button>
+            <button className="button is-link is-light add-note-button" onClick={() => addNote(typeChecklist)}><span
+                className="mdi mdi-playlist-check"/> &nbsp; Add Checklist
+            </button>
+            <button className="button is-link is-light add-note-button" onClick={() => addNote(typeAgenda)}><span
+                className="mdi mdi-calendar-text"/> &nbsp; Add Planner
+            </button>
             <div className="notes-list">
                 {notes.map(note => {
-                    if (note.type === "simple-note") {
-                         return <Note key={note.id}
-                                      note={ note }
-                                      handleUpdateNote={updateNote}
-                                      handleDeleteNote={deleteNote}/>
+                    if (note.note_type === typeSimpleNote) {
+                        return <Note key={note.note_id}
+                                     note={note}
+                                     users={users}
+                                     onDeleteNote={handleDeleteNote}/>
                     }
-                    if (note.type === "checklist") {
-                        return <CheckList key={note.id}
-                                            items={note}
-                                            handleUpdateCheckList={updateCheckList}
-                                            handleDeleteCheckList={deleteCheckList}/>
+                    if (note.note_type === typeChecklist) {
+                        return <CheckList key={note.note_id}
+                                          note={note}
+                                          users={users}
+                                          onDeleteNote={handleDeleteNote}/>
                     }
+                    if (note.note_type === typeAgenda) {
+                        return <AgendaNote key={note.note_id}
+                                           note={note}
+                                           user={user}
+                                           users={users}
+                                           onDeleteAgendaNote={handleDeleteNote}
+                        />
+                    }
+                    return null
                 })}
             </div>
         </div>

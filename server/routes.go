@@ -34,6 +34,21 @@ var routes = Routes{
 	Route{"CategoryDelete", http.MethodDelete, "/api/categories/{id}", true, api.CategoryDelete},
 	Route{"UpdateUser", http.MethodPut, "/api/user/update-settings/{id}", true, api.UpdateUser},
 
+	Route{"Notes", http.MethodGet, "/api/notes/{id}", true, api.Notes},
+	Route{"NoteNew", http.MethodPost, "/api/notes/{id}", true, api.NoteNew},
+	Route{"NoteUpdate", http.MethodPut, "/api/notes/{id}", true, api.NoteUpdate},
+	Route{"NoteDelete", http.MethodDelete, "/api/notes/{noteId}/{userId}", true, api.NoteDelete},
+
+	Route{"Items", http.MethodGet, "/api/note_items/{id}", true, api.Items},
+	Route{"ItemsAgenda", http.MethodGet, "/api/note_items", true, api.ItemsAgenda},
+	Route{"ItemsDelete", http.MethodDelete, "/api/note_items/{id}", true, api.ItemsDelete},
+	Route{"ItemNew", http.MethodPost, "/api/note_item", true, api.ItemNew},
+	Route{"ItemUpdate", http.MethodPut, "/api/note_item/{id}", true, api.ItemUpdate},
+	Route{"ItemDelete", http.MethodDelete, "/api/note_item/{id}", true, api.ItemDelete},
+
+	Route{"NoteUsers", http.MethodGet, "/api/notes_user/{noteId}", true, api.NoteUsers},
+	Route{"NoteUserNew", http.MethodPost, "/api/notes_user/{noteId}/{userId}", true, api.NoteUserNew},
+
 	Route{"UserRegister", http.MethodPost, "/api/register", false, api.UserRegister},
 	Route{"UserLogin", http.MethodPost, "/api/login", false, api.UserLogin},
 	Route{"User", http.MethodGet, "/api/user", false, api.User},

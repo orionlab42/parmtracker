@@ -14,8 +14,8 @@ package users_test
 //	assert.Nil(t, e)
 //	users := users.GetUsers()
 //	assert.NotEqual(t, len(users), 0)
-//	//e = u.Delete()
-//	//assert.Nil(t, e)
+//	e = u.Delete()
+//	assert.Nil(t, e)
 //}
 //
 //func TestUserSave(t *testing.T) {
@@ -33,8 +33,8 @@ package users_test
 //	u.UserName = "Atik"
 //	u.Save()
 //	assert.Equal(t, u.UserName, "Atik")
-//	e = u.Delete()
-//	assert.Nil(t, e)
+//	//e = u.Delete()
+//	//assert.Nil(t, e)
 //}
 //
 //func TestUsersSaveSeedData(t *testing.T) {

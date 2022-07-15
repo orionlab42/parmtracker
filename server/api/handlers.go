@@ -9,6 +9,7 @@ import (
 	"github.com/orionlab42/parmtracker/data/categories"
 	"github.com/orionlab42/parmtracker/data/expenses"
 	"github.com/orionlab42/parmtracker/data/filters"
+	"github.com/orionlab42/parmtracker/data/notes"
 	"github.com/orionlab42/parmtracker/data/users"
 	"golang.org/x/crypto/bcrypt"
 	"io"
@@ -627,4 +628,403 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
+}
+
+// Notes is a handler for: /api/notes/{id}
+func Notes(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	userId, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	noteUsers := notes.GetNotesByUserId(userId)
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	n := notes.GetNotesByIds(noteUsers)
+	if err := json.NewEncoder(w).Encode(n); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+type NoteFrontEnd struct {
+	NoteId    string `json:"note_id"`
+	OwnerId   int    `json:"owner_id"`
+	NoteType  int    `json:"note_type"`
+	NoteTitle string `json:"note_title"`
+	NoteText  string `json:"note_text"`
+	NoteEmpty bool   `json:"note_empty"`
+}
+
+// NoteNew is a handler for: /api/notes
+func NoteNew(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+	userId, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	var noteFE NoteFrontEnd
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := json.Unmarshal(body, &noteFE); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	var note notes.Note
+	note.OwnerId = noteFE.OwnerId
+	note.NoteType = noteFE.NoteType
+	note.NoteTitle = noteFE.NoteTitle
+	note.NoteText = noteFE.NoteText
+	note.NoteEmpty = noteFE.NoteEmpty
+	err = note.Insert()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	var noteUser notes.NoteUser
+	noteUser.NoteId = note.NoteId
+	noteUser.UserId = userId
+	err = noteUser.Insert()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
+}
+
+// NoteUpdate is a handler for: /api/notes/{id}
+func NoteUpdate(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	noteId := vars["id"]
+	var note notes.Note
+	id, err := strconv.Atoi(noteId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := note.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The note with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	if err := json.Unmarshal(body, &note); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	err = note.Save()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+}
+
+// NoteDelete is a handler for: /api/notes/{noteId}/{userId}
+func NoteDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+
+	idNote := vars["noteId"]
+	var note notes.Note
+	noteId, err := strconv.Atoi(idNote)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+
+	idUser := vars["userId"]
+	userId, err := strconv.Atoi(idUser)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	noteUsers := notes.GetNoteByNoteAndUserId(noteId, userId)
+	if len(noteUsers) > 0 {
+		noteUser := noteUsers[0]
+		err = noteUser.Delete()
+		if err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	noteUsers = notes.GetNotesByNoteId(noteId)
+
+	if len(noteUsers) == 0 {
+		if err := note.Load(noteId); err != nil {
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			w.WriteHeader(404) // not found
+			message := "The note with the given ID not found."
+			if err := json.NewEncoder(w).Encode(message); err != nil {
+				fmt.Printf("Error: %s\n", err)
+				return
+			}
+		}
+		err = note.Delete()
+		if err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+}
+
+// Items is a handler for: /api/notes/items/{id}  -here we are having the note id
+func Items(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	noteId := vars["id"]
+	id, err := strconv.Atoi(noteId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	i := notes.GetItemsByNoteId(id)
+	if err := json.NewEncoder(w).Encode(i); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+// ItemsAgenda is a handler for: /api/notes/items/parameters:note_id, start_date, end_date
+func ItemsAgenda(w http.ResponseWriter, r *http.Request) {
+	noteId := r.URL.Query().Get("note_id")
+	startDate := r.URL.Query().Get("start_date")
+	endDate := r.URL.Query().Get("end_date")
+	id, err := strconv.Atoi(noteId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	i := notes.CreateItemsByNoteId(id, startDate, endDate)
+	if err := json.NewEncoder(w).Encode(i); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+// ItemsDelete is a handler for: /api/notes/items/{id}  -here we are having the note id
+func ItemsDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	noteId := vars["id"]
+	id, err := strconv.Atoi(noteId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	notes.DeleteByNoteId(id)
+	if err := json.NewEncoder(w).Encode("Deleted all items from note: " + noteId); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+type ItemFrontEnd struct {
+	ItemId         string    `json:"item_id"`
+	NoteId         int       `json:"note_id"`
+	ItemText       string    `json:"item_text"`
+	ItemIsComplete bool      `json:"item_is_complete"`
+	ItemDate       time.Time `json:"item_date"`
+}
+
+// ItemNew is a handler for: /api/notes/items
+func ItemNew(w http.ResponseWriter, r *http.Request) {
+	var itemFE ItemFrontEnd
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := json.Unmarshal(body, &itemFE); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	var item notes.Item
+	item.NoteId = itemFE.NoteId
+	item.ItemText = itemFE.ItemText
+	item.ItemIsComplete = itemFE.ItemIsComplete
+	item.ItemDate = itemFE.ItemDate
+	err = item.Insert()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
+}
+
+// ItemUpdate is a handler for: /api/notes/items/{id}
+func ItemUpdate(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	itemId := vars["id"]
+	var item notes.Item
+	id, err := strconv.Atoi(itemId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := item.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The item with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	if err := json.Unmarshal(body, &item); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	err = item.Save()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+}
+
+// ItemDelete is a handler for: /api/notes/items/{id}
+func ItemDelete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	itemId := vars["id"]
+	var item notes.Item
+	id, err := strconv.Atoi(itemId)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	if err := item.Load(id); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(404) // not found
+		message := "The note with the given ID not found."
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	err = item.Delete()
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+}
+
+// NoteUsers is a handler for: /api/notes_user/{noteId}
+func NoteUsers(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["noteId"]
+	noteId, err := strconv.Atoi(id)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	usersOfNote := notes.GetUsersOfNote(noteId)
+	if err := json.NewEncoder(w).Encode(usersOfNote); err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+}
+
+// NoteUserNew is a handler for: /api/notes_user/{noteId}/{userId}
+func NoteUserNew(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	idNote := vars["noteId"]
+	noteId, err := strconv.Atoi(idNote)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	idUser := vars["userId"]
+	userId, err := strconv.Atoi(idUser)
+	if err != nil {
+		fmt.Printf("Error: %s\n", err)
+		return
+	}
+	noteUsers := notes.GetNoteByNoteAndUserId(noteId, userId)
+	if len(noteUsers) > 0 {
+		noteUser := noteUsers[0]
+		err = noteUser.Delete()
+		if err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+
+	}
+	if len(noteUsers) == 0 {
+		userNote := notes.NoteUser{
+			NoteId: noteId,
+			UserId: userId,
+		}
+		err = userNote.Insert()
+		if err != nil {
+			fmt.Printf("Error: %s\n", err)
+			return
+		}
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusCreated)
 }

@@ -8,6 +8,18 @@
 
 @import "assets/normalize";
 
+// brand colors for dark mode
+$dark: #222;
+$dark-darker: #1d1d1d;
+$dark-light: #333;
+$dark-lighter: #444;
+$grey: #3a3f41;
+$grey-light: #bbb8b7;
+$grey-lighter: #cbc8c7;
+$blue: #4493de;
+$blue-light: #5ba5ea;
+$green: #2c7b41;
+$green-light: #2a9747;
 
 /* taking out the default styling of any button */
 button {
@@ -31,6 +43,7 @@ body {
     margin: 0 auto;
     padding: 0 0 60px 0;
     max-width: 1152px;
+    z-index: 0;
     @media (max-width: 376px){
         padding: 5px 0 50px 0;
     }
@@ -637,7 +650,7 @@ body {
     .search-box {
         margin-bottom: 30px;
         .control {
-        width: 100%;
+            width: 100%;
         }
     }
     .title {
@@ -703,6 +716,29 @@ textarea:focus {
     flex-direction: column;
     justify-content: space-between;
     flex-grow: 4;
+    ul {
+      list-style-type: disc;
+      padding-left: 16px;
+      line-height: 1;
+    }
+    hr {
+        border-top: 1px solid #333;
+    }
+    h1 {
+        font-size: 150%;
+        font-weight: 600;
+    }
+    h2 {
+        font-size: 120%;
+        font-weight: 600;
+        margin: 13px 0;
+    }
+    blockquote {
+       border-left: 4px solid whitesmoke;
+       line-height: 1;
+       padding-left: 30px;
+
+    }
 }
 
 .simple-note-buttons {
@@ -763,6 +799,39 @@ textarea:focus {
 }
 [data-title] {
     position: relative;
+}
+
+.note-share {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    .checkbox {
+        padding: 10px 25px 10px 7px;
+        color: #333;
+    }
+}
+
+.users-checkbox {
+    display: flex;
+//     [type="checkbox"] {
+//         display: none;
+//     }
+    input[type=checkbox] {
+        margin-top: 15px;
+        transform: scale(1.2);
+    }
+    input[type=checkbox] + label {
+
+    }
+//     input[type=checkbox]:checked + label {
+//         text-decoration: line-through;
+//     }
+    p {
+        margin-right: 10px;
+        color: #333;
+    }
 }
 
 /* Checklist */
@@ -872,23 +941,54 @@ textarea:focus {
     color: #999796;
 }
 
+/* Agenda note */
+.date-range-picker {
+    .react-datepicker__input-container {
+        width: 210px;
+        input {
+            color: #333;
+            padding-right: 25px;
+            border-radius: 4px;
+        }
+    }
+    .react-datepicker__close-icon::after {
+        line-height: 0.8;
+    }
+}
+
+.agenda-item-list {
+    margin: 25px 0;
+    .agenda-item {
+        margin: 5px 0;
+        display: flex;
+        justify-content: space-between;
+        .agenda-item-date {
+            font-weight: 600;
+        }
+        input {
+           width: 70%;
+           background-color: #c8dafa !important;
+           border: 1px solid #c8dafa !important;
+           border-bottom: 1px dotted #333 !important;
+           color: #333;
+        }
+        input:focus {
+            border: none;
+            outline: none;
+            resize: none;
+        }
+    }
+    .agenda-item.checked {
+        input {
+            text-decoration: line-through;
+            color: #999796;
+        }
+    }
+}
 
 /**
  * Bulma customization dark mode
  */
-
-// brand colors
-$dark: #222;
-$dark-darker: #1d1d1d;
-$dark-light: #333;
-$dark-lighter: #444;
-$grey: #3a3f41;
-$grey-light: #bbb8b7;
-$grey-lighter: #cbc8c7;
-$blue: #4493de;
-$blue-light: #5ba5ea;
-$green: #2c7b41;
-$green-light: #2a9747;
 
 .dark-mode {
     background-color: $dark;
