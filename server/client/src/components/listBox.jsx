@@ -15,7 +15,18 @@ const typeAgenda = 3;
 
 const ListBox = ({user}) => {
     const [notes, setNotes] = useState([]);
+    const [users, setUsers] = useState([]);
     // const [searchQuery, setSearchQuery] = useState("");
+
+    useEffect(() => {
+        async function getALlUsers() {
+            const { data: users } = await getUsers();
+            if (users != null) {
+                setUsers(users);
+            }
+        }
+        getALlUsers();
+    }, [user]);
 
     useEffect(() => {
         async function getInitialNotes() {
@@ -107,19 +118,20 @@ const ListBox = ({user}) => {
                     if (note.note_type === typeSimpleNote) {
                         return <Note key={note.note_id}
                                      note={note}
-                                     user={user}
+                                     users={users}
                                      onDeleteNote={handleDeleteNote}/>
                     }
                     if (note.note_type === typeChecklist) {
                         return <CheckList key={note.note_id}
                                           note={note}
-                                          user={user}
+                                          users={users}
                                           onDeleteNote={handleDeleteNote}/>
                     }
                     if (note.note_type === typeAgenda) {
                         return <AgendaNote key={note.note_id}
                                            note={note}
                                            user={user}
+                                           users={users}
                                            onDeleteAgendaNote={handleDeleteNote}
                         />
                     }

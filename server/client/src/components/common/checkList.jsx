@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from "react";
 import CheckListForm from "./checkListForm";
 import CheckListItems from "./checkListItems";
-import {saveNote, saveItem, deleteItem, getItems, getUsersOfNote, saveNoteUser} from "../../services/noteService";
+import {saveNote, saveItem, deleteItem, getItems, saveNoteUser} from "../../services/noteService";
 import UserRadioOptions from "./userRadioOptions";
 
-const CheckList = ({ note, user, onDeleteNote }) => {
+const CheckList = ({ note, users, onDeleteNote }) => {
     const [items, setItems] = useState([]);
     const [titleOn, setTitleOn] = useState(false);
     const [shareWithUserOn, setShareWithUserOn] = useState(false);
@@ -102,7 +102,7 @@ const CheckList = ({ note, user, onDeleteNote }) => {
     const share = (
         <UserRadioOptions
             note={note}
-            user={user}
+            users={users}
             onUserShare={handleUserShare}
         />
     );

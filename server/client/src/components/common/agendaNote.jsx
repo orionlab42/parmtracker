@@ -5,7 +5,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import UserRadioOptions from "./userRadioOptions";
 
 
-const AgendaNote = ({note, user, onDeleteAgendaNote}) => {
+const AgendaNote = ({note, user, users, onDeleteAgendaNote}) => {
     const [items, setItems] = useState([]);
     const [dateRange, setDateRange] = useState([null, null]);
     const [startDate, endDate] = dateRange;
@@ -148,7 +148,7 @@ const AgendaNote = ({note, user, onDeleteAgendaNote}) => {
     const share = (
         <UserRadioOptions
             note={note}
-            user={user}
+            users={users}
             onUserShare={handleUserShare}
         />
     );

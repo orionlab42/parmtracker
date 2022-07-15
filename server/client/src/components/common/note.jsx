@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import ReactMarkdown from "react-markdown";
-import {getUsersOfNote, saveNote, saveNoteUser} from "../../services/noteService";
+import {saveNote, saveNoteUser} from "../../services/noteService";
 import UserRadioOptions from "./userRadioOptions";
 
-const Note = ({ note, user, onDeleteNote }) => {
+const Note = ({ note, users, onDeleteNote }) => {
     const [textOn, setTextOn] = useState(false);
     const [titleOn, setTitleOn] = useState(false);
     const [shareWithUserOn, setShareWithUserOn] = useState(false);
@@ -70,7 +70,7 @@ const Note = ({ note, user, onDeleteNote }) => {
     const share = (
         <UserRadioOptions
             note={note}
-            user={user}
+            users={users}
             onUserShare={handleUserShare}
         />
     );
